@@ -162,6 +162,8 @@ Yorum:
   konsantrasyonu yükseltiyor (85 vs 69). Detection kalitesi doğrudan CASA sonucuna yansıyor.
 - Uyarı: 30 fps, önerilen 50 fps'nin altında; VCL ve ALH eğri yolun az örneklenmesi yüzünden düşük tahmin edilebilir.
 
+Fonksiyonların tamamını tek tek denemek için: [FONKSIYON_DENEME_REHBERI.md](FONKSIYON_DENEME_REHBERI.md)
+
 Script: `scripts/step6_motility.py` — ham sonuçlar `outputs/step6_motility_results.json`, karşılaştırma `outputs/step6_casa_vs_hstli.json`, log `outputs/step6_log.txt`
 
 ---
