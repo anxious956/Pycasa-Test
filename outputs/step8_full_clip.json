@@ -130,36 +130,36 @@
     }
   },
   "yolo26_sort": {
-    "frames_loaded": 251,
+    "frames_loaded": 899,
     "casa": {
       "grades": {
-        "rapid": 37.9,
-        "slow": 22.37,
-        "non_progressive": 1.37,
-        "immotile": 38.36
+        "rapid": 37.84,
+        "slow": 23.14,
+        "non_progressive": 0.78,
+        "immotile": 38.24
       },
       "grades_std": {
-        "rapid": 3.28,
-        "slow": 2.82,
-        "non_progressive": 0.79,
-        "immotile": 3.29
+        "rapid": 2.15,
+        "slow": 1.87,
+        "non_progressive": 0.39,
+        "immotile": 2.15
       },
-      "percent_motile": 61.64,
-      "percent_motile_std": 3.29,
+      "percent_motile": 61.76,
+      "percent_motile_std": 2.15,
       "counts": {
-        "rapid": 83,
-        "slow": 49,
-        "non_progressive": 3,
-        "immotile": 84
+        "rapid": 193,
+        "slow": 118,
+        "non_progressive": 4,
+        "immotile": 195
       },
-      "track_count": 219,
-      "cells_per_frame": 124.74,
-      "concentration_M_per_ml": 79.82,
-      "concentration_M_per_ml_std": 0.41,
+      "track_count": 510,
+      "cells_per_frame": 115.03,
+      "concentration_M_per_ml": 73.61,
+      "concentration_M_per_ml_std": 0.2,
       "dilution_factor": 1.0,
       "volume_ml": 2.2,
-      "total_sperm_count_M": 175.6,
-      "total_sperm_count_M_std": 0.9,
+      "total_sperm_count_M": 161.93,
+      "total_sperm_count_M_std": 0.45,
       "velocity_metric": "VCL",
       "thresholds": {
         "rapid": 29.0,
@@ -170,38 +170,38 @@
     },
     "kinematik": {
       "VCL": [
-        21.39,
-        14.71
+        20.35,
+        15.29
       ],
       "VSL": [
-        14.7,
-        11.34
+        13.76,
+        11.41
       ],
       "VAP": [
-        15.84,
-        11.58
+        14.82,
+        11.72
       ],
       "LIN": [
-        0.57,
+        0.55,
         0.26
       ],
       "ALH": [
-        0.79,
-        0.59
+        0.77,
+        0.62
       ],
       "WOB": [
-        0.66,
+        0.64,
         0.2
       ],
       "STR": [
-        0.82,
+        0.81,
         0.24
       ],
       "MAD": [
-        39.48,
-        14.89
+        40.45,
+        15.27
       ],
-      "track_sayisi": 219
+      "track_sayisi": 510
     }
   }
 }

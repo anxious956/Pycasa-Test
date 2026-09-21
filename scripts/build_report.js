@@ -23,6 +23,7 @@ const P = (text, o = {}) => new Paragraph({
 
 const H = (text, level) => new Paragraph({
   heading: level, spacing: { before: 280, after: 140 },
+  keepNext: true,          // baslik sayfa sonunda yalniz kalmasin
   children: [new TextRun({ text, size: level === HeadingLevel.HEADING_1 ? 28 : 24, bold: true,
                            color: level === HeadingLevel.HEADING_1 ? "1F3864" : "2E5C8A" })],
 });
@@ -177,21 +178,19 @@ govde.push(
     "pip install git+https://github.com/DFL-KamLab/sort.git      # not in any extra",
     "git clone --depth 1 https://github.com/ultralytics/yolov5.git %USERPROFILE%\\.pycasa\\yolov5",
   ]),
-  P("Four setup obstacles were encountered and resolved. They are reported here because each one would stop a new user.", { before: 80 }),
+  P("Three setup obstacles were encountered and resolved. They are reported here because each one would stop a new user.", { before: 80 }),
   Tablo(
     ["Obstacle", "Cause", "Resolution"],
     [
       ["Missing scikit-image, scipy, torch", "Only numpy, opencv and tqdm are hard requirements; everything else sits behind extras", "Install the extras explicitly"],
       ["No module named 'sort'", "The SORT tracker is a separate Git package and is not listed in the tracking extra", "Install from the DFL-KamLab/sort repository"],
       ["EOFError on first YOLOv5 run", "pycasa asks interactively whether to clone the yolov5 repository; with no stdin the input() call raises", "Clone the repository manually before the first run"],
-      ["YOLOv5 weights fail to load on some paths", "The TorchScript loader cannot open paths containing non-ASCII characters, which affects any non-English locale", "Point PYCASA_PROJECT_ROOT at an ASCII-only directory"],
     ],
     [30, 38, 32]),
 );
 
 /* --- 3. Steps 1-2 --- */
 govde.push(
-  SayfaSonu(),
   H("3. Data Loading and Ground-Truth Visualization", HeadingLevel.HEADING_1),
   P("A single call fetches and caches a real recording from the group's HSTLI dataset, with calibration metadata already attached."),
   ...Kod(["import pycasa as pc", "self = pc.io.load_default_data()"]),
@@ -208,7 +207,6 @@ govde.push(
 
 /* --- 4. Step 3 --- */
 govde.push(
-  SayfaSonu(),
   H("4. Detection Benchmark", HeadingLevel.HEADING_1),
   P("Three detector families were run on the same clip and scored against ground truth. Matching is by centre distance within 20 pixels, the library default."),
   ...Kod(['self.detection.yolo(yolo_model="yolov5"); self.assessment.evaluate_detections()',
@@ -224,7 +222,6 @@ govde.push(
 
 /* --- 5. Step 4 --- */
 govde.push(
-  SayfaSonu(),
   H("5. The Single Active Model Policy", HeadingLevel.HEADING_1),
   P("pycasa stores exactly one predicted-detection result per session. Running a second detector discards the first and prints a warning. The same rule applies to tracking backends."),
   ...Kod(["Warning: Previous detection result overwritten (yolov5 -> yolo26).",
@@ -240,7 +237,6 @@ govde.push(
 
 /* --- 6. Step 5 --- */
 govde.push(
-  SayfaSonu(),
   H("6. Tracking: SORT against JPDAF", HeadingLevel.HEADING_1),
   P("Both trackers were run on the same ground-truth detections, with no detector active, so the comparison isolates the tracking algorithm itself. JPDAF is the method from Urbano et al. (2017); SORT is the Bewley implementation adapted by the group."),
   ...Kod(["self.tracking.sort()", "self.tracking.jpdaf()   # overwrites the SORT result"]),
@@ -253,7 +249,6 @@ govde.push(
 
 /* --- 7. Step 6 --- */
 govde.push(
-  SayfaSonu(),
   H("7. Kinematic and CASA Parameters", HeadingLevel.HEADING_1),
   P("Two pipelines were taken all the way to population statistics: ground truth with SORT, and YOLO26 detections with SORT. Both were then compared against the real commercial-CASA numbers recorded for this donor in the HSTLI dataset."),
   ...Kod(["self.tracking.sort()", "self.motility.kinematic_parameters()", "self.motility.casa_parameters()"]),
@@ -274,7 +269,6 @@ govde.push(
 
 /* --- 8. Longer clip --- */
 govde.push(
-  SayfaSonu(),
   H("8. Longer-Clip Rerun", HeadingLevel.HEADING_1),
   P("The default session loads 101 of 901 frames, which is 3.4 seconds of a 30-second recording. That is a short window for a tracking problem, and both concentration and total count are derived from a cells-per-frame average, so they depend on how much footage is available. Steps 3, 5 and 6 were therefore repeated on the full clip, " + D.uzun.frames + " frames."),
   P("This turned out to be the most informative part of the work. One conclusion from the 101-frame window survives, one is sharpened beyond recognition, and one is overturned.", { before: 60, bold: true }),
@@ -294,7 +288,6 @@ govde.push(
 
 /* --- 9. API coverage --- */
 govde.push(
-  SayfaSonu(),
   H("9. Full Public-API Coverage", HeadingLevel.HEADING_1),
   P("The six assigned steps exercise roughly half of pycasa. To characterise the rest, every public function was called at least once, with its important parameter variants and with deliberately invalid inputs to check error handling. The suite runs each module group in its own Python process, both to bound memory and to isolate the YOLOv5 contamination described in section 10."),
   ...Kod(["python scripts/step7_full_api_test.py"]),
@@ -307,7 +300,6 @@ govde.push(
 
 /* --- 10. Findings --- */
 govde.push(
-  SayfaSonu(),
   H("10. Defects and Design Issues Found", HeadingLevel.HEADING_1),
   P("Six issues were identified and reproduced. They are ordered by how much they affect the reported results. The first three change numbers; the last three cost time."),
   Tablo(["#", "Issue", "Effect", "Workaround"], D.bulgular, [5, 30, 37, 28]),
@@ -324,7 +316,6 @@ govde.push(
 
 /* --- 11. Summary --- */
 govde.push(
-  SayfaSonu(),
   H("11. Summary", HeadingLevel.HEADING_1),
   P("What the testing established:", { bold: true, after: 60 }),
   Madde("Detection: YOLO26 is the strongest of the three detectors, driven almost entirely by recall. YOLOv5 is better balanced on precision. The classical moving-cells method is usable but noisy and blind to non-moving cells."),
@@ -337,7 +328,7 @@ govde.push(
   Madde("Two silent failures, the no-op kinematic call and the unvalidated overlap parameter, should raise or warn."),
   Madde("Result getters should return copies, or each result should be stored under its own key."),
   Madde("The sort package belongs in the tracking extra, and the interactive clone prompt should handle a closed stdin."),
-  Madde("Loading the video as one contiguous array puts a hard ceiling on clip length. Chunked or memory-mapped loading would remove it."),
+  Madde("The video is loaded as one contiguous array, so the usable clip length is bounded by the largest free memory block rather than by total memory. Chunked or memory-mapped loading would remove that coupling."),
   P("Open question for the group:", { bold: true, before: 140, after: 60 }),
   P(D.acikSoru),
   H("11.1 Reproducing this work", HeadingLevel.HEADING_2),

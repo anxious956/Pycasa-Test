@@ -169,13 +169,13 @@
     ],
     [
       "YOLO26",
-      "23,636",
-      "13,550",
-      "290",
-      "63.56%",
-      "98.79%",
-      "77.35%",
-      "251"
+      "80,271",
+      "42,369",
+      "808",
+      "65.45%",
+      "99.00%",
+      "78.81%",
+      "899"
     ],
     [
       "Moving cells (cv-gmg)",
@@ -224,13 +224,13 @@
       119.86
     ],
     [
-      "pycasa: YOLO26 + SORT (251f)",
-      37.9,
-      22.37,
-      1.37,
-      38.36,
-      79.82,
-      175.6
+      "pycasa: YOLO26 + SORT (899f)",
+      37.84,
+      23.14,
+      0.78,
+      38.24,
+      73.61,
+      161.93
     ]
   ],
   "uzun": {
@@ -238,7 +238,7 @@
     "saniye": 30.0,
     "jpdafKat": 93,
     "jpdafAz": 35,
-    "yorum": "For ground truth with SORT the concentration error did not improve with more footage: 59.52 M/mL on 101 frames and 54.48 M/mL on 899 frames, against the machine's 69 M/mL, a 14 percent and 21 percent gap respectively. The motility grades did move: rapid rose from 49.55 to 56.43 percent and immotile fell from 20.72 to 18.5 percent, both moving away from the reference rather than towards it. Longer tracks let more cells accumulate enough displacement to be graded rapid, which suggests the 101-frame agreement on grades was partly coincidental."
+    "yorum": "This is the overturned conclusion, and the two pipelines move in opposite directions. YOLO26 with SORT was 24 percent above the machine on 101 frames at 85.39 M/mL; on the full clip it lands at 73.61 M/mL against the machine's 69, an error of only 7 percent. Its immotile fraction also settles at 38.24 percent. More footage lets the tracker discard the short spurious tracks that false positives create, so the detector's weakness largely washes out at scale. Ground truth with SORT went the other way: 59.52 M/mL on 101 frames and 54.48 M/mL on the full clip, widening the gap from 14 to 21 percent. Its grades drifted too, with rapid rising from 49.55 to 56.43 percent and immotile falling from 20.72 to 18.5 percent, both away from the reference. Longer tracks give each cell more opportunity to accumulate displacement and be graded rapid, which means the close agreement seen on 101 frames was partly an artefact of the short window."
   },
   "api": {
     "satirlar": [
@@ -341,28 +341,42 @@
   ],
   "y26karsilastirma": [
     [
-      "Isolated, this machine",
+      "101 frames, isolated",
       "9,985",
       "5,806",
       "107",
       "77.15%"
     ],
     [
-      "After YOLOv5, this machine",
+      "101 frames, after YOLOv5",
       "9,985",
       "4,797",
       "107",
       "80.28%"
     ],
     [
-      "Independent run, different machine",
+      "101 frames, different machine",
       "9,982",
       "3,951",
       "110",
       "83.10%"
+    ],
+    [
+      "Full clip, isolated",
+      "80,271",
+      "42,369",
+      "808",
+      "78.81%"
+    ],
+    [
+      "Full clip, different machine",
+      "80,002",
+      "27,806",
+      "1,077",
+      "84.71%"
     ]
   ],
-  "acikSoru": "Ground truth with SORT under-reports concentration by roughly a fifth, and more footage does not close the gap. Since these are the dataset's own annotations, the detector cannot be blamed. Two explanations are worth testing: the commercial machine may count cells the annotation protocol excludes, such as debris-adjacent or partially out-of-focus heads, or the imaged volume implied by um_per_px and chamber depth may not correspond to the volume the machine samples. Resolving this would tell the group whether pycasa's concentration output can be compared to a commercial report at all, or only to itself.",
+  "acikSoru": "The two pipelines diverge, and only one of them behaves the way more data should make it behave. YOLO26 with SORT converges on the machine once the full clip is used, ending within 7 percent on concentration. Ground truth with SORT does the opposite: it under-reports by a fifth and the gap widens with more footage. Since these are the dataset's own annotations, the detector cannot be blamed for it. Two explanations are worth testing. The commercial machine may count cells that the annotation protocol excludes, such as debris-adjacent or partially out-of-focus heads, which would make the ground truth a systematically sparser count than the machine's. Alternatively the imaged volume implied by um_per_px and chamber depth may not match the volume the machine samples, which would be a calibration question rather than an annotation one. Resolving this matters because it decides whether pycasa's concentration output can be compared to a commercial report at all, or only to itself.",
   "komutlar": [
     "import pycasa as pc, copy",
     "self = pc.io.load_default_data()",

@@ -131,34 +131,43 @@ for etiket, k in (("YOLOv5", "yolov5"), ("YOLO26", "yolo26"), ("Moving cells (cv
                               f"{a['precision']:.2f}%", f"{a['recall']:.2f}%", f"{a['F1']:.2f}%",
                               str(v["frames_loaded"])])
 
-# uzun klip yorumu, gercek sayilardan uretilir
+# uzun klip yorumu: iki boru hattinin zit davranisi anlatilir
+def _fark(deger, ref):
+    return abs(deger - ref) / ref * 100
+
+yorum = "Longer-clip results were not available for every pipeline."
 gt_u = d8.get("gt_sort", {}).get("casa")
-yorum = "Longer-clip results were not available for every pipeline on this machine."
-if gt_u and hstli:
-    c101 = d6["gt_sort"]["concentration_M_per_ml"]
-    cU = gt_u["concentration_M_per_ml"]
+y26_u = d8.get("yolo26_sort", {}).get("casa")
+if gt_u and y26_u and hstli:
     ref = hstli["concentration_M_per_ml"]
-    h101 = abs(c101 - ref) / ref * 100
-    hU = abs(cU - ref) / ref * 100
-    yon = "did not improve" if hU >= h101 else "improved"
+    g101, gU = d6["gt_sort"]["concentration_M_per_ml"], gt_u["concentration_M_per_ml"]
+    y101, yU = d6["yolo26_sort"]["concentration_M_per_ml"], y26_u["concentration_M_per_ml"]
     yorum = (
-        f"For ground truth with SORT the concentration error {yon} with more footage: "
-        f"{c101} M/mL on 101 frames and {cU} M/mL on {d8['gt_sort']['frames_loaded']} frames, "
-        f"against the machine's {ref} M/mL, a {h101:.0f} percent and {hU:.0f} percent gap respectively. "
-        "The motility grades did move: rapid rose from "
-        f"{d6['gt_sort']['rapid']} to {gt_u['grades']['rapid']} percent and immotile fell from "
-        f"{d6['gt_sort']['immotile']} to {gt_u['grades']['immotile']} percent, both moving away from the "
-        "reference rather than towards it. Longer tracks let more cells accumulate enough displacement to "
-        "be graded rapid, which suggests the 101-frame agreement on grades was partly coincidental."
+        "This is the overturned conclusion, and the two pipelines move in opposite directions. "
+        f"YOLO26 with SORT was {_fark(y101, ref):.0f} percent above the machine on 101 frames at {y101} M/mL; "
+        f"on the full clip it lands at {yU} M/mL against the machine's {ref}, an error of only "
+        f"{_fark(yU, ref):.0f} percent. Its immotile fraction also settles at {y26_u['grades']['immotile']} percent. "
+        "More footage lets the tracker discard the short spurious tracks that false positives create, so the "
+        "detector's weakness largely washes out at scale. "
+        f"Ground truth with SORT went the other way: {g101} M/mL on 101 frames and {gU} M/mL on the full clip, "
+        f"widening the gap from {_fark(g101, ref):.0f} to {_fark(gU, ref):.0f} percent. Its grades drifted too, "
+        f"with rapid rising from {d6['gt_sort']['rapid']} to {gt_u['grades']['rapid']} percent and immotile "
+        f"falling from {d6['gt_sort']['immotile']} to {gt_u['grades']['immotile']} percent, both away from the "
+        "reference. Longer tracks give each cell more opportunity to accumulate displacement and be graded rapid, "
+        "which means the close agreement seen on 101 frames was partly an artefact of the short window."
     )
 
 acik_soru = (
-    "Ground truth with SORT under-reports concentration by roughly a fifth, and more footage does not close "
-    "the gap. Since these are the dataset's own annotations, the detector cannot be blamed. Two explanations "
-    "are worth testing: the commercial machine may count cells the annotation protocol excludes, such as "
-    "debris-adjacent or partially out-of-focus heads, or the imaged volume implied by um_per_px and chamber "
-    "depth may not correspond to the volume the machine samples. Resolving this would tell the group whether "
-    "pycasa's concentration output can be compared to a commercial report at all, or only to itself."
+    "The two pipelines diverge, and only one of them behaves the way more data should make it behave. "
+    "YOLO26 with SORT converges on the machine once the full clip is used, ending within 7 percent on "
+    "concentration. Ground truth with SORT does the opposite: it under-reports by a fifth and the gap widens "
+    "with more footage. Since these are the dataset's own annotations, the detector cannot be blamed for it. "
+    "Two explanations are worth testing. The commercial machine may count cells that the annotation protocol "
+    "excludes, such as debris-adjacent or partially out-of-focus heads, which would make the ground truth a "
+    "systematically sparser count than the machine's. Alternatively the imaged volume implied by um_per_px and "
+    "chamber depth may not match the volume the machine samples, which would be a calibration question rather "
+    "than an annotation one. Resolving this matters because it decides whether pycasa's concentration output "
+    "can be compared to a commercial report at all, or only to itself."
 )
 
 # ---------------------------------------------------------------- API testi
