@@ -11,17 +11,21 @@ da track başına 30 nokta istiyor. Daha azıyla bu iki grup çalışmaz.
 
 ## 0. Başlangıç
 
-Proje klasöründe, Python'dan önce:
+PowerShell kullan (Windows 11 varsayılanı). Proje klasöründe:
 
 ```bash
-call setup_env.bat
+. .\setup_env.ps1
 ```
 
-Sonra:
+Sonra IPython'u başlat:
 
 ```bash
-ipython
+python -m IPython
 ```
+
+`ipython` komutu doğrudan çalışmıyor, PATH'te değil. `python -m IPython` her zaman çalışır.
+
+cmd kullanıyorsan ortam ayarı için `call setup_env.bat`, gerisi aynı.
 
 ---
 

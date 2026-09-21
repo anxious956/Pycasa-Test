@@ -115,8 +115,11 @@ set PYCASA_DATA=C:\pycasa-data
 ## BÖLÜM 3 — IPython ile adım adım (Atilla'nın önerdiği yol)
 
 ```bash
-ipython
+python -m IPython
 ```
+
+Not: `ipython` komutu tek başına çalışmıyor, Microsoft Store Python'unda Scripts
+klasörü PATH'te olmadığı için `ipython.exe` üretilmiyor. `python -m IPython` her zaman çalışır.
 
 IPython açıldıktan sonra aşağıdakileri **tek tek** yapıştır.
 
