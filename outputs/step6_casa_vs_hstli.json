@@ -1,0 +1,52 @@
+{
+  "HSTLI_reference (HC004, unwashed)": {
+    "source": "HSTLI sys-casa_casaMotilityReports.csv, row sys-casa_sub-HC004, Unwashed Samples",
+    "volume_ml": 2.2,
+    "rapid": 42,
+    "slow": 23,
+    "non_progressive": 9,
+    "immotile": 26,
+    "concentration_M_per_ml": 69,
+    "total_count_M": 151.8
+  },
+  "gt_sort": {
+    "volume_ml": 2.2,
+    "rapid": 49.55,
+    "slow": 27.03,
+    "non_progressive": 2.7,
+    "immotile": 20.72,
+    "percent_motile": 79.28,
+    "concentration_M_per_ml": 59.52,
+    "total_count_M": 130.95,
+    "tracks_classified": 111,
+    "cells_per_frame": 93.02,
+    "diff_vs_hstli": {
+      "rapid": 7.55,
+      "slow": 4.03,
+      "non_progressive": -6.3,
+      "immotile": -5.28,
+      "concentration_M_per_ml": -9.48,
+      "total_count_M": -20.85
+    }
+  },
+  "yolo26_sort": {
+    "volume_ml": 2.2,
+    "rapid": 37.01,
+    "slow": 20.78,
+    "non_progressive": 1.95,
+    "immotile": 40.26,
+    "percent_motile": 59.74,
+    "concentration_M_per_ml": 85.39,
+    "total_count_M": 187.86,
+    "tracks_classified": 154,
+    "cells_per_frame": 133.45,
+    "diff_vs_hstli": {
+      "rapid": -4.99,
+      "slow": -2.22,
+      "non_progressive": -7.05,
+      "immotile": 14.26,
+      "concentration_M_per_ml": 16.39,
+      "total_count_M": 36.06
+    }
+  }
+}

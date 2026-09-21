@@ -21,17 +21,16 @@ def render(session, out_path, show_gt=True, det_source=None, track_source=None,
     N, H, W = video.shape[:3]
     gt = session.get_groundtruth() if show_gt else {}
     det = session.get_detections() if det_source else {}
-    tracks = {}
-    if track_source:
-        tracks = session.get_tracks().get(track_source, {})
-    # tracks -> {track_id: [(frame, x, y), ...]}
+    # tracks: session.get_tracks()[backend][source][track_id] = {frame_index: [x, y]}
     trails = {}
-    for tid, pts in (tracks.items() if isinstance(tracks, dict) else []):
-        for p in pts:
-            p = [float(x) for x in np.asarray(p).ravel()]
-            f, x, y = int(p[0]), p[1], p[2]
-            if max(x, y) <= 1.5: x, y = x*W, y*H
-            trails.setdefault(f, []).append((tid, x, y))
+    if track_source:
+        backend, source = track_source
+        tracks = session.get_tracks().get(backend, {}).get(source, {})
+        for tid, pts in tracks.items():
+            for f, xy in pts.items():
+                x, y = float(xy[0]), float(xy[1])
+                if max(x, y) <= 1.5: x, y = x*W, y*H
+                trails.setdefault(int(f), []).append((tid, x, y))
     frames_out = []
     idx = range(0, N if max_frames is None else min(N, max_frames), stride)
     for i in idx:
@@ -43,18 +42,18 @@ def render(session, out_path, show_gt=True, det_source=None, track_source=None,
         if trails:
             # draw trajectory tails for last 30 frames
             colors = {}
-            for f in range(max(0, i-30), i+1):
+            for f in range(max(0, i-30), i+1):  # son 30 frame'lik iz
                 for tid, x, y in trails.get(f, []):
                     c = colors.setdefault(tid, tuple(int(v) for v in np.random.RandomState(hash(str(tid)) % 2**31).randint(60, 255, 3)))
-                    cv2.circle(img, (int(x), int(y)), 2, c, -1)
+                    cv2.circle(img, (int(x), int(y)), 3, c, -1)
         cv2.putText(img, f"{title} frame {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
         if scale != 1: img = cv2.resize(img, (int(W*scale), int(H*scale)))
         frames_out.append(img)
     if out_path.endswith(".gif"):
         imageio.mimsave(out_path, frames_out, duration=1/30, loop=0)
+        cv2.imwrite(out_path.rsplit(".", 1)[0] + "_frame0.png", cv2.cvtColor(frames_out[0], cv2.COLOR_RGB2BGR))
     else:
         cv2.imwrite(out_path, cv2.cvtColor(frames_out[0], cv2.COLOR_RGB2BGR))
-    cv2.imwrite(out_path.rsplit(".", 1)[0] + "_frame0.png", cv2.cvtColor(frames_out[0], cv2.COLOR_RGB2BGR))
     print("saved", out_path, len(frames_out), "frames")
 
 if __name__ == "__main__":

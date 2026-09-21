@@ -1,0 +1,461 @@
+[93mWarning: No detections found, tracking will only run on GT[0m
+[93mWarning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.[0m
+[93mWarning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.[0m
+[93mWarning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.[0m
+
+######################### gt_sort #########################
+Loaded video summary: frames=101/901, range=0-100, size=1280x1024, fps=30.00
+Groundtruth detections summary: frames_with_labels=900, labels=81179
+[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
+
+Running SORT tracking on frames (sources=groundtruth)...
+SORT summary: sources_processed=['groundtruth'], input_frames=101, output_tracks=141
+- groundtruth: tracks=141, average_track_length=66.63
+Running kinematic parameters on tracks (sources=['groundtruth'])...
+Motility parameter summary (sort:groundtruth)
+- tracks=111, average windows per track=2.55
+- VCL=28.31+/-11.10 um/s, VSL=17.80+/-9.86 um/s
+- VAP=19.64+/-9.69 um/s, LIN=0.58+/-0.24
+- ALH=1.06+/-0.50 um, WOB=0.66+/-0.19
+- STR=0.83+/-0.22, MAD=43.31+/-16.02 deg
+CASA parameters (sort:groundtruth)
+- tracks classified=111 (metric=VCL, rapid>=29, immotile<19 um/s, progressive STR>=0.68)
+- %rapid=49.55+/-4.75, %slow=27.03+/-4.22, %non-progressive=2.7+/-1.54, %immotile=20.72+/-3.85 (%motile=79.28+/-3.85)
+- concentration=59.52+/-0.34 x10^6/mL (cells/frame=93.02)
+- volume=2.2 mL
+- total sperm count=130.95+/-0.76 x10^6
+motility keys: ['kinematic_parameters', 'casa_parameters']
+
+######################### yolo26_sort #########################
+Loaded video summary: frames=101/901, range=0-100, size=1280x1024, fps=30.00
+Groundtruth detections summary: frames_with_labels=900, labels=81179
+Running YOLO26 on frames...
+[93mWarning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.[0m
+[93mWarning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.[0m
+[93mWarning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.[0m
+YOLO26 summary: frames_processed=101, detections_found=15791, confidence p5/p50/p95=0.192/0.866/0.901, mean+/-std=0.750+/-0.230
+[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
+
+Running SORT tracking on frames (sources=yolo26)...
+SORT summary: sources_processed=['yolo26'], input_frames=101, output_tracks=359
+- yolo26: tracks=359, average_track_length=37.54
+Running kinematic parameters on tracks (sources=['yolo26'])...
+Motility parameter summary (sort:yolo26)
+- tracks=154, average windows per track=2.40
+- VCL=22.20+/-14.77 um/s, VSL=14.93+/-10.96 um/s
+- VAP=16.25+/-11.33 um/s, LIN=0.58+/-0.25
+- ALH=0.85+/-0.63 um, WOB=0.67+/-0.19
+- STR=0.82+/-0.22, MAD=38.97+/-14.19 deg
+CASA parameters (sort:yolo26)
+- tracks classified=154 (metric=VCL, rapid>=29, immotile<19 um/s, progressive STR>=0.68)
+- %rapid=37.01+/-3.89, %slow=20.78+/-3.27, %non-progressive=1.95+/-1.11, %immotile=40.26+/-3.95 (%motile=59.74+/-3.95)
+- concentration=85.39+/-0.6 x10^6/mL (cells/frame=133.45)
+- volume=2.2 mL
+- total sperm count=187.86+/-1.31 x10^6
+motility keys: ['kinematic_parameters', 'casa_parameters']
+
+=== RAW MOTILITY DUMP (truncated) ===
+
+--- gt_sort ---
+{
+ "kinematic_parameters": {
+  "groundtruth": {
+   "t2": {
+    "VCL": [
+     17.177661850369866,
+     15.993643262174466,
+     18.65531958250922
+    ],
+    "VSL": [
+     6.25860617644892,
+     7.105062376683736,
+     9.429713324265471
+    ],
+    "VAP": [
+     10.146704894574787,
+     8.793901333111815,
+     11.935969675864362
+    ],
+    "LIN": [
+     0.3643456385954042,
+     0.4442428945184404,
+     0.505470478946206
+    ],
+    "ALH": [
+     0.520348441691109,
+     0.5710636438637515,
+     0.6987512718162269
+    ],
+    "WOB": [
+     0.5906918521833815,
+     0.5498372815348274,
+     0.6398158778826409
+    ],
+    "STR": [
+     0.6168116882748068,
+     0.807953388097605,
+     0.7900249062573632
+    ],
+    "MAD": [
+     72.95140877482379,
+     78.0447495585285,
+     53.63975345976806
+    ],
+    "frame_ranges": [
+     "0-29",
+     "24-53",
+     "48-64 68-80"
+    ]
+   },
+   "t3": {
+    "VCL": [
+     12.065540305968412,
+     9.123743413837262
+    ],
+    "VSL": [
+     1.737192704221711,
+     0.6251337818819955
+    ],
+    "VAP": [
+     4.4201431966582385,
+     1.6735860702367367
+    ],
+    "LIN": [
+     0.14397968596254085,
+     0.06851724709113415
+    ],
+    "ALH": [
+     0.3411955137284614,
+     0.45550348975815264
+    ],
+    "WOB": [
+     0.36634440601650836,
+     0.18343195268934687
+    ],
+    "STR": [
+     0.3930172908278358,
+     0.37352950828132037
+    ],
+    "MAD": [
+     73.23853468889247,
+     77.8640130467219
+    ],
+    "frame_ranges": [
+     "0-2 6-32",
+     "27-32 39 45-60 68-74"
+    ]
+   },
+   "t4": {
+    "VCL": [
+     43.87559940793998,
+     36.44645530413625,
+     32.5883749549345
+    ],
+    "VSL": [
+     20.275916743406068,
+     14.900039315327728,
+     14.90929460465213
+    ],
+    "VAP": [
+     21.39747375616203,
+     22.033635542804845,
+     16.118812121842343
+    ],
+    "LIN": [
+     0.46212284315224245,
+     0.40881998512587164,
+     0.4575034694202995
+    ],
+    "ALH": [
+     2.0593747968791676,
+     1.9638557078647738,
+     1.4358493699733021
+    ],
+    "WOB": [
+     0.4876850469258734,
+     0.6045481065014375,
+     0.4946184688292242
+    ],
+    "STR": [
+     0.9475846062232941,
+     0.6762406179580013,
+     0.924962366454336
+    ],
+    "MAD": [
+     30.27159142224601,
+     36.04053693722516,
+     33.858766030606795
+    ],
+    "frame_ranges": [
+     "0-29",
+     "24-53",
+     "48-77"
+    ]
+   },
+   "t5": {
+    "VCL": [
+     36.440758192736794,
+     29.810296576723037,
+     29.674604553175122
+    ],
+    "VSL": [
+     28.496262383128983,
+     25.412946848836754,
+     25.123248362671095
+    ],
+    "VAP": [
+     30.87186415523665,
+     25.210048310189332,
+     26.156751242886457
+    ],
+    "LIN": [
+     0.7819887344936948,
+     0.8524888970303002,
+     0.846624537747478
+    ],
+    "ALH": [
+     1.2509475897889597,
+     1.0288993783155267,
+     0.7053792602415468
+    ],
+    "WOB": [
+     0.8471795233225936,
+     0.8456825729762869,
+     0.8814523946229887
+    ],
+    "STR": [
+     0.9230496169534127,
+     1.0,
+     0.9604881022639831
+    ],
+    "MAD": [
+     30.269333943192038,
+     27.25559636287561,
+     33.036931630875095
+    ],
+    "frame_ranges": [
+     "0-29",
+     "24-53",
+     "48-66 73-83"
+    ]
+   },
+   "t7": {
+    "VCL": [
+     14.374076687457306,
+     10.786014029920917,
+     14.070610161875912
+    ],
+    "VSL": [
+     1.701897046105837,
+     0.4744346471924603,
+     0.5281849747627563
+    ],
+    "VAP": [
+     5.91548247457744,
+     3.2882825692144833,
+     2.680938664298622
+    ],
+    "LIN": [
+     0.118400442902248
+
+--- yolo26_sort ---
+{
+ "kinematic_parameters": {
+  "yolo26": {
+   "t1": {
+    "VCL": [
+     2.8835398527806273,
+     2.3349895803067042,
+     2.4165385050644717
+    ],
+    "VSL": [
+     0.529440085963342,
+     0.0462662456543472,
+     1.4247551668922258
+    ],
+    "VAP": [
+     1.901909310418227,
+     1.0658360238586246,
+     1.6354197495019824
+    ],
+    "LIN": [
+     0.18360768811736639,
+     0.019814326386959746,
+     0.5895851292691131
+    ],
+    "ALH": [
+     0.10317216530078034,
+     0.1334256705233111,
+     0.1650590319374918
+    ],
+    "WOB": [
+     0.6595744839746869,
+     0.4564628608401009,
+     0.6767613038544777
+    ],
+    "STR": [
+     0.27837293979433697,
+     0.04340840862823386,
+     0.8711862305234432
+    ],
+    "MAD": [
+     47.26084334551023,
+     57.62989695230491,
+     42.18304293647893
+    ],
+    "frame_ranges": [
+     "0-29",
+     "24-53",
+     "48-77"
+    ]
+   },
+   "t2": {
+    "VCL": [
+     31.25566328034493,
+     30.03350693130706,
+     35.333910225027864
+    ],
+    "VSL": [
+     28.633358453480827,
+     26.44993011112391,
+     31.107763460641266
+    ],
+    "VAP": [
+     28.332407646579238,
+     26.9066853072025,
+     31.204364826502417
+    ],
+    "LIN": [
+     0.9161014500526331,
+     0.8806807067726209,
+     0.8803940255275479
+    ],
+    "ALH": [
+     0.8342179758495668,
+     0.8619105030349861,
+     1.3052053740787877
+    ],
+    "WOB": [
+     0.9064727691891928,
+     0.8958888939857654,
+     0.8831279818105048
+    ],
+    "STR": [
+     1.0,
+     0.9830244717673816,
+     0.996904235468395
+    ],
+    "MAD": [
+     26.210044612165248,
+     25.03681662723592,
+     24.08002153561869
+    ],
+    "frame_ranges": [
+     "0-29",
+     "24-53",
+     "48-77"
+    ]
+   },
+   "t3": {
+    "VCL": [
+     28.277417238459194,
+     28.07053123802691,
+     27.5314936089455
+    ],
+    "VSL": [
+     19.476838779761167,
+     20.257405818959214,
+     20.554049238741797
+    ],
+    "VAP": [
+     20.32883653849965,
+     20.981704363857364,
+     20.47329481156606
+    ],
+    "LIN": [
+     0.6887771473439716,
+     0.7216609349920916,
+     0.7465649895602976
+    ],
+    "ALH": [
+     0.9488499334631566,
+     0.7833181874192265,
+     0.8773533359328534
+    ],
+    "WOB": [
+     0.7189071182516296,
+     0.7474637435943366,
+     0.7436318240618047
+    ],
+    "STR": [
+     0.958089202147652,
+     0.9654795181393456,
+     1.0
+    ],
+    "MAD": [
+     39.659241522130614,
+     37.31540493964689,
+     43.1951195648922
+    ],
+    "frame_ranges": [
+     "0-29",
+     "24-53",
+     "48-77"
+    ]
+   },
+   "t4": {
+    "VCL": [
+     1.6098775250159176,
+     1.441215216574413,
+     2.972161192808812
+    ],
+    "VSL": [
+     0.34143577685835136,
+     0.5146812429719666,
+     1.350131604596919
+    ],
+    "VAP": [
+     0.8188142517914933,
+     0.56806079214079,
+     1.6528265431156308
+    ],
+    "LIN": [
+     0.21208804493060762,
+     0.3571161593722963,
+     0.4542592130815725
+    ],
+    "ALH": [
+     0.09063387369056329,
+     0.05901127209240902,
+     0.11204839093738063
+    ],
+    "WOB": [
+     0.508618971982603,
+     0.3941540344619722,
+     0.5561025919841323
+    ],
+    "STR": [
+     0.41698807282765293,
+     0.9060319777260853,
+     0.8168622474151932
+    ],
+    "MAD": [
+     54.77555482226412,
+     47.5444971383469,
+     49.58336437512093
+    ],
+    "frame_ranges": [
+     "0-29",
+     "24-53",
+     "48-77"
+    ]
+   },
+   "t5": {
+    "VCL": [
+     39.894345021488206,
+     44.62903979474964,
+     45.46445350179412
+    ],
+    "VSL": [
+     31.189565373138496,
+     34.6388499979
