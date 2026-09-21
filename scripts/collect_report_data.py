@@ -121,6 +121,16 @@ for etiket, k in (("pycasa: GT + SORT", "gt_sort"), ("pycasa: YOLO26 + SORT", "y
                          g["non_progressive"], g["immotile"],
                          c["concentration_M_per_ml"], c["total_sperm_count_M"]])
 
+# tam klip detection tablosu
+detectionUzun = []
+for etiket, k in (("YOLOv5", "yolov5"), ("YOLO26", "yolo26"), ("Moving cells (cv-gmg)", "moving_cells")):
+    v = d8.get(k)
+    if v and "detection" in v:
+        a = v["detection"]
+        detectionUzun.append([f"{etiket}", f"{a['tp']:,}", f"{a['fp']:,}", f"{a['fn']:,}",
+                              f"{a['precision']:.2f}%", f"{a['recall']:.2f}%", f"{a['F1']:.2f}%",
+                              str(v["frames_loaded"])])
+
 # uzun klip yorumu, gercek sayilardan uretilir
 gt_u = d8.get("gt_sort", {}).get("casa")
 yorum = "Longer-clip results were not available for every pipeline on this machine."
@@ -211,14 +221,16 @@ bulgular = [
      "session.io.load_default_data() has no volume_ml or chamber_depth_um, although the module function does",
      "Use the module function, or the setters afterwards"],
     ["6", "Video is held as one contiguous array",
-     "The full 899-frame clip needs a single 3.3 GB allocation, which caps the usable clip length",
-     "Load a shorter window, or free memory first"],
+     "The full clip needs a single 3.3 GB allocation, so clip length is bounded by the largest free block rather than by total memory",
+     "Close other work, or load a shorter window"],
 ]
 
 y26 = [
-    ["Isolated, this machine", "9,985", "5,806", "107", "77.15%"],
-    ["After YOLOv5, this machine", "9,985", "4,797", "107", "80.28%"],
-    ["Independent run, different machine", "9,982", "3,951", "110", "83.10%"],
+    ["101 frames, isolated", "9,985", "5,806", "107", "77.15%"],
+    ["101 frames, after YOLOv5", "9,985", "4,797", "107", "80.28%"],
+    ["101 frames, different machine", "9,982", "3,951", "110", "83.10%"],
+    ["Full clip, isolated", "80,271", "42,369", "808", "78.81%"],
+    ["Full clip, different machine", "80,002", "27,806", "1,077", "84.71%"],
 ]
 
 komutlar = [
@@ -241,6 +253,7 @@ json.dump({
     "tracking101": tracking101,
     "kinematik101": kinematik101,
     "casa101": casa101,
+    "detectionUzun": detectionUzun,
     "trackingUzun": trackingUzun,
     "casaUzun": casaUzun,
     "uzun": {"frames": UZUN_N, "saniye": round(UZUN_N / 30, 1),
@@ -256,5 +269,6 @@ print("yazildi:", OUT)
 print(f"  detection satiri : {len(detection101)}")
 print(f"  CASA 101 satiri  : {len(casa101)}")
 print(f"  CASA uzun satiri : {len(casaUzun)}")
+print(f"  det uzun satiri  : {len(detectionUzun)}")
 print(f"  API              : {gecen}/{toplam}")
 print(f"  uzun klip        : {UZUN_N} frame")

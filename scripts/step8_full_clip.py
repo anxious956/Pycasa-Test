@@ -46,7 +46,9 @@ def _en_buyuk_yukle():
     # deneyip dusmek, sonraki denemelere yer birakmiyor. Bu yuzden makul bir
     # degerden basliyor ve her basarisizliktan sonra gc.collect() cagiriyoruz.
     hedef = os.environ.get("PYCASA_MAX_FRAMES")
-    sira = [int(hedef)] if hedef else [600, 500, 400, 300, 200]
+    if hedef == "full":   sira = [None, 800, 700, 600, 500]   # tam klip hedefli
+    elif hedef:           sira = [int(hedef)]
+    else:                 sira = [600, 500, 400, 300, 200]
     for ff in sira:
         try:
             s = pc.io.load_default_data(final_frame=ff)

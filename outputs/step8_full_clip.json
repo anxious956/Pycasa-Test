@@ -1,45 +1,90 @@
 {
+  "yolov5": {
+    "frames_loaded": 899,
+    "detection": {
+      "tp": 63128,
+      "fp": 19688,
+      "fn": 17951,
+      "precision": 76.23,
+      "recall": 77.86,
+      "F0.5": 76.55,
+      "F1": 77.03,
+      "F2": 77.53,
+      "evaluated_frames": 899
+    },
+    "frames": "Detection assessment is performed on frames: 0-898"
+  },
+  "yolo26": {
+    "frames_loaded": 899,
+    "detection": {
+      "tp": 80271,
+      "fp": 42369,
+      "fn": 808,
+      "precision": 65.45,
+      "recall": 99.0,
+      "F0.5": 70.21,
+      "F1": 78.81,
+      "F2": 89.8,
+      "evaluated_frames": 899
+    },
+    "frames": "Detection assessment is performed on frames: 0-898"
+  },
+  "moving_cells": {
+    "frames_loaded": 899,
+    "detection": {
+      "tp": 62751,
+      "fp": 52366,
+      "fn": 16302,
+      "precision": 54.51,
+      "recall": 79.38,
+      "F0.5": 58.15,
+      "F1": 64.64,
+      "F2": 72.74,
+      "evaluated_frames": 879
+    },
+    "frames": "Detection assessment is performed on frames: 20-898"
+  },
   "sort": {
-    "frames_loaded": 601,
-    "tracks": 298,
-    "avg_track_length": 168.3
+    "frames_loaded": 899,
+    "tracks": 401,
+    "avg_track_length": 190.88
   },
   "jpdaf": {
-    "frames_loaded": 601,
-    "tracks": 215,
-    "avg_track_length": 293.16
+    "frames_loaded": 899,
+    "tracks": 262,
+    "avg_track_length": 368.96
   },
   "gt_sort": {
-    "frames_loaded": 601,
+    "frames_loaded": 899,
     "casa": {
       "grades": {
-        "rapid": 56.41,
-        "slow": 23.08,
-        "non_progressive": 1.28,
-        "immotile": 19.23
+        "rapid": 56.43,
+        "slow": 23.82,
+        "non_progressive": 1.25,
+        "immotile": 18.5
       },
       "grades_std": {
-        "rapid": 3.24,
-        "slow": 2.75,
-        "non_progressive": 0.74,
-        "immotile": 2.58
+        "rapid": 2.78,
+        "slow": 2.39,
+        "non_progressive": 0.62,
+        "immotile": 2.17
       },
-      "percent_motile": 80.77,
-      "percent_motile_std": 2.58,
+      "percent_motile": 81.5,
+      "percent_motile_std": 2.17,
       "counts": {
-        "rapid": 132,
-        "slow": 54,
-        "non_progressive": 3,
-        "immotile": 45
+        "rapid": 180,
+        "slow": 76,
+        "non_progressive": 4,
+        "immotile": 59
       },
-      "track_count": 234,
-      "cells_per_frame": 83.45,
-      "concentration_M_per_ml": 53.4,
-      "concentration_M_per_ml_std": 0.19,
+      "track_count": 319,
+      "cells_per_frame": 85.14,
+      "concentration_M_per_ml": 54.48,
+      "concentration_M_per_ml_std": 0.16,
       "dilution_factor": 1.0,
       "volume_ml": 2.2,
-      "total_sperm_count_M": 117.47,
-      "total_sperm_count_M_std": 0.41,
+      "total_sperm_count_M": 119.86,
+      "total_sperm_count_M_std": 0.34,
       "velocity_metric": "VCL",
       "thresholds": {
         "rapid": 29.0,
@@ -50,53 +95,113 @@
     },
     "kinematik": {
       "VCL": [
-        24.92,
-        13.82
+        24.46,
+        13.98
       ],
       "VSL": [
-        16.46,
-        11.06
+        16.13,
+        10.9
       ],
       "VAP": [
-        17.78,
-        11.11
+        17.46,
+        11.02
       ],
       "LIN": [
         0.58,
         0.25
       ],
       "ALH": [
-        0.94,
-        0.58
+        0.93,
+        0.6
       ],
       "WOB": [
         0.66,
-        0.2
+        0.19
       ],
       "STR": [
         0.83,
         0.22
       ],
       "MAD": [
-        40.25,
-        15.18
+        39.85,
+        14.98
       ],
-      "track_sayisi": 234
+      "track_sayisi": 319
     }
   },
-  "yolov5": {
-    "frames_loaded": 401,
-    "detection": {
-      "tp": 28301,
-      "fp": 9718,
-      "fn": 8336,
-      "precision": 74.44,
-      "recall": 77.25,
-      "F0.5": 74.98,
-      "F1": 75.82,
-      "F2": 76.67,
-      "evaluated_frames": 401
+  "yolo26_sort": {
+    "frames_loaded": 251,
+    "casa": {
+      "grades": {
+        "rapid": 37.9,
+        "slow": 22.37,
+        "non_progressive": 1.37,
+        "immotile": 38.36
+      },
+      "grades_std": {
+        "rapid": 3.28,
+        "slow": 2.82,
+        "non_progressive": 0.79,
+        "immotile": 3.29
+      },
+      "percent_motile": 61.64,
+      "percent_motile_std": 3.29,
+      "counts": {
+        "rapid": 83,
+        "slow": 49,
+        "non_progressive": 3,
+        "immotile": 84
+      },
+      "track_count": 219,
+      "cells_per_frame": 124.74,
+      "concentration_M_per_ml": 79.82,
+      "concentration_M_per_ml_std": 0.41,
+      "dilution_factor": 1.0,
+      "volume_ml": 2.2,
+      "total_sperm_count_M": 175.6,
+      "total_sperm_count_M_std": 0.9,
+      "velocity_metric": "VCL",
+      "thresholds": {
+        "rapid": 29.0,
+        "immotile": 19.0,
+        "progressive_str": 0.68
+      },
+      "skipped": false
     },
-    "frames": "Detection assessment is performed on frames: 0-400"
+    "kinematik": {
+      "VCL": [
+        21.39,
+        14.71
+      ],
+      "VSL": [
+        14.7,
+        11.34
+      ],
+      "VAP": [
+        15.84,
+        11.58
+      ],
+      "LIN": [
+        0.57,
+        0.26
+      ],
+      "ALH": [
+        0.79,
+        0.59
+      ],
+      "WOB": [
+        0.66,
+        0.2
+      ],
+      "STR": [
+        0.82,
+        0.24
+      ],
+      "MAD": [
+        39.48,
+        14.89
+      ],
+      "track_sayisi": 219
+    }
   }
 }
