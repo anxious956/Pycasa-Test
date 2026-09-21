@@ -79,6 +79,11 @@ Yukarıdaki YOLO26 satırı YOLOv5'ten sonra alındı (14 782 detection). İzole
 TP=9985, FP=5806, FN=107, precision 63.23 %, recall 98.94 %, **F1 77.15 %**. TP/FN aynı, sadece düşük güvenli FP'ler değişiyor
 (conf p5: 0.259 → 0.192). Aynı session'da YOLO26'yı iki kez çalıştırmak ise deterministik (aynı sonuç). Bkz. `scripts/step6_motility.py`
 (izole yolo26 kullanır, 15 791 detection).
+Kök neden araştırması: YOLOv5 reposunu (`~/.pycasa/yolov5`, `models.common`) sadece **import etmek** bile YOLO26 çıktısını
+değiştiriyor (14 782). OpenCV thread sayısı (import sırasında 16→1 oluyor) ve `conf` eşiği eleniyor: thread'i geri alınca yine 14 782,
+`conf=0.05` verince 17 609 (parametre dinleniyor). Yani yolov5 import'u torch/ultralytics tarafında sayısal sonucu etkileyen bir
+global durum bırakıyor. **Çözüm:** YOLOv5 ve YOLO26'yı ayrı Python process'lerinde çalıştırın (ya da YOLO26'yı önce çalıştırın).
+Kütüphane tarafında kalıcı çözüm: YOLOv5 inference'ını subprocess'te izole etmek.
 
 \* Moving-cells yöntemi ilk 20 frame'i arka plan modeli eğitimi için kullanır (`training_frames=20`), bu yüzden 20–100 arası değerlendirilir.
 
