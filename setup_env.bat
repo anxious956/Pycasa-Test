@@ -18,4 +18,4 @@ if not exist "%PYCASA_PROJECT_ROOT%" mkdir "%PYCASA_PROJECT_ROOT%"
 echo PYCASA_DATA         = %PYCASA_DATA%
 echo PYCASA_PROJECT_ROOT = %PYCASA_PROJECT_ROOT%
 echo.
-echo Hazir.  ipython   veya   python scripts\step1_load.py
+echo Hazir.  python -m IPython   veya   python scripts\step1_load.py

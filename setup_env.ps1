@@ -13,4 +13,4 @@ New-Item -ItemType Directory -Force -Path $env:PYCASA_PROJECT_ROOT | Out-Null
 Write-Host "PYCASA_DATA         = $env:PYCASA_DATA"
 Write-Host "PYCASA_PROJECT_ROOT = $env:PYCASA_PROJECT_ROOT"
 Write-Host ""
-Write-Host "Hazir.  ipython   veya   python scripts\step1_load.py"
+Write-Host "Hazir.  python -m IPython   veya   python scripts\step1_load.py"
