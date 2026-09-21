@@ -40,10 +40,13 @@ import pycasa as pc
 
 RESULTS = []
 FRAMES = 20                                         # final_frame -> 21 frame (~82 MiB/session)
-DATA = os.path.expanduser("~/.pycasa_data/sys-casa/rawdata/sub-HC004/ses-01")
+# Veri ve agirliklar proje klasorunun icinde (bkz. setup_env.bat)
+PROJ_ROOT = os.environ.get("PYCASA_PROJECT_ROOT") or os.path.abspath(".")
+PROJ_DATA = os.environ.get("PYCASA_DATA") or os.path.join(PROJ_ROOT, "pycasa_data")
+DATA = os.path.join(PROJ_DATA, "sys-casa/rawdata/sub-HC004/ses-01")
 VIDEO = f"{DATA}/sys-casa_sub-HC004_ses-01_run-005_video.avi"
 GT_DIR = f"{DATA}/sys-casa_sub-HC004_ses-01_run-005_gt"
-W_Y26 = os.path.expanduser("~/.pycasa_data/yolo26-weights/sys-casa_yolo26s.pt")
+W_Y26 = os.path.join(PROJ_ROOT, "yolo26-weights/sys-casa_yolo26s.pt")
 
 
 def run(name, fn, expect_error=None):
@@ -505,6 +508,8 @@ def _driver():
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         SECTION = sys.argv[1]
+        if SECTION in ("motility", "visualization"):
+            FRAMES = 60          # kinematik hesap track basina 30 nokta istiyor
         SECTIONS[SECTION]()
         json.dump(RESULTS, open(f"outputs/_step7_part_{SECTION}.json", "w", encoding="utf-8"),
                   indent=2, ensure_ascii=False)
