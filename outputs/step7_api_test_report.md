@@ -1,6 +1,6 @@
-# pycasa tam API testi: 134 PASS / 6 FAIL / 140 test
+# pycasa tam API testi: 90 PASS / 29 FAIL / 119 test
 
-Her bolum ayri Python process'inde, HC004 default datasi ile calistirildi.
+Her bolum ayri Python process'inde, HC004 default datasinin ilk 21 frame'i ile calistirildi.
 `-> hata beklenir` yazan testlerde PASS, fonksiyonun dogru sekilde hata vermesi demektir.
 
 
@@ -9,7 +9,7 @@ Her bolum ayri Python process'inde, HC004 default datasi ile calistirildi.
 | Test | Sonuc | Sure (s) | Not |
 |---|---|---|---|
 | `io.load_default_data(final_frame=20)` | PASS | 0.3 | frames=21 |
-| `io.load_default_data(um_per_px/volume_ml/chamber_depth_um override)` | PASS | 0.7 | {'um_per_px': 0.5, 'volume_ml': 3.0, 'chamber_depth_um': 10.0} |
+| `io.load_default_data(um_per_px/volume_ml/chamber_depth_um override)` | PASS | 0.6 | {'um_per_px': 0.5, 'volume_ml': 3.0, 'chamber_depth_um': 10.0} |
 | `io.load_default_data(initial_frame=10, final_frame=20)` | PASS | 0.2 | frames=11 |
 | `io.load_default_data(sampling_rate=15)` | PASS | 0.2 | fps=15.0 |
 | `io.load_default_data(magnification='20x')` | PASS | 0.2 | magnification=20x |
@@ -17,7 +17,7 @@ Her bolum ayri Python process'inde, HC004 default datasi ile calistirildi.
 | `session.io.load_default_data() wrapper` | PASS | 0.1 | um_per_px=0.24 |
 | `session.io.load_default_data(volume_ml=...) wrapper/module imza paritesi` | **FAIL** | 0.0 | TypeError: _SessionIONamespace.load_default_data() got an unexpected keyword argument 'volume_ml' |
 | `io.load_video(video, groundtruth_detections_path)` | PASS | 0.2 | frames=21 gt_frames=900 fps=30.0 |
-| `io.load_video(video) GT'siz, sampling_rate=25` | PASS | 0.1 | fps=25.0 |
+| `io.load_video(video) GT'siz, sampling_rate=25` | PASS | 0.0 | fps=25.0 |
 | `io.load_video(groundtruth_tracks_path=GT_DIR) (GT'de track id yok)` | PASS | 0.2 | gt_tracks=1 |
 | `io.load_video(dilution_factor=2)` | PASS | 0.0 | dilution=2.0 |
 | `io.load_video(olmayan dosya) -> hata beklenir` | PASS | 0.0 | beklenen hata: FileNotFoundError: Video file does not exist: C:\nope\x.avi |
@@ -56,66 +56,66 @@ Her bolum ayri Python process'inde, HC004 default datasi ile calistirildi.
 | Test | Sonuc | Sure (s) | Not |
 |---|---|---|---|
 | `preprocessing.grayscale()` | PASS | 0.2 | ['original_video', 'grayscale_video'] |
-| `preprocessing.grayscale(overwrite=True)` | PASS | 0.5 | original_video.shape=(21, 1024, 1280) |
+| `preprocessing.grayscale(overwrite=True)` | PASS | 0.4 | original_video.shape=(21, 1024, 1280) |
 | `preprocessing.binarization.otsu()` | PASS | 0.5 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255] |
 | `preprocessing.binarization.adaptive_gaussian()` | PASS | 0.4 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255] |
-| `preprocessing.binarization.adaptive_mean()` | PASS | 0.3 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255] |
-| `preprocessing.binarization.niblack()` | PASS | 1.0 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255] |
-| `preprocessing.binarization.sauvola()` | PASS | 1.0 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255] |
-| `preprocessing.binarization.urbano()` | PASS | 4.7 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 1] |
-| `binarization.otsu() grayscale yapilmadan (ham renkli video)` | PASS | 0.8 | ['original_video', 'binary_video'] |
+| `preprocessing.binarization.adaptive_mean()` | PASS | 0.4 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255] |
+| `preprocessing.binarization.niblack()` | PASS | 1.5 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255] |
+| `preprocessing.binarization.sauvola()` | PASS | 1.4 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255] |
+| `preprocessing.binarization.urbano()` | PASS | 5.1 | ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 1] |
+| `binarization.otsu() grayscale yapilmadan (ham renkli video)` | PASS | 1.0 | ['original_video', 'binary_video'] |
 | `binarization.adaptive_gaussian(block_size=4 cift) -> hata beklenir` | PASS | 0.0 | beklenen hata: ValueError: `block_size` must be an odd integer >= 3. |
 | `binarization.niblack(window_size=0) -> hata beklenir` | PASS | 0.0 | beklenen hata: ValueError: `window_size` must be >= 3. |
-| `preprocessing.normalization.clahe()` | PASS | 0.1 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
-| `preprocessing.normalization.hist_equal()` | PASS | 1.2 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
-| `preprocessing.normalization.log()` | PASS | 1.2 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
-| `preprocessing.normalization.median()` | PASS | 1.3 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
-| `preprocessing.normalization.min_max()` | PASS | 0.6 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
-| `preprocessing.normalization.z_score()` | PASS | 0.7 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=float32 |
-| `normalization.min_max(overwrite=True)` | PASS | 0.8 | ['original_video', 'normalized_video'] |
-| `zincir: grayscale -> clahe -> otsu` | PASS | 1.2 | ['original_video', 'grayscale_video', 'normalized_video', 'binary_video'] |
+| `preprocessing.normalization.clahe()` | PASS | 0.2 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
+| `preprocessing.normalization.hist_equal()` | PASS | 1.3 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
+| `preprocessing.normalization.log()` | PASS | 1.4 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
+| `preprocessing.normalization.median()` | PASS | 1.4 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
+| `preprocessing.normalization.min_max()` | PASS | 0.7 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8 |
+| `preprocessing.normalization.z_score()` | PASS | 0.9 | ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=float32 |
+| `normalization.min_max(overwrite=True)` | PASS | 0.7 | ['original_video', 'normalized_video'] |
+| `zincir: grayscale -> clahe -> otsu` | PASS | 1.0 | ['original_video', 'grayscale_video', 'normalized_video', 'binary_video'] |
 
-## detection_yolo26 (8/8)
-
-| Test | Sonuc | Sure (s) | Not |
-|---|---|---|---|
-| `detection.yolo() varsayilan (yolo26) + evaluate_detections` | PASS | 5.0 | tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21 |
-| `detection.yolo(weights=<ASCII tam yol>) ozel agirlik` | PASS | 3.3 | tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21 |
-| `detection.yolo(conf=0.5) yuksek esik` | PASS | 2.8 | tp=2068 fp=1141 fn=59 P=64.44 R=97.23 F1=77.51 frames=21 |
-| `detection.yolo(conf=0.01) dusuk esik` | PASS | 3.2 | tp=2120 fp=4024 fn=7 P=34.51 R=99.67 F1=51.26 frames=21 |
-| `detection.yolo(yolo_model='yolo99') -> hata beklenir` | PASS | 0.3 | beklenen hata: ValueError: `yolo_model` must be one of ('yolov5', 'yolo26'), got 'yolo99'. |
-| `detection.yolo(weights='C:/nope.pt') -> hata beklenir` | PASS | 0.2 | beklenen hata: FileNotFoundError: Custom `weights` path was not found: 'C:/nope.pt'. On Windows use a raw string: r'D:\path\to\weights.pt' |
-| `detection.yolo(download=False) managed agirlik cache'de` | PASS | 2.8 | tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21 |
-| `get_detections() satir formati (yolo26, frame 0)` | PASS | 3.2 | [['0', '0.910138', '0.828910', '0.037355', '0.046788'], ['0', '0.556985', '0.449665', '0.036418', '0.045641']] |
-
-## detection_classic (13/14)
+## detection_yolo26 (5/8)
 
 | Test | Sonuc | Sure (s) | Not |
 |---|---|---|---|
-| `detection.detect_moving_cells(method='cv-gmg')` | PASS | 1.6 | tp=0 fp=1 fn=101 P=0.0 R=0.0 F1=0.0 frames=1 |
-| `detection.detect_moving_cells(method='cv-mog')` | PASS | 0.8 | tp=69 fp=16 fn=32 P=81.18 R=68.32 F1=74.19 frames=1 |
-| `detection.detect_moving_cells(method='cv-mog2')` | PASS | 0.6 | tp=90 fp=248 fn=11 P=26.63 R=89.11 F1=41.0 frames=1 |
-| `detection.detect_moving_cells(method='gm')` | PASS | 3.8 | tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1 |
-| `detection.detect_moving_cells(method='gm', low_memory=True)` | PASS | 3.1 | tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1 |
+| `detection.yolo() varsayilan (yolo26) + evaluate_detections` | PASS | 4.5 | tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21 |
+| `detection.yolo(weights=<ASCII tam yol>) ozel agirlik` | PASS | 2.3 | tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21 |
+| `detection.yolo(conf=0.5) yuksek esik` | PASS | 2.0 | tp=2068 fp=1141 fn=59 P=64.44 R=97.23 F1=77.51 frames=21 |
+| `detection.yolo(conf=0.01) dusuk esik` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `detection.yolo(yolo_model='yolo99') -> hata beklenir` | PASS | 0.0 | beklenen hata: MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `detection.yolo(weights='C:/nope.pt') -> hata beklenir` | PASS | 0.0 | beklenen hata: MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `detection.yolo(download=False) managed agirlik cache'de` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `get_detections() satir formati (yolo26, frame 0)` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+
+## detection_classic (11/14)
+
+| Test | Sonuc | Sure (s) | Not |
+|---|---|---|---|
+| `detection.detect_moving_cells(method='cv-gmg')` | PASS | 1.5 | tp=0 fp=1 fn=101 P=0.0 R=0.0 F1=0.0 frames=1 |
+| `detection.detect_moving_cells(method='cv-mog')` | PASS | 0.7 | tp=69 fp=16 fn=32 P=81.18 R=68.32 F1=74.19 frames=1 |
+| `detection.detect_moving_cells(method='cv-mog2')` | PASS | 0.5 | tp=90 fp=248 fn=11 P=26.63 R=89.11 F1=41.0 frames=1 |
+| `detection.detect_moving_cells(method='gm')` | PASS | 3.3 | tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1 |
+| `detection.detect_moving_cells(method='gm', low_memory=True)` | PASS | 2.8 | tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1 |
 | `detection.detect_moving_cells(method='xyz') -> hata beklenir` | PASS | 0.2 | beklenen hata: ValueError: method xyz is invalid. |
-| `detection.digital_washing() n_jobs=1` | PASS | 16.9 | tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1 |
-| `detection.digital_washing(n_jobs=4) paralel` | PASS | 18.1 | tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1 |
-| `detection.digital_washing(motion_threshold=5, blob_min_pixel_area=30)` | PASS | 15.5 | tp=58 fp=3 fn=43 P=95.08 R=57.43 F1=71.6 frames=1 |
+| `detection.digital_washing() n_jobs=1` | PASS | 14.9 | tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1 |
+| `detection.digital_washing(n_jobs=4) paralel` | **FAIL** | 0.3 | MemoryError: Unable to allocate 105. MiB for an array with shape (21, 1024, 1280) and data type float32 |
+| `detection.digital_washing(motion_threshold=5, blob_min_pixel_area=30)` | **FAIL** | 0.3 | MemoryError: Unable to allocate 105. MiB for an array with shape (21, 1024, 1280) and data type float32 |
 | `detection.urbano_detection()` | PASS | 4.9 | tp=1920 fp=589 fn=207 P=76.52 R=90.27 F1=82.83 frames=21 |
-| `detection.urbano_detection(blob_min_pixel_area=10, log_size=7)` | PASS | 4.8 | tp=1813 fp=546 fn=314 P=76.85 R=85.24 F1=80.83 frames=21 |
-| `assessment.evaluate_detections(match_min_distance_pixel=10)` | PASS | 4.9 | {'tp': 1599, 'fp': 910, 'fn': 528, 'precision': np.float64(63.73), 'recall': np.float64(75.18), 'F0.5': np.float64(65.73), 'F1': np.float64(68.98), 'F2': np.float64(72.57), 'evaluated_frames': 21} |
-| `assessment.evaluate_detections() detection YOKKEN -> hata beklenir` | **FAIL** | 0.2 | beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x0000019672E36F90> |
-| `detection overwrite uyarisi (urbano -> moving_cells)` | PASS | 5.9 | detection frame sayisi=1 |
+| `detection.urbano_detection(blob_min_pixel_area=10, log_size=7)` | PASS | 4.7 | tp=1813 fp=546 fn=314 P=76.85 R=85.24 F1=80.83 frames=21 |
+| `assessment.evaluate_detections(match_min_distance_pixel=10)` | PASS | 4.7 | {'tp': 1599, 'fp': 910, 'fn': 528, 'precision': np.float64(63.73), 'recall': np.float64(75.18), 'F0.5': np.float64(65.73), 'F1': np.float64(68.98), 'F2': np.float64(72.57), 'evaluated_frames': 21} |
+| `assessment.evaluate_detections() detection YOKKEN -> hata beklenir` | **FAIL** | 0.2 | beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x0000022A04AE7BF0> |
+| `detection overwrite uyarisi (urbano -> moving_cells)` | PASS | 5.8 | detection frame sayisi=1 |
 
 ## detection_yolov5 (3/3)
 
 | Test | Sonuc | Sure (s) | Not |
 |---|---|---|---|
-| `detection.yolo(yolo_model='yolov5') + evaluate_detections` | PASS | 5.4 | tp=1539 fp=631 fn=588 P=70.92 R=72.36 F1=71.63 frames=21 |
-| `detection.yolo(yolov5, conf=0.4)` | PASS | 2.3 | tp=1413 fp=315 fn=714 P=81.77 R=66.43 F1=73.31 frames=21 |
-| `YOLOv5'ten SONRA yolo26 (sira bagimliligi testi)` | PASS | 3.2 | tp=2101 fp=1025 fn=26 P=67.21 R=98.78 F1=79.99 frames=21 |
+| `detection.yolo(yolo_model='yolov5') + evaluate_detections` | PASS | 6.0 | tp=1539 fp=631 fn=588 P=70.92 R=72.36 F1=71.63 frames=21 |
+| `detection.yolo(yolov5, conf=0.4)` | PASS | 2.1 | tp=1413 fp=315 fn=714 P=81.77 R=66.43 F1=73.31 frames=21 |
+| `YOLOv5'ten SONRA yolo26 (sira bagimliligi testi)` | PASS | 3.0 | tp=2101 fp=1025 fn=26 P=67.21 R=98.78 F1=79.99 frames=21 |
 
-## tracking (18/19)
+## tracking (5/19)
 
 | Test | Sonuc | Sure (s) | Not |
 |---|---|---|---|
@@ -123,68 +123,48 @@ Her bolum ayri Python process'inde, HC004 default datasi ile calistirildi.
 | `tracking.sort(max_age=5, min_hits=1, iou_threshold=0.3)` | PASS | 0.3 | backend=sort groundtruth:168 track |
 | `tracking.sort(initial_frame=10)` | PASS | 0.3 | backend=sort groundtruth:105 track |
 | `tracking.sort(delete_temp=False)` | PASS | 0.3 | backend=sort groundtruth:114 track |
-| `tracking.sort() GT + yolo26 (iki kaynak)` | PASS | 4.9 | backend=sort groundtruth:114 track / yolo26:239 track |
-| `tracking.sort(skip_gt=True) sadece yolo26` | PASS | 2.7 | backend=sort yolo26:239 track |
-| `tracking.sort(skip_gt=True) detection YOKKEN` | PASS | 0.2 | backend=sort  |
-| `tracking.jpdaf() sadece GT` | PASS | 1.4 | backend=jpdaf groundtruth:115 track |
-| `tracking.jpdaf(frame_rate=60, p_delete=0.3, sigma_n_um=1)` | PASS | 1.6 | backend=jpdaf groundtruth:138 track |
-| `tracking.jpdaf(position_gate=5, velocity_gate_um=20, detection_probability=0.9)` | PASS | 11.4 | backend=jpdaf groundtruth:81 track |
-| `tracking.jpdaf(skip_gt=True) yolo26` | PASS | 6.4 | backend=jpdaf yolo26:203 track |
-| `tracking.deepsort() sadece GT` | PASS | 0.7 | backend=deepsort groundtruth:127 track |
-| `tracking.deepsort(max_age=10, n_init=2, max_iou_distance=0.5)` | PASS | 0.8 | backend=deepsort groundtruth:180 track |
-| `tracking overwrite: sort -> jpdaf, get_tracks() tek backend` | PASS | 1.6 | backends=['jpdaf'] |
-| `get_tracks(backend='jpdaf') sort varken` | PASS | 0.3 | {} |
-| `assessment.evaluate_tracks() GT-sort vs yolo26-sort` | PASS | 3.5 | {} |
-| `assessment.evaluate_tracks(match_min_distance_pixel=10, backend='sort')` | PASS | 3.3 | ok |
-| `assessment.evaluate_tracks() tek kaynakla (sadece GT)` | PASS | 0.3 | {} |
-| `assessment.evaluate_tracks() tracking YOKKEN -> hata beklenir` | **FAIL** | 0.2 | beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x000001850690D490> |
+| `tracking.sort() GT + yolo26 (iki kaynak)` | **FAIL** | 4.1 | MemoryError:  |
+| `tracking.sort(skip_gt=True) sadece yolo26` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `tracking.sort(skip_gt=True) detection YOKKEN` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `tracking.jpdaf() sadece GT` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `tracking.jpdaf(frame_rate=60, p_delete=0.3, sigma_n_um=1)` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `tracking.jpdaf(position_gate=5, velocity_gate_um=20, detection_probability=0.9)` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `tracking.jpdaf(skip_gt=True) yolo26` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `tracking.deepsort() sadece GT` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `tracking.deepsort(max_age=10, n_init=2, max_iou_distance=0.5)` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `tracking overwrite: sort -> jpdaf, get_tracks() tek backend` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `get_tracks(backend='jpdaf') sort varken` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `assessment.evaluate_tracks() GT-sort vs yolo26-sort` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `assessment.evaluate_tracks(match_min_distance_pixel=10, backend='sort')` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `assessment.evaluate_tracks() tek kaynakla (sadece GT)` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `assessment.evaluate_tracks() tracking YOKKEN -> hata beklenir` | PASS | 0.0 | beklenen hata: MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
 
-## motility (15/18)
+## motility (11/18)
 
 | Test | Sonuc | Sure (s) | Not |
 |---|---|---|---|
-| `kinematic_parameters() + casa_parameters() [sort/GT]` | PASS | 1.2 | groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101 |
-| `motility [jpdaf/GT]` | PASS | 4.2 | groundtruth: grades={'rapid': 41.51, 'slow': 31.13, 'non_progressive': 2.83, 'immotile': 24.53} motile=75.47 conc=67.76 tracks=106 |
-| `motility [deepsort/GT]` | PASS | 2.3 | groundtruth: grades={'rapid': 44.33, 'slow': 29.9, 'non_progressive': 5.15, 'immotile': 20.62} motile=79.38 conc=63.02 tracks=97 |
-| `motility [sort/GT+yolo26 iki kaynak]` | PASS | 10.0 | groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101 |
+| `kinematic_parameters() + casa_parameters() [sort/GT]` | PASS | 1.7 | groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101 |
+| `motility [jpdaf/GT]` | PASS | 4.5 | groundtruth: grades={'rapid': 41.51, 'slow': 31.13, 'non_progressive': 2.83, 'immotile': 24.53} motile=75.47 conc=67.76 tracks=106 |
+| `motility [deepsort/GT]` | PASS | 2.0 | groundtruth: grades={'rapid': 44.33, 'slow': 29.9, 'non_progressive': 5.15, 'immotile': 20.62} motile=79.38 conc=63.02 tracks=97 |
+| `motility [sort/GT+yolo26 iki kaynak]` | PASS | 9.2 | groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101 |
 | `kinematic_parameters(window_size=15, overlap=0.5, smoothing_window=3, denoise_window=1, min_frame_rate_warn=0)` | PASS | 0.8 | groundtruth: grades={'rapid': 52.29, 'slow': 9.17, 'non_progressive': 29.36, 'immotile': 9.17} motile=90.83 conc=61.21 tracks=109 |
-| `kinematic_parameters(frame_rate=60)` | PASS | 0.8 | groundtruth: grades={'rapid': 80.2, 'slow': 0.0, 'non_progressive': 17.82, 'immotile': 1.98} motile=98.02 conc=61.21 tracks=101 |
+| `kinematic_parameters(frame_rate=60)` | PASS | 0.7 | groundtruth: grades={'rapid': 80.2, 'slow': 0.0, 'non_progressive': 17.82, 'immotile': 1.98} motile=98.02 conc=61.21 tracks=101 |
 | `kinematic_parameters(conversion_required=False) piksel birimi` | PASS | 0.8 | groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101 |
-| `kinematic_parameters(overlap=1.5) gecersiz -> hata beklenir` | **FAIL** | 1.4 | beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x000001FD397712E0> |
-| `casa_parameters(velocity_metric='VAP', rapid=25, immotile=10, progressive_str=0.5)` | PASS | 0.8 | groundtruth: grades={'rapid': 36.63, 'slow': 41.58, 'non_progressive': 0.99, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101 |
-| `casa_parameters(velocity_metric='VSL')` | PASS | 0.8 | groundtruth: grades={'rapid': 12.87, 'slow': 42.57, 'non_progressive': 0.0, 'immotile': 44.55} motile=55.45 conc=61.21 tracks=101 |
-| `casa_parameters(volume_ml=1, chamber_depth_um=10, dilution_factor=2)` | PASS | 0.8 | groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=253.4 tracks=101 |
-| `casa_parameters(experimental_parameters=True, n_subpopulations=2)` | PASS | 0.9 | keys=['grades', 'grades_std', 'percent_motile', 'percent_motile_std', 'counts', 'track_count', 'cells_per_frame', 'concentration_M_per_ml', 'concentration_M_per_ml_std', 'dilution_factor', 'volume_ml' |
-| `casa_parameters(hyperactivation esikleri, experimental)` | PASS | 0.9 | groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101 |
-| `casa_parameters(velocity_metric='XYZ') -> hata beklenir` | PASS | 0.8 | beklenen hata: ValueError: `velocity_metric` must be one of ('VAP', 'VCL', 'VSL'), got 'XYZ'. |
-| `casa_parameters() kinematic YOKKEN -> hata beklenir` | PASS | 0.7 | beklenen hata: RuntimeError: No kinematic parameters found. Run `self.motility.kinematic_parameters()` before `casa_parameters()`. |
-| `kinematic_parameters() tracking YOKKEN -> hata beklenir` | **FAIL** | 0.4 | beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x000001FD5C5DC890> |
-| `kinematic_parameters() um_per_px=None iken` | **FAIL** | 0.4 | ValueError: `um_per_px` is required when conversion is requested. |
-| `get_motility() track basina kinematik anahtarlar` | PASS | 0.9 | ['VCL', 'VSL', 'VAP', 'LIN', 'ALH', 'WOB', 'STR', 'MAD', 'frame_ranges'] |
+| `kinematic_parameters(overlap=1.5) gecersiz -> hata beklenir` | **FAIL** | 1.3 | beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x00000222F8BCBBC0> |
+| `casa_parameters(velocity_metric='VAP', rapid=25, immotile=10, progressive_str=0.5)` | PASS | 0.9 | groundtruth: grades={'rapid': 36.63, 'slow': 41.58, 'non_progressive': 0.99, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101 |
+| `casa_parameters(velocity_metric='VSL')` | **FAIL** | 0.0 | MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8 |
+| `casa_parameters(volume_ml=1, chamber_depth_um=10, dilution_factor=2)` | **FAIL** | 0.0 | MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8 |
+| `casa_parameters(experimental_parameters=True, n_subpopulations=2)` | **FAIL** | 0.0 | MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8 |
+| `casa_parameters(hyperactivation esikleri, experimental)` | **FAIL** | 0.0 | MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8 |
+| `casa_parameters(velocity_metric='XYZ') -> hata beklenir` | PASS | 0.0 | beklenen hata: MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8 |
+| `casa_parameters() kinematic YOKKEN -> hata beklenir` | PASS | 0.0 | beklenen hata: MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8 |
+| `kinematic_parameters() tracking YOKKEN -> hata beklenir` | PASS | 0.0 | beklenen hata: MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8 |
+| `kinematic_parameters() um_per_px=None iken` | **FAIL** | 0.0 | MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8 |
+| `get_motility() track basina kinematik anahtarlar` | **FAIL** | 0.0 | MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8 |
 
-## visualization (22/22)
+## visualization (0/1)
 
 | Test | Sonuc | Sure (s) | Not |
 |---|---|---|---|
-| `visualization.plot_frame('original')` | PASS | 0.1 | png kaydedildi |
-| `visualization.plot_frame(frame_index=5, show_detections=False)` | PASS | 0.1 | png kaydedildi |
-| `visualization.plot_frame('binarized') binarization YOKKEN -> hata beklenir` | PASS | 0.0 | beklenen hata: ValueError: No binarized video found. Run `self.preprocessing.binarization.otsu()` first. |
-| `visualization.plot_frame(frame_index=999) -> hata beklenir` | PASS | 0.0 | beklenen hata: ValueError: `frame_index`=999 is out of range for 61 frame(s). |
-| `visualization.timelapse() varsayilan (GT overlay)` | PASS | 0.2 | png kaydedildi |
-| `visualization.timelapse(image_type='original') eski alias` | PASS | 0.1 | png kaydedildi |
-| `visualization.timelapse('normalized') katman YOKKEN -> hata beklenir` | PASS | 0.0 | beklenen hata: ValueError: `normalized` video is not available in casa['video']. Run the relevant preprocessing step first. |
-| `visualization.plot_frame(['original','grayscale','binarized','normalized'])` | PASS | 0.5 | png kaydedildi |
-| `visualization.plot_frame('grayscale+binarized')` | PASS | 0.3 | png kaydedildi |
-| `visualization.timelapse(tracks+ids+ozel renkler+max_track_gap)` | PASS | 0.8 | png kaydedildi |
-| `visualization.interactive_motility_calculator()` | PASS | 0.9 | png kaydedildi |
-| `visualization.interactive_motility_calculator(frame_rate=60, smoothing_window=3)` | PASS | 0.8 | png kaydedildi |
-| `visualization.plot_frame('moving_cells')` | PASS | 0.2 | png kaydedildi |
-| `visualization.timelapse('moving_cells')` | PASS | 0.2 | png kaydedildi |
-| `visualization.motility_radar() motility YOKKEN -> hata beklenir` | PASS | 0.0 | beklenen hata: RuntimeError: No motility parameters found under 'kinematic_parameters'. Run `self.motility.kinematic_parameters()` first. |
-| `visualization.motility_density_scatter() motility YOKKEN -> hata beklenir` | PASS | 0.0 | beklenen hata: RuntimeError: No motility parameters found under 'kinematic_parameters'. Run `self.motility.kinematic_parameters()` first. |
-| `visualization.interactive_motility_calculator() tracking YOKKEN -> hata beklenir` | PASS | 0.0 | beklenen hata: RuntimeError: No tracks found. Run tracking first, or load imported ground-truth tracks via load_video(groundtruth_tracks_path=...). |
-| `visualization.motility_radar()` | PASS | 0.2 | png kaydedildi |
-| `visualization.motility_radar(show_legend=False, show_text=False)` | PASS | 0.1 | png kaydedildi |
-| `visualization.motility_radar(axis=<verilen polar eksen>)` | PASS | 0.1 | png kaydedildi |
-| `visualization.motility_density_scatter()` | PASS | 0.3 | png kaydedildi |
-| `meta['last_visualization'] yazildi mi` | PASS | 0.0 | {'type': 'motility_density_scatter', 'tracking_backend': 'sort', 'detection_method': 'groundtruth'} |
+| `BOLUM visualization cokti` | **FAIL** | 0 | s\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\utils\_video_helpers.py", line 64, in _convert_video_to_grayscale
+    gray = 0.114 * b + 0 |

@@ -3,7 +3,20 @@
 `scripts/make_report_gifs.py` ve `scripts/make_report_figs.py` ile üretildi.
 Hepsi HC004 default datasının ilk 61 frame'i (0-60) kullanılarak hazırlandı.
 
-## Animasyonlar (GIF, 31 kare)
+## Animasyonlar
+
+Her görsel üç formatta var:
+
+| Format | Ne zaman kullan | Boyut |
+|---|---|---|
+| `.mp4` | **PowerPoint** ve sunumlar. H.264, 896x716, 61 kare | 1.7-3.2 MB |
+| `.gif` | GitHub, markdown, e-posta. 576x460, 31 kare | ~4.5 MB |
+| `.png` | Animasyon koyamadığın yer. Ortadaki kare | ~0.3 MB |
+
+PowerPoint'e MP4 koy, GIF değil. Daha küçük dosya, iki katı kare, daha net görüntü.
+Slayda sürükleyip bırak, sonra Oynatma sekmesinden Otomatik ve Döngü seçeneklerini işaretle.
+
+### İçerikler
 
 | Dosya | İçerik | Rapor bölümü |
 |---|---|---|
@@ -12,9 +25,6 @@ Hepsi HC004 default datasının ilk 61 frame'i (0-60) kullanılarak hazırlandı
 | `03_sort_gt` | Gerçek etiketler üstünde SORT yörüngeleri | Adım 5 |
 | `04_jpdaf_gt` | Gerçek etiketler üstünde JPDAF yörüngeleri | Adım 5 |
 | `05_full` | Hepsi bir arada: iki kutu seti + iki yörünge seti | Adım 6 |
-
-Her GIF'in yanında aynı isimde bir PNG var, ortadaki kareyi içeriyor.
-Rapora animasyon koyamazsan PNG'yi kullan.
 
 ## Durgun grafikler (PNG)
 
