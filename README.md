@@ -70,8 +70,15 @@ Eşleştirme: GT ile merkez mesafesi ≤ 20 px (`match_min_distance_pixel=20`). 
 | Detector | TP | FP | FN | Precision | Recall | F1 | Değerlendirilen frame |
 |---|---|---|---|---|---|---|---|
 | YOLOv5 (sys-casa_yolov5s) | 7716 | 2976 | 2376 | 72.17 % | 76.46 % | **74.25 %** | 101 (0–100) |
-| YOLO26 (sys-casa_yolo26s) | 9985 | 4797 | 107 | 67.55 % | 98.94 % | **80.28 %** | 101 (0–100) |
+| YOLO26 (sys-casa_yolo26s), YOLOv5'ten sonra\*\* | 9985 | 4797 | 107 | 67.55 % | 98.94 % | **80.28 %** | 101 (0–100) |
+| YOLO26 (sys-casa_yolo26s), izole\*\* | 9985 | 5806 | 107 | 63.23 % | 98.94 % | **77.15 %** | 101 (0–100) |
 | Moving cells (cv-gmg) | 6800 | 8069 | 1266 | 45.73 % | 84.30 % | **59.30 %** | 81 (20–100)* |
+
+\*\* **Sıra bağımlılığı (kütüphane sorunu):** YOLO26 aynı process'te önce YOLOv5 çalıştıysa farklı sonuç veriyor.
+Yukarıdaki YOLO26 satırı YOLOv5'ten sonra alındı (14 782 detection). İzole çalıştırınca: 15 791 detection,
+TP=9985, FP=5806, FN=107, precision 63.23 %, recall 98.94 %, **F1 77.15 %**. TP/FN aynı, sadece düşük güvenli FP'ler değişiyor
+(conf p5: 0.259 → 0.192). Aynı session'da YOLO26'yı iki kez çalıştırmak ise deterministik (aynı sonuç). Bkz. `scripts/step6_motility.py`
+(izole yolo26 kullanır, 15 791 detection).
 
 \* Moving-cells yöntemi ilk 20 frame'i arka plan modeli eğitimi için kullanır (`training_frames=20`), bu yüzden 20–100 arası değerlendirilir.
 
