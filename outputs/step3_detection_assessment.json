@@ -1,0 +1,914 @@
+{
+  "yolov5": {
+    "detection": {
+      "tp": 7716,
+      "fp": 2976,
+      "fn": 2376,
+      "precision": 72.17,
+      "recall": 76.46,
+      "F0.5": 72.99,
+      "F1": 74.25,
+      "F2": 75.56,
+      "evaluated_frames": 101
+    },
+    "detection_log": [
+      [
+        "Frame:0, tp:80, fp:33, fn:26"
+      ],
+      [
+        "Frame:1, tp:81, fp:31, fn:25"
+      ],
+      [
+        "Frame:2, tp:78, fp:28, fn:26"
+      ],
+      [
+        "Frame:3, tp:78, fp:32, fn:26"
+      ],
+      [
+        "Frame:4, tp:74, fp:35, fn:24"
+      ],
+      [
+        "Frame:5, tp:76, fp:36, fn:25"
+      ],
+      [
+        "Frame:6, tp:86, fp:25, fn:16"
+      ],
+      [
+        "Frame:7, tp:73, fp:22, fn:29"
+      ],
+      [
+        "Frame:8, tp:79, fp:28, fn:23"
+      ],
+      [
+        "Frame:9, tp:64, fp:37, fn:36"
+      ],
+      [
+        "Frame:10, tp:58, fp:44, fn:43"
+      ],
+      [
+        "Frame:11, tp:72, fp:24, fn:27"
+      ],
+      [
+        "Frame:12, tp:71, fp:31, fn:27"
+      ],
+      [
+        "Frame:13, tp:66, fp:25, fn:31"
+      ],
+      [
+        "Frame:14, tp:66, fp:36, fn:33"
+      ],
+      [
+        "Frame:15, tp:70, fp:30, fn:27"
+      ],
+      [
+        "Frame:16, tp:70, fp:31, fn:32"
+      ],
+      [
+        "Frame:17, tp:66, fp:35, fn:34"
+      ],
+      [
+        "Frame:18, tp:78, fp:18, fn:26"
+      ],
+      [
+        "Frame:19, tp:78, fp:26, fn:26"
+      ],
+      [
+        "Frame:20, tp:75, fp:24, fn:26"
+      ],
+      [
+        "Frame:21, tp:69, fp:25, fn:32"
+      ],
+      [
+        "Frame:22, tp:78, fp:25, fn:24"
+      ],
+      [
+        "Frame:23, tp:86, fp:23, fn:16"
+      ],
+      [
+        "Frame:24, tp:83, fp:18, fn:20"
+      ],
+      [
+        "Frame:25, tp:80, fp:28, fn:26"
+      ],
+      [
+        "Frame:26, tp:90, fp:22, fn:15"
+      ],
+      [
+        "Frame:27, tp:80, fp:25, fn:22"
+      ],
+      [
+        "Frame:28, tp:76, fp:27, fn:26"
+      ],
+      [
+        "Frame:29, tp:72, fp:22, fn:30"
+      ],
+      [
+        "Frame:30, tp:78, fp:29, fn:25"
+      ],
+      [
+        "Frame:31, tp:86, fp:21, fn:18"
+      ],
+      [
+        "Frame:32, tp:84, fp:24, fn:21"
+      ],
+      [
+        "Frame:33, tp:73, fp:33, fn:33"
+      ],
+      [
+        "Frame:34, tp:71, fp:28, fn:30"
+      ],
+      [
+        "Frame:35, tp:67, fp:32, fn:28"
+      ],
+      [
+        "Frame:36, tp:83, fp:30, fn:18"
+      ],
+      [
+        "Frame:37, tp:84, fp:30, fn:9"
+      ],
+      [
+        "Frame:38, tp:70, fp:37, fn:35"
+      ],
+      [
+        "Frame:39, tp:82, fp:17, fn:23"
+      ],
+      [
+        "Frame:40, tp:79, fp:21, fn:25"
+      ],
+      [
+        "Frame:41, tp:81, fp:23, fn:23"
+      ],
+      [
+        "Frame:42, tp:76, fp:32, fn:28"
+      ],
+      [
+        "Frame:43, tp:83, fp:23, fn:22"
+      ],
+      [
+        "Frame:44, tp:85, fp:22, fn:13"
+      ],
+      [
+        "Frame:45, tp:78, fp:14, fn:31"
+      ],
+      [
+        "Frame:46, tp:70, fp:29, fn:34"
+      ],
+      [
+        "Frame:47, tp:76, fp:32, fn:28"
+      ],
+      [
+        "Frame:48, tp:75, fp:32, fn:30"
+      ],
+      [
+        "Frame:49, tp:71, fp:47, fn:28"
+      ],
+      [
+        "Frame:50, tp:82, fp:32, fn:20"
+      ],
+      [
+        "Frame:51, tp:79, fp:31, fn:23"
+      ],
+      [
+        "Frame:52, tp:69, fp:30, fn:28"
+      ],
+      [
+        "Frame:53, tp:77, fp:28, fn:24"
+      ],
+      [
+        "Frame:54, tp:80, fp:32, fn:23"
+      ],
+      [
+        "Frame:55, tp:80, fp:30, fn:22"
+      ],
+      [
+        "Frame:56, tp:72, fp:29, fn:31"
+      ],
+      [
+        "Frame:57, tp:82, fp:21, fn:19"
+      ],
+      [
+        "Frame:58, tp:76, fp:29, fn:25"
+      ],
+      [
+        "Frame:59, tp:76, fp:29, fn:25"
+      ],
+      [
+        "Frame:60, tp:69, fp:33, fn:31"
+      ],
+      [
+        "Frame:61, tp:86, fp:26, fn:16"
+      ],
+      [
+        "Frame:62, tp:86, fp:23, fn:16"
+      ],
+      [
+        "Frame:63, tp:82, fp:26, fn:20"
+      ],
+      [
+        "Frame:64, tp:88, fp:25, fn:12"
+      ],
+      [
+        "Frame:65, tp:83, fp:29, fn:17"
+      ],
+      [
+        "Frame:66, tp:78, fp:24, fn:28"
+      ],
+      [
+        "Frame:67, tp:68, fp:36, fn:32"
+      ],
+      [
+        "Frame:68, tp:77, fp:29, fn:23"
+      ],
+      [
+        "Frame:69, tp:80, fp:26, fn:18"
+      ],
+      [
+        "Frame:70, tp:73, fp:30, fn:23"
+      ],
+      [
+        "Frame:71, tp:82, fp:30, fn:17"
+      ],
+      [
+        "Frame:72, tp:77, fp:33, fn:21"
+      ],
+      [
+        "Frame:73, tp:71, fp:36, fn:27"
+      ],
+      [
+        "Frame:74, tp:63, fp:43, fn:36"
+      ],
+      [
+        "Frame:75, tp:84, fp:29, fn:15"
+      ],
+      [
+        "Frame:76, tp:86, fp:27, fn:10"
+      ],
+      [
+        "Frame:77, tp:78, fp:29, fn:17"
+      ],
+      [
+        "Frame:78, tp:76, fp:28, fn:20"
+      ],
+      [
+        "Frame:79, tp:78, fp:38, fn:21"
+      ],
+      [
+        "Frame:80, tp:79, fp:26, fn:17"
+      ],
+      [
+        "Frame:81, tp:73, fp:34, fn:22"
+      ],
+      [
+        "Frame:82, tp:84, fp:26, fn:14"
+      ],
+      [
+        "Frame:83, tp:74, fp:33, fn:24"
+      ],
+      [
+        "Frame:84, tp:76, fp:26, fn:20"
+      ],
+      [
+        "Frame:85, tp:78, fp:30, fn:18"
+      ],
+      [
+        "Frame:86, tp:81, fp:32, fn:12"
+      ],
+      [
+        "Frame:87, tp:81, fp:34, fn:17"
+      ],
+      [
+        "Frame:88, tp:77, fp:33, fn:17"
+      ],
+      [
+        "Frame:89, tp:75, fp:34, fn:19"
+      ],
+      [
+        "Frame:90, tp:70, fp:35, fn:22"
+      ],
+      [
+        "Frame:91, tp:66, fp:37, fn:27"
+      ],
+      [
+        "Frame:92, tp:67, fp:40, fn:25"
+      ],
+      [
+        "Frame:93, tp:83, fp:35, fn:13"
+      ],
+      [
+        "Frame:94, tp:81, fp:33, fn:16"
+      ],
+      [
+        "Frame:95, tp:74, fp:30, fn:19"
+      ],
+      [
+        "Frame:96, tp:71, fp:33, fn:21"
+      ],
+      [
+        "Frame:97, tp:80, fp:31, fn:12"
+      ],
+      [
+        "Frame:98, tp:71, fp:32, fn:22"
+      ],
+      [
+        "Frame:99, tp:65, fp:34, fn:31"
+      ],
+      [
+        "Frame:100, tp:67, fp:35, fn:27"
+      ]
+    ],
+    "last_detection": {
+      "detection_method": "yolov5",
+      "match_min_distance_pixel": 20.0,
+      "evaluated_frames": 101,
+      "frame_summary": "Detection assessment is performed on frames: 0-100"
+    }
+  },
+  "yolo26": {
+    "detection": {
+      "tp": 9985,
+      "fp": 4797,
+      "fn": 107,
+      "precision": 67.55,
+      "recall": 98.94,
+      "F0.5": 72.13,
+      "F1": 80.28,
+      "F2": 90.53,
+      "evaluated_frames": 101
+    },
+    "detection_log": [
+      [
+        "Frame:0, tp:106, fp:46, fn:0"
+      ],
+      [
+        "Frame:1, tp:104, fp:46, fn:2"
+      ],
+      [
+        "Frame:2, tp:103, fp:48, fn:1"
+      ],
+      [
+        "Frame:3, tp:103, fp:50, fn:1"
+      ],
+      [
+        "Frame:4, tp:98, fp:52, fn:0"
+      ],
+      [
+        "Frame:5, tp:100, fp:51, fn:1"
+      ],
+      [
+        "Frame:6, tp:101, fp:47, fn:1"
+      ],
+      [
+        "Frame:7, tp:100, fp:50, fn:2"
+      ],
+      [
+        "Frame:8, tp:102, fp:50, fn:0"
+      ],
+      [
+        "Frame:9, tp:97, fp:52, fn:3"
+      ],
+      [
+        "Frame:10, tp:100, fp:49, fn:1"
+      ],
+      [
+        "Frame:11, tp:97, fp:49, fn:2"
+      ],
+      [
+        "Frame:12, tp:96, fp:48, fn:2"
+      ],
+      [
+        "Frame:13, tp:96, fp:52, fn:1"
+      ],
+      [
+        "Frame:14, tp:98, fp:49, fn:1"
+      ],
+      [
+        "Frame:15, tp:95, fp:55, fn:2"
+      ],
+      [
+        "Frame:16, tp:99, fp:52, fn:3"
+      ],
+      [
+        "Frame:17, tp:99, fp:47, fn:1"
+      ],
+      [
+        "Frame:18, tp:103, fp:44, fn:1"
+      ],
+      [
+        "Frame:19, tp:104, fp:41, fn:0"
+      ],
+      [
+        "Frame:20, tp:100, fp:47, fn:1"
+      ],
+      [
+        "Frame:21, tp:100, fp:45, fn:1"
+      ],
+      [
+        "Frame:22, tp:99, fp:48, fn:3"
+      ],
+      [
+        "Frame:23, tp:100, fp:41, fn:2"
+      ],
+      [
+        "Frame:24, tp:102, fp:38, fn:1"
+      ],
+      [
+        "Frame:25, tp:104, fp:36, fn:2"
+      ],
+      [
+        "Frame:26, tp:104, fp:37, fn:1"
+      ],
+      [
+        "Frame:27, tp:101, fp:39, fn:1"
+      ],
+      [
+        "Frame:28, tp:101, fp:43, fn:1"
+      ],
+      [
+        "Frame:29, tp:101, fp:43, fn:1"
+      ],
+      [
+        "Frame:30, tp:101, fp:47, fn:2"
+      ],
+      [
+        "Frame:31, tp:103, fp:39, fn:1"
+      ],
+      [
+        "Frame:32, tp:104, fp:39, fn:1"
+      ],
+      [
+        "Frame:33, tp:106, fp:44, fn:0"
+      ],
+      [
+        "Frame:34, tp:101, fp:44, fn:0"
+      ],
+      [
+        "Frame:35, tp:94, fp:48, fn:1"
+      ],
+      [
+        "Frame:36, tp:98, fp:45, fn:3"
+      ],
+      [
+        "Frame:37, tp:92, fp:54, fn:1"
+      ],
+      [
+        "Frame:38, tp:101, fp:44, fn:4"
+      ],
+      [
+        "Frame:39, tp:103, fp:44, fn:2"
+      ],
+      [
+        "Frame:40, tp:104, fp:40, fn:0"
+      ],
+      [
+        "Frame:41, tp:102, fp:43, fn:2"
+      ],
+      [
+        "Frame:42, tp:103, fp:40, fn:1"
+      ],
+      [
+        "Frame:43, tp:104, fp:45, fn:1"
+      ],
+      [
+        "Frame:44, tp:95, fp:50, fn:3"
+      ],
+      [
+        "Frame:45, tp:108, fp:44, fn:1"
+      ],
+      [
+        "Frame:46, tp:103, fp:47, fn:1"
+      ],
+      [
+        "Frame:47, tp:103, fp:44, fn:1"
+      ],
+      [
+        "Frame:48, tp:102, fp:45, fn:3"
+      ],
+      [
+        "Frame:49, tp:98, fp:54, fn:1"
+      ],
+      [
+        "Frame:50, tp:100, fp:42, fn:2"
+      ],
+      [
+        "Frame:51, tp:101, fp:46, fn:1"
+      ],
+      [
+        "Frame:52, tp:96, fp:50, fn:1"
+      ],
+      [
+        "Frame:53, tp:99, fp:49, fn:2"
+      ],
+      [
+        "Frame:54, tp:101, fp:41, fn:2"
+      ],
+      [
+        "Frame:55, tp:101, fp:46, fn:1"
+      ],
+      [
+        "Frame:56, tp:101, fp:41, fn:2"
+      ],
+      [
+        "Frame:57, tp:100, fp:48, fn:1"
+      ],
+      [
+        "Frame:58, tp:101, fp:47, fn:0"
+      ],
+      [
+        "Frame:59, tp:101, fp:49, fn:0"
+      ],
+      [
+        "Frame:60, tp:99, fp:47, fn:1"
+      ],
+      [
+        "Frame:61, tp:101, fp:43, fn:1"
+      ],
+      [
+        "Frame:62, tp:98, fp:46, fn:4"
+      ],
+      [
+        "Frame:63, tp:102, fp:47, fn:0"
+      ],
+      [
+        "Frame:64, tp:100, fp:50, fn:0"
+      ],
+      [
+        "Frame:65, tp:100, fp:54, fn:0"
+      ],
+      [
+        "Frame:66, tp:106, fp:39, fn:0"
+      ],
+      [
+        "Frame:67, tp:100, fp:45, fn:0"
+      ],
+      [
+        "Frame:68, tp:100, fp:44, fn:0"
+      ],
+      [
+        "Frame:69, tp:98, fp:52, fn:0"
+      ],
+      [
+        "Frame:70, tp:95, fp:54, fn:1"
+      ],
+      [
+        "Frame:71, tp:99, fp:46, fn:0"
+      ],
+      [
+        "Frame:72, tp:98, fp:54, fn:0"
+      ],
+      [
+        "Frame:73, tp:98, fp:48, fn:0"
+      ],
+      [
+        "Frame:74, tp:99, fp:48, fn:0"
+      ],
+      [
+        "Frame:75, tp:98, fp:52, fn:1"
+      ],
+      [
+        "Frame:76, tp:96, fp:48, fn:0"
+      ],
+      [
+        "Frame:77, tp:95, fp:48, fn:0"
+      ],
+      [
+        "Frame:78, tp:95, fp:54, fn:1"
+      ],
+      [
+        "Frame:79, tp:98, fp:47, fn:1"
+      ],
+      [
+        "Frame:80, tp:96, fp:52, fn:0"
+      ],
+      [
+        "Frame:81, tp:93, fp:50, fn:2"
+      ],
+      [
+        "Frame:82, tp:97, fp:47, fn:1"
+      ],
+      [
+        "Frame:83, tp:97, fp:52, fn:1"
+      ],
+      [
+        "Frame:84, tp:96, fp:49, fn:0"
+      ],
+      [
+        "Frame:85, tp:93, fp:55, fn:3"
+      ],
+      [
+        "Frame:86, tp:93, fp:57, fn:0"
+      ],
+      [
+        "Frame:87, tp:98, fp:52, fn:0"
+      ],
+      [
+        "Frame:88, tp:93, fp:50, fn:1"
+      ],
+      [
+        "Frame:89, tp:92, fp:49, fn:2"
+      ],
+      [
+        "Frame:90, tp:91, fp:54, fn:1"
+      ],
+      [
+        "Frame:91, tp:93, fp:54, fn:0"
+      ],
+      [
+        "Frame:92, tp:92, fp:57, fn:0"
+      ],
+      [
+        "Frame:93, tp:95, fp:45, fn:1"
+      ],
+      [
+        "Frame:94, tp:97, fp:43, fn:0"
+      ],
+      [
+        "Frame:95, tp:90, fp:55, fn:3"
+      ],
+      [
+        "Frame:96, tp:90, fp:54, fn:2"
+      ],
+      [
+        "Frame:97, tp:92, fp:53, fn:0"
+      ],
+      [
+        "Frame:98, tp:93, fp:49, fn:0"
+      ],
+      [
+        "Frame:99, tp:96, fp:51, fn:0"
+      ],
+      [
+        "Frame:100, tp:94, fp:49, fn:0"
+      ]
+    ],
+    "last_detection": {
+      "detection_method": "yolo26",
+      "match_min_distance_pixel": 20.0,
+      "evaluated_frames": 101,
+      "frame_summary": "Detection assessment is performed on frames: 0-100"
+    }
+  },
+  "moving_cells": {
+    "detection": {
+      "tp": 6800,
+      "fp": 8069,
+      "fn": 1266,
+      "precision": 45.73,
+      "recall": 84.3,
+      "F0.5": 50.34,
+      "F1": 59.3,
+      "F2": 72.14,
+      "evaluated_frames": 81
+    },
+    "detection_log": [
+      [
+        "Frame:20, tp:0, fp:1, fn:101"
+      ],
+      [
+        "Frame:21, tp:80, fp:128, fn:21"
+      ],
+      [
+        "Frame:22, tp:77, fp:157, fn:25"
+      ],
+      [
+        "Frame:23, tp:75, fp:163, fn:27"
+      ],
+      [
+        "Frame:24, tp:70, fp:166, fn:33"
+      ],
+      [
+        "Frame:25, tp:68, fp:183, fn:38"
+      ],
+      [
+        "Frame:26, tp:75, fp:155, fn:30"
+      ],
+      [
+        "Frame:27, tp:78, fp:177, fn:24"
+      ],
+      [
+        "Frame:28, tp:88, fp:159, fn:14"
+      ],
+      [
+        "Frame:29, tp:86, fp:161, fn:16"
+      ],
+      [
+        "Frame:30, tp:85, fp:162, fn:18"
+      ],
+      [
+        "Frame:31, tp:91, fp:159, fn:13"
+      ],
+      [
+        "Frame:32, tp:90, fp:140, fn:15"
+      ],
+      [
+        "Frame:33, tp:94, fp:118, fn:12"
+      ],
+      [
+        "Frame:34, tp:84, fp:136, fn:17"
+      ],
+      [
+        "Frame:35, tp:86, fp:127, fn:9"
+      ],
+      [
+        "Frame:36, tp:86, fp:115, fn:15"
+      ],
+      [
+        "Frame:37, tp:81, fp:103, fn:12"
+      ],
+      [
+        "Frame:38, tp:92, fp:90, fn:13"
+      ],
+      [
+        "Frame:39, tp:87, fp:93, fn:18"
+      ],
+      [
+        "Frame:40, tp:87, fp:97, fn:17"
+      ],
+      [
+        "Frame:41, tp:89, fp:103, fn:15"
+      ],
+      [
+        "Frame:42, tp:84, fp:96, fn:20"
+      ],
+      [
+        "Frame:43, tp:92, fp:103, fn:13"
+      ],
+      [
+        "Frame:44, tp:84, fp:106, fn:14"
+      ],
+      [
+        "Frame:45, tp:83, fp:109, fn:26"
+      ],
+      [
+        "Frame:46, tp:88, fp:111, fn:16"
+      ],
+      [
+        "Frame:47, tp:91, fp:100, fn:13"
+      ],
+      [
+        "Frame:48, tp:90, fp:98, fn:15"
+      ],
+      [
+        "Frame:49, tp:85, fp:96, fn:14"
+      ],
+      [
+        "Frame:50, tp:89, fp:92, fn:13"
+      ],
+      [
+        "Frame:51, tp:91, fp:98, fn:11"
+      ],
+      [
+        "Frame:52, tp:83, fp:104, fn:14"
+      ],
+      [
+        "Frame:53, tp:83, fp:97, fn:18"
+      ],
+      [
+        "Frame:54, tp:94, fp:89, fn:9"
+      ],
+      [
+        "Frame:55, tp:92, fp:93, fn:10"
+      ],
+      [
+        "Frame:56, tp:93, fp:97, fn:10"
+      ],
+      [
+        "Frame:57, tp:88, fp:110, fn:13"
+      ],
+      [
+        "Frame:58, tp:85, fp:108, fn:16"
+      ],
+      [
+        "Frame:59, tp:87, fp:93, fn:14"
+      ],
+      [
+        "Frame:60, tp:86, fp:94, fn:14"
+      ],
+      [
+        "Frame:61, tp:86, fp:84, fn:16"
+      ],
+      [
+        "Frame:62, tp:91, fp:92, fn:11"
+      ],
+      [
+        "Frame:63, tp:87, fp:96, fn:15"
+      ],
+      [
+        "Frame:64, tp:86, fp:87, fn:14"
+      ],
+      [
+        "Frame:65, tp:88, fp:79, fn:12"
+      ],
+      [
+        "Frame:66, tp:86, fp:80, fn:20"
+      ],
+      [
+        "Frame:67, tp:87, fp:83, fn:13"
+      ],
+      [
+        "Frame:68, tp:85, fp:76, fn:15"
+      ],
+      [
+        "Frame:69, tp:86, fp:69, fn:12"
+      ],
+      [
+        "Frame:70, tp:87, fp:88, fn:9"
+      ],
+      [
+        "Frame:71, tp:89, fp:80, fn:10"
+      ],
+      [
+        "Frame:72, tp:89, fp:89, fn:9"
+      ],
+      [
+        "Frame:73, tp:84, fp:77, fn:14"
+      ],
+      [
+        "Frame:74, tp:85, fp:81, fn:14"
+      ],
+      [
+        "Frame:75, tp:83, fp:80, fn:16"
+      ],
+      [
+        "Frame:76, tp:85, fp:79, fn:11"
+      ],
+      [
+        "Frame:77, tp:87, fp:89, fn:8"
+      ],
+      [
+        "Frame:78, tp:82, fp:87, fn:14"
+      ],
+      [
+        "Frame:79, tp:86, fp:91, fn:13"
+      ],
+      [
+        "Frame:80, tp:86, fp:78, fn:10"
+      ],
+      [
+        "Frame:81, tp:84, fp:82, fn:11"
+      ],
+      [
+        "Frame:82, tp:84, fp:82, fn:14"
+      ],
+      [
+        "Frame:83, tp:83, fp:84, fn:15"
+      ],
+      [
+        "Frame:84, tp:81, fp:87, fn:15"
+      ],
+      [
+        "Frame:85, tp:76, fp:71, fn:20"
+      ],
+      [
+        "Frame:86, tp:82, fp:75, fn:11"
+      ],
+      [
+        "Frame:87, tp:86, fp:85, fn:12"
+      ],
+      [
+        "Frame:88, tp:79, fp:74, fn:15"
+      ],
+      [
+        "Frame:89, tp:78, fp:85, fn:16"
+      ],
+      [
+        "Frame:90, tp:79, fp:85, fn:13"
+      ],
+      [
+        "Frame:91, tp:82, fp:77, fn:11"
+      ],
+      [
+        "Frame:92, tp:77, fp:76, fn:15"
+      ],
+      [
+        "Frame:93, tp:86, fp:85, fn:10"
+      ],
+      [
+        "Frame:94, tp:86, fp:78, fn:11"
+      ],
+      [
+        "Frame:95, tp:85, fp:77, fn:8"
+      ],
+      [
+        "Frame:96, tp:88, fp:92, fn:4"
+      ],
+      [
+        "Frame:97, tp:86, fp:81, fn:6"
+      ],
+      [
+        "Frame:98, tp:85, fp:86, fn:8"
+      ],
+      [
+        "Frame:99, tp:86, fp:83, fn:10"
+      ],
+      [
+        "Frame:100, tp:85, fp:72, fn:9"
+      ]
+    ],
+    "last_detection": {
+      "detection_method": "moving_cells",
+      "match_min_distance_pixel": 20.0,
+      "evaluated_frames": 81,
+      "frame_summary": "Detection assessment is performed on frames: 20-100"
+    }
+  }
+}
