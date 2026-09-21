@@ -53,28 +53,62 @@ python -c "import pycasa, sort, skimage, torch, ultralytics, motmetrics; print('
 
 ---
 
-## BÖLÜM 2 — Türkçe klasör sorunu (ÖNEMLİ)
+## BÖLÜM 2 — Klasör yapısı ve ortam ayarı (ÖNEMLİ)
 
-YOLO ağırlıkları çalıştığın klasöre iniyor. Klasör yolunda Türkçe karakter varsa
-(`Masaüstü` gibi) `torch.jit.load` dosyayı açamıyor ve YOLOv5 çöküyor.
+Veri ve ağırlıklar şöyle duruyor:
 
-Her terminal oturumunda, Python'u başlatmadan ÖNCE:
+| Ne | Nerede | Boyut | Neden |
+|---|---|---|---|
+| HC004 veri seti | `PYCASA TRY\pycasa_data\` | 1.2 GB | Proje klasörünün içinde |
+| YOLO ağırlıkları | `C:\pycasa-weights\` | 67 MB | Proje klasöründe duramıyor, aşağıya bak |
+| yolov5 reposu | `%USERPROFILE%\.pycasa\yolov5` | 4 MB | pycasa buraya bakıyor |
+
+### Ağırlıklar neden proje klasöründe olamıyor
+
+Klasör yolunda Türkçe karakter var (`Masaüstü`). YOLOv5'in kullandığı
+`torch.jit.load` Türkçe karakterli yoldan dosya açamıyor, `errno 2` veriyor.
+Junction ve `subst` sürücüsü denendi, ikisi de işe yaramıyor: pycasa yolu
+`.resolve()` ile gerçek Türkçe yola geri çeviriyor.
+
+Türkçe yoldan sorunsuz çalışanlar: veri yükleme, YOLO26, moving-cells,
+digital washing, urbano, tüm tracking, motility ve görselleştirme.
+Tek istisna YOLOv5.
+
+Hepsini tek klasörde toplamak istersen projeyi Türkçe karakter içermeyen bir
+yola taşı (örneğin `C:\pycasa-try`), sonra `PYCASA_PROJECT_ROOT`'u oraya ayarla.
+
+### Ortam ayarı
+
+Her terminal oturumunda, Python'u başlatmadan önce proje klasöründe:
 
 ```bash
-set PYCASA_PROJECT_ROOT=C:\Users\<KULLANICI>\.pycasa_data
+call setup_env.bat
 ```
 
-Kalıcı yapmak istersen (yeni terminal açman gerekir):
+PowerShell kullanıyorsan:
 
 ```bash
-setx PYCASA_PROJECT_ROOT C:\Users\<KULLANICI>\.pycasa_data
+. .\setup_env.ps1
 ```
 
-Doğrulama:
+Bu iki değişkeni ayarlar: `PYCASA_DATA` veri setini, `PYCASA_PROJECT_ROOT`
+ağırlıkları gösterir. Doğrulama:
 
 ```bash
-echo %PYCASA_PROJECT_ROOT%
+echo %PYCASA_DATA% & echo %PYCASA_PROJECT_ROOT%
 ```
+
+### OneDrive uyarısı
+
+Veri seti OneDrive klasörünün içinde, yani 1.2 GB buluta senkronlanacak.
+İstemiyorsan OneDrive ayarlarından `pycasa_data` klasörünü senkronizasyon dışı
+bırak, ya da veriyi başka yere taşıyıp değişkeni oraya çevir:
+
+```bash
+set PYCASA_DATA=C:\pycasa-data
+```
+
+`pycasa_data`, ağırlıklar ve `.cache` zaten `.gitignore` içinde, GitHub'a gitmiyor.
 
 ---
 
@@ -310,7 +344,7 @@ curl -L -o hstli_reports.csv "https://huggingface.co/datasets/DFL-KamLab/HSTLI_A
 
 ## BÖLÜM 4 — Hazır scriptleri çalıştırma
 
-Her biri tek komutla çalışır. Önce `set PYCASA_PROJECT_ROOT=...` yapmayı unutma.
+Her biri tek komutla çalışır. Önce `call setup_env.bat` yapmayı unutma.
 
 ```bash
 python scripts/step1_load.py
@@ -358,7 +392,7 @@ Bölüm isimleri: `io`, `casa`, `preprocessing`, `detection_yolo26`, `detection_
 |---|---|---|
 | `No module named 'skimage'` | Eksik bağımlılık | Bölüm 1.3'teki pip komutu |
 | `No module named 'sort'` | SORT ayrı paket | Bölüm 1.4 |
-| `open file failed ... errno 2` (yolov5) | Türkçe karakterli yol | Bölüm 2, `PYCASA_PROJECT_ROOT` |
+| `open file failed ... errno 2` (yolov5) | Türkçe karakterli yol | `call setup_env.bat`, ağırlıklar `C:pycasa-weights` içinde olmalı |
 | `EOFError: EOF when reading a line` | YOLOv5 repo klon sorusu, stdin yok | Bölüm 1.5, repoyu elle klonla |
 | `PytorchStreamReader failed locating constants.pkl` | Ağırlık dosyası bozuk/yanlış yol | `PYCASA_PROJECT_ROOT`'u ayarla, ağırlıkları sil ve tekrar indir |
 | `MemoryError: Unable to allocate 191 MiB` | Çok fazla session/`copy()` | `final_frame` ile frame sayısını düşür, session'ları `del` et |

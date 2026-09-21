@@ -1,0 +1,268 @@
+﻿
+============================== BOLUM: io ==============================
+
+>>> io.load_default_data(final_frame=20)
+    PASS 0.3s frames=21
+
+>>> io.load_default_data(um_per_px/volume_ml/chamber_depth_um override)
+    PASS 0.7s {'um_per_px': 0.5, 'volume_ml': 3.0, 'chamber_depth_um': 10.0}
+
+>>> io.load_default_data(initial_frame=10, final_frame=20)
+    PASS 0.2s frames=11
+
+>>> io.load_default_data(sampling_rate=15)
+    PASS 0.2s fps=15.0
+
+>>> io.load_default_data(magnification='20x')
+    PASS 0.2s magnification=20x
+
+>>> io.load_default_data(download=False) cache'den
+    PASS 0.2s frames=21
+
+>>> session.io.load_default_data() wrapper
+    PASS 0.1s um_per_px=0.24
+
+>>> session.io.load_default_data(volume_ml=...) wrapper/module imza paritesi
+    FAIL TypeError: _SessionIONamespace.load_default_data() got an unexpected keyword argument 'volume_ml'
+
+>>> io.load_video(video, groundtruth_detections_path)
+    PASS 0.2s frames=21 gt_frames=900 fps=30.0
+
+>>> io.load_video(video) GT'siz, sampling_rate=25
+    PASS 0.1s fps=25.0
+
+>>> io.load_video(groundtruth_tracks_path=GT_DIR) (GT'de track id yok)
+    PASS 0.2s gt_tracks=1
+
+>>> io.load_video(dilution_factor=2)
+    PASS 0.0s dilution=2.0
+
+>>> io.load_video(olmayan dosya) -> hata beklenir
+    PASS (beklenen hata) FileNotFoundError: Video file does not exist: C:\nope\x.avi
+
+>>> session.io.load_video() wrapper
+    PASS 0.0s frames=6
+
+============================== BOLUM: casa ==============================
+
+>>> Casa.info()
+Casa Info
+
+[session]
+- video_path: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data\sys-casa\rawdata\sub-HC004\ses-01\sys-casa_sub-HC004_ses-01_run-005_video.avi
+- groundtruth_detections_path: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data\sys-casa\rawdata\sub-HC004\ses-01\sys-casa_sub-HC004_ses-01_run-005_gt
+- groundtruth_tracks_path: None
+
+[video specifications]
+- total number of frames: 901 frames
+- total video duration: 30.03 sec
+- width: 1280 px
+- height: 1024 px
+- um per px: 0.24 um/px
+- magnification: None
+- sampling rate: 30.0 fps
+
+- number of processed frames: 21 frames
+- processed video duration: 0.70 sec
+- initial frame: 0
+- final frame: 20
+
+[videos]
+- original: present=True shape=(21, 1024, 1280, 3) dtype=uint8
+- grayscale: present=False shape=None dtype=None
+- normalized: present=False shape=None dtype=None
+- binarized: present=False shape=None dtype=None
+- moving_cells: present=False shape=None dtype=None
+
+[methods]
+- detection: ['groundtruth']
+- tracking: []
+- motility: []
+- assessment: []
+
+[tracking]
+- tracking: none
+
+[motility]
+- Kinematic Parameters
+- none
+
+[casa_parameters]
+- CASA Parameters (WHO motility grades)
+- none
+
+[assessment]
+- detection: none
+- tracking: none
+
+[last performed operations]
+- last_preprocessing: None
+- last_tracking: None
+- last_motility: None
+- last_assessment: None
+    PASS 0.0s ekrana basildi
+
+>>> Casa.copy() bagimsiz kopya mi
+    PASS 0.1s yeni nesne=True, meta ayni=True
+
+>>> set_um_per_px(0.3)
+    PASS 0.2s 0.3
+
+>>> set_volume_ml(1.5)
+    PASS 0.2s 1.5
+
+>>> set_chamber_depth_um(10)
+    PASS 0.2s 10.0
+
+>>> set_dilution_factor(2)
+    PASS 0.2s 2.0
+
+>>> set_um_per_px(-1) -> ValueError beklenir
+    PASS (beklenen hata) ValueError: `um_per_px` must be > 0.
+
+>>> set_volume_ml('abc') -> TypeError beklenir
+    PASS (beklenen hata) TypeError: `volume_ml` must be a numeric value.
+
+>>> set_chamber_depth_um(0) -> hata beklenir
+    PASS (beklenen hata) ValueError: `chamber_depth_um` must be > 0.
+
+>>> set_dilution_factor(-5) -> hata beklenir
+    PASS (beklenen hata) ValueError: `dilution_factor` must be > 0.
+
+>>> get_casa() keys
+    PASS 0.0s ['meta', 'video', 'detections', 'tracks', 'motility', 'assessment']
+
+>>> get_meta() keys
+    PASS 0.0s ['chamber_depth_um', 'duration_sec', 'height', 'magnification', 'sampling_rate', 'total_duration_sec', 'total_number_frame', 'um_per_px', 'video_path', 'volume_ml', 'width']
+
+>>> get_video() keys
+    PASS 0.0s ['path', 'initial_frame', 'final_frame', 'number_frame_used', 'original_video']
+
+>>> get_groundtruth() frame sayisi
+    PASS 0.0s 900
+
+>>> get_groundtruth_tracks() (bos olmali)
+    PASS 0.0s {}
+
+>>> get_detections() (bos)
+    PASS 0.0s {}
+
+>>> get_detections(include_groundtruth=True)
+    PASS 0.0s ['groundtruth', 'groundtruth_detections_path']
+
+>>> get_tracks() (bos)
+    PASS 0.0s {}
+
+>>> get_tracks(backend='sort') tracking yokken
+    PASS 0.0s {}
+
+>>> get_motility() (bos)
+    PASS 0.0s {}
+
+>>> get_assessment() (bos)
+    PASS 0.0s {}
+
+>>> get_assesment() (yazim hatali alias)
+    PASS 0.0s {}
+
+>>> get_assessment() canli referans mi (mutasyon testi)
+    PASS 0.0s session'a sizdi=True
+
+============================== BOLUM: preprocessing ==============================
+
+>>> preprocessing.grayscale()
+Running preprocessing grayscale on frames...
+Grayscale summary: frames=21, shape=(21, 1024, 1280), dtype=uint8, overwrite=False
+    PASS 0.2s ['original_video', 'grayscale_video']
+
+>>> preprocessing.grayscale(overwrite=True)
+Running preprocessing grayscale on frames...
+Grayscale summary: frames=21, shape=(21, 1024, 1280), dtype=uint8, overwrite=True
+    PASS 0.5s original_video.shape=(21, 1024, 1280)
+
+>>> preprocessing.binarization.otsu()
+Running binarization otsu on frames...
+Binarization summary: method=otsu, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 0.5s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.adaptive_gaussian()
+Running binarization adaptive-gaussian on frames (block_size=15, c=3.000)...
+Binarization summary: method=adaptive-gaussian, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 0.4s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.adaptive_mean()
+Running binarization adaptive-mean on frames (block_size=11, c=2.000)...
+Binarization summary: method=adaptive-mean, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 0.3s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.niblack()
+Running binarization niblack on frames (window_size=21, k=-0.200)...
+Binarization summary: method=niblack, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 1.0s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.sauvola()
+Running binarization sauvola on frames (window_size=25, k=0.200, r=128.000)...
+Binarization summary: method=sauvola, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 1.0s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.urbano()
+Running binarization urbano on frames...
+Binarization summary: method=urbano, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 4.7s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 1]
+
+>>> binarization.otsu() grayscale yapilmadan (ham renkli video)
+Running binarization otsu on frames...
+Binarization summary: method=otsu, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 0.8s ['original_video', 'binary_video']
+
+>>> binarization.adaptive_gaussian(block_size=4 cift) -> hata beklenir
+    PASS (beklenen hata) ValueError: `block_size` must be an odd integer >= 3.
+
+>>> binarization.niblack(window_size=0) -> hata beklenir
+    PASS (beklenen hata) ValueError: `window_size` must be >= 3.
+
+>>> preprocessing.normalization.clahe()
+Running normalization clahe on frames (overwrite=False, clip_limit=3.000, tile_grid_size=(4, 4))...
+Normalization summary: method=clahe, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 0.1s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.hist_equal()
+Running normalization hist-equal on frames (overwrite=False)...
+Normalization summary: method=hist-equal, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 1.2s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.log()
+Running normalization log on frames (overwrite=False)...
+Normalization summary: method=log, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 1.2s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.median()
+Running normalization median on frames (overwrite=False)...
+Normalization summary: method=median, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 1.3s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.min_max()
+Running normalization min-max on frames (overwrite=False)...
+Normalization summary: method=min-max, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 0.6s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.z_score()
+Running normalization z-score on frames (overwrite=False)...
+Normalization summary: method=z-score, frames=21, shape=(21, 1024, 1280, 3), dtype=float32, overwrite=False
+    PASS 0.7s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=float32
+
+>>> normalization.min_max(overwrite=True)
+Running normalization min-max on frames (overwrite=True)...
+Normalization summary: method=min-max, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=True
+    PASS 0.8s ['original_video', 'normalized_video']
+
+>>> zincir: grayscale -> clahe -> otsu
+Running preprocessing grayscale on frames...
+Grayscale summary: frames=21, shape=(21, 1024, 1280), dtype=uint8, overwrite=False
+Running normalization clahe on frames (overwrite=False, clip_limit=2.000, tile_grid_size=(8, 8))...
+Normalization summary: method=clahe, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+Running binarization otsu on frames...
+Binarization summary: method=otsu, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 1.2s ['original_video', 'grayscale_video', 'normalized_video', 'binary_video']
+
+============================== BOLUM: detection_yolo26 ==============================
