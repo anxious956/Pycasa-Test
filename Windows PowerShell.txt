@@ -1,0 +1,1859 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Users\Esmer> git clone --depth 1 https://github.com/ultralytics/yolov5.git C:\Users\Esmer\.pycasa\yolov5
+fatal: destination path 'C:\Users\Esmer\.pycasa\yolov5' already exists and is not an empty directory.
+PS C:\Users\Esmer> cd "C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY"
+PS C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY> . .\setup_env.ps1
+PYCASA_DATA         = C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data
+PYCASA_PROJECT_ROOT = C:\pycasa-weights
+
+Hazir.  python -m IPython   veya   python scripts\step1_load.py
+PS C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY> python -m IPython
+Python 3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 9.12.0 -- An enhanced Interactive Python. Type '?' for help.
+Tip: IPython 9.0+ has hooks to integrate AI/LLM completions.
+
+In [1]: import pycasa as pc, copy, numpy as np
+   ...: self = pc.io.load_default_data()
+Resolving default data under 'C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data'...
+Default data cache is ready: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data
+Loading default session video and groundtruth: sys-casa_sub-HC004_ses-01_run-005_video.avi
+um_per_px automatically set to 0.24.
+volume_ml automatically set to 2.2.
+chamber_depth_um automatically set to 20.7.
+Loading video frames from 'sys-casa_sub-HC004_ses-01_run-005_video.avi'...
+Loading video: 100%|######################################################################################################################################################| 101/101 [00:00<00:00, 248.76frame/s]
+Loaded video summary: frames=101/901, range=0-100, size=1280x1024, fps=30.00
+Groundtruth detections summary: frames_with_labels=900, labels=81179
+
+In [2]: s = pc.io.load_default_data(final_frame=60)
+   ...: print(s.get_video()["number_frame_used"])
+Resolving default data under 'C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data'...
+Default data cache is ready: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data
+Loading default session video and groundtruth: sys-casa_sub-HC004_ses-01_run-005_video.avi
+um_per_px automatically set to 0.24.
+volume_ml automatically set to 2.2.
+chamber_depth_um automatically set to 20.7.
+Loading video frames from 'sys-casa_sub-HC004_ses-01_run-005_video.avi'...
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 263.57frame/s]
+Loaded video summary: frames=61/901, range=0-60, size=1280x1024, fps=30.00
+Groundtruth detections summary: frames_with_labels=900, labels=81179
+61
+
+In [3]: s2 = pc.io.load_default_data(initial_frame=10, final_frame=20, verbose=False)
+   ...: print(s2.get_video()["number_frame_used"])
+Loading video: 100%|########################################################################################################################################################| 11/11 [00:00<00:00, 245.31frame/s]
+11
+
+In [4]: s3 = pc.io.load_default_data(final_frame=5, um_per_px=0.5, volume_ml=3, chamber_depth_um=10, verbose=False)
+   ...: print({k: s3.get_meta()[k] for k in ("um_per_px","volume_ml","chamber_depth_um")})
+Loading video: 100%|##########################################################################################################################################################| 6/6 [00:00<00:00, 200.60frame/s]
+{'um_per_px': 0.5, 'volume_ml': 3.0, 'chamber_depth_um': 10.0}
+
+In [5]: s4 = pc.io.load_default_data(final_frame=5, sampling_rate=15, magnification="20x", verbose=False)
+   ...: print(s4.get_meta()["sampling_rate"], s4.get_meta()["magnification"])
+Loading video: 100%|##########################################################################################################################################################| 6/6 [00:00<00:00, 218.90frame/s]
+15.0 20x
+
+In [6]: import os
+   ...: DATA = os.path.join(os.environ["PYCASA_DATA"], "sys-casa/rawdata/sub-HC004/ses-01")
+   ...: VIDEO = f"{DATA}/sys-casa_sub-HC004_ses-01_run-005_video.avi"
+   ...: GT = f"{DATA}/sys-casa_sub-HC004_ses-01_run-005_gt"
+   ...: v = pc.io.load_video(VIDEO, groundtruth_detections_path=GT, final_frame=60,
+   ...:                      um_per_px=0.24, volume_ml=2.2, chamber_depth_um=20.7, verbose=False)
+   ...: print(v.get_video()["number_frame_used"], "frame,", len(v.get_groundtruth()), "GT frame")
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 218.71frame/s]
+61 frame, 900 GT frame
+
+In [7]: try:
+   ...:     pc.io.load_video("C:/yok/x.avi", verbose=False)
+   ...: except Exception as e:
+   ...:     print(type(e).__name__, e)
+   ...:
+FileNotFoundError Video file does not exist: C:\yok\x.avi
+
+In [8]: try:
+   ...:     pc.Casa().io.load_default_data(final_frame=5, volume_ml=2.2, verbose=False)
+   ...: except TypeError as e:
+   ...:     print("BULGU:", e)
+   ...:
+BULGU: _SessionIONamespace.load_default_data() got an unexpected keyword argument 'volume_ml'
+
+In [9]: self = pc.io.load_default_data(final_frame=60)
+   ...: self.info()
+Resolving default data under 'C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data'...
+Default data cache is ready: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data
+Loading default session video and groundtruth: sys-casa_sub-HC004_ses-01_run-005_video.avi
+um_per_px automatically set to 0.24.
+volume_ml automatically set to 2.2.
+chamber_depth_um automatically set to 20.7.
+Loading video frames from 'sys-casa_sub-HC004_ses-01_run-005_video.avi'...
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 224.30frame/s]
+Loaded video summary: frames=61/901, range=0-60, size=1280x1024, fps=30.00
+Groundtruth detections summary: frames_with_labels=900, labels=81179
+Casa Info
+
+[session]
+- video_path: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data\sys-casa\rawdata\sub-HC004\ses-01\sys-casa_sub-HC004_ses-01_run-005_video.avi
+- groundtruth_detections_path: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data\sys-casa\rawdata\sub-HC004\ses-01\sys-casa_sub-HC004_ses-01_run-005_gt
+- groundtruth_tracks_path: None
+
+[video specifications]
+- total number of frames: 901 frames
+- total video duration: 30.03 sec
+- width: 1280 px
+- height: 1024 px
+- um per px: 0.24 um/px
+- magnification: None
+- sampling rate: 30.0 fps
+
+- number of processed frames: 61 frames
+- processed video duration: 2.03 sec
+- initial frame: 0
+- final frame: 60
+
+[videos]
+- original: present=True shape=(61, 1024, 1280, 3) dtype=uint8
+- grayscale: present=False shape=None dtype=None
+- normalized: present=False shape=None dtype=None
+- binarized: present=False shape=None dtype=None
+- moving_cells: present=False shape=None dtype=None
+
+[methods]
+- detection: ['groundtruth']
+- tracking: []
+- motility: []
+- assessment: []
+
+[tracking]
+- tracking: none
+
+[motility]
+- Kinematic Parameters
+- none
+
+[casa_parameters]
+- CASA Parameters (WHO motility grades)
+- none
+
+[assessment]
+- detection: none
+- tracking: none
+
+[last performed operations]
+- last_preprocessing: None
+- last_tracking: None
+- last_motility: None
+- last_assessment: None
+Out[9]: <pycasa.casa.casa.Casa at 0x173d80b79b0>
+
+In [10]: print(list(self.get_casa().keys()))
+    ...: print(sorted(self.get_meta().keys()))
+    ...: print(list(self.get_video().keys()))
+['meta', 'video', 'detections', 'tracks', 'motility', 'assessment']
+['chamber_depth_um', 'duration_sec', 'height', 'magnification', 'sampling_rate', 'total_duration_sec', 'total_number_frame', 'um_per_px', 'video_path', 'volume_ml', 'width']
+['path', 'initial_frame', 'final_frame', 'number_frame_used', 'original_video']
+
+In [11]: print("GT frame:", len(self.get_groundtruth()))
+    ...: print("GT track:", self.get_groundtruth_tracks())
+    ...: print("detection:", self.get_detections())
+    ...: print("track:", self.get_tracks())
+    ...: print("motility:", self.get_motility())
+    ...: print("assessment:", self.get_assessment())
+GT frame: 900
+GT track: {}
+detection: {}
+track: {}
+motility: {}
+assessment: {}
+
+In [12]: c = self.copy()
+    ...: print("yeni nesne:", c is not self)
+    ...: print(self.set_um_per_px(0.3).get_meta()["um_per_px"])
+    ...: print(self.set_volume_ml(1.5).get_meta()["volume_ml"])
+    ...: print(self.set_chamber_depth_um(10).get_meta()["chamber_depth_um"])
+    ...: print(self.set_dilution_factor(2).get_meta()["dilution_factor"])
+yeni nesne: True
+0.3
+1.5
+10.0
+2.0
+
+In [13]: for f, v in [(self.set_um_per_px, -1), (self.set_volume_ml, "abc"), (self.set_chamber_depth_um, 0)]:
+    ...:     try: f(v)
+    ...:     except Exception as e: print(type(e).__name__, ":", e)
+    ...:
+ValueError : `um_per_px` must be > 0.
+TypeError : `volume_ml` must be a numeric value.
+ValueError : `chamber_depth_um` must be > 0.
+
+In [14]: self = pc.io.load_default_data(final_frame=60)
+Resolving default data under 'C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data'...
+Default data cache is ready: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data
+Loading default session video and groundtruth: sys-casa_sub-HC004_ses-01_run-005_video.avi
+um_per_px automatically set to 0.24.
+volume_ml automatically set to 2.2.
+chamber_depth_um automatically set to 20.7.
+Loading video frames from 'sys-casa_sub-HC004_ses-01_run-005_video.avi'...
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 233.95frame/s]
+Loaded video summary: frames=61/901, range=0-60, size=1280x1024, fps=30.00
+Groundtruth detections summary: frames_with_labels=900, labels=81179
+
+In [15]: p = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...: p.preprocessing.grayscale()
+    ...: print([k for k in p.get_video() if k.endswith("video")])
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 240.37frame/s]
+Running preprocessing grayscale on frames...
+Preprocessing grayscale: 100%|##############################################################################################################################################| 61/61 [00:00<00:00, 109.07frame/s]
+Grayscale summary: frames=61, shape=(61, 1024, 1280), dtype=uint8, overwrite=False
+['original_video', 'grayscale_video']
+
+In [16]: o = pc.io.load_default_data(final_frame=10, verbose=False)
+    ...: o.preprocessing.grayscale(overwrite=True)
+    ...: print(np.asarray(o.get_video()["original_video"]).shape)
+Loading video: 100%|########################################################################################################################################################| 11/11 [00:00<00:00, 243.61frame/s]
+Running preprocessing grayscale on frames...
+Preprocessing grayscale: 100%|##############################################################################################################################################| 11/11 [00:00<00:00, 106.54frame/s]
+Grayscale summary: frames=11, shape=(11, 1024, 1280), dtype=uint8, overwrite=True
+(11, 1024, 1280)
+
+In [17]: for m in ["otsu", "adaptive_gaussian", "adaptive_mean", "niblack", "sauvola", "urbano"]:
+    ...:     getattr(p.preprocessing.binarization, m)()
+    ...:     b = np.asarray(p.get_video()["binary_video"])
+    ...:     print(f"{m:20s} dtype={b.dtype} degerler={np.unique(b[0])[:3]}")
+    ...:
+Running binarization otsu on frames...
+Binarization otsu: 100%|####################################################################################################################################################| 61/61 [00:00<00:00, 114.58frame/s]
+Binarization summary: method=otsu, frames=61, shape=(61, 1024, 1280), dtype=uint8
+otsu                 dtype=uint8 degerler=[  0 255]
+Running binarization adaptive-gaussian on frames (block_size=11, c=2.000)...
+Binarization adaptive-gaussian: 100%|#######################################################################################################################################| 61/61 [00:00<00:00, 321.60frame/s]
+Binarization summary: method=adaptive-gaussian, frames=61, shape=(61, 1024, 1280), dtype=uint8
+adaptive_gaussian    dtype=uint8 degerler=[  0 255]
+Running binarization adaptive-mean on frames (block_size=11, c=2.000)...
+Binarization adaptive-mean: 100%|###########################################################################################################################################| 61/61 [00:00<00:00, 604.71frame/s]
+Binarization summary: method=adaptive-mean, frames=61, shape=(61, 1024, 1280), dtype=uint8
+adaptive_mean        dtype=uint8 degerler=[  0 255]
+Running binarization niblack on frames (window_size=25, k=-0.200)...
+Binarization niblack: 100%|##################################################################################################################################################| 61/61 [00:02<00:00, 26.90frame/s]
+Binarization summary: method=niblack, frames=61, shape=(61, 1024, 1280), dtype=uint8
+niblack              dtype=uint8 degerler=[  0 255]
+Running binarization sauvola on frames (window_size=25, k=0.200, r=128.000)...
+Binarization sauvola: 100%|##################################################################################################################################################| 61/61 [00:02<00:00, 22.38frame/s]
+Binarization summary: method=sauvola, frames=61, shape=(61, 1024, 1280), dtype=uint8
+sauvola              dtype=uint8 degerler=[  0 255]
+Running binarization urbano on frames...
+Binarization urbano:   0%|------------------------------------------------------------------------------------------------------------------------------------------------------------| 0/61 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\preprocessing\binarization\_urbano.py:46: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  binary = binary_erosion(binary, diamond(2))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\preprocessing\binarization\_urbano.py:49: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  binary = binary_dilation(binary, diamond(1))
+Binarization urbano: 100%|###################################################################################################################################################| 61/61 [00:11<00:00,  5.15frame/s]
+Binarization summary: method=urbano, frames=61, shape=(61, 1024, 1280), dtype=uint8
+urbano               dtype=uint8 degerler=[0 1]
+
+In [18]: try:
+    ...:     p.preprocessing.binarization.adaptive_gaussian(block_size=4)
+    ...: except Exception as e:
+    ...:     print(type(e).__name__, ":", e)
+    ...:
+ValueError : `block_size` must be an odd integer >= 3.
+
+In [19]: for m in ["clahe", "hist_equal", "log", "median", "min_max", "z_score"]:
+    ...:     getattr(p.preprocessing.normalization, m)()
+    ...:     n = np.asarray(p.get_video()["normalized_video"])
+    ...:     print(f"{m:12s} dtype={n.dtype} min={n.min():.2f} max={n.max():.2f}")
+    ...:
+Running normalization clahe on frames (overwrite=False, clip_limit=2.000, tile_grid_size=(8, 8))...
+Normalization clahe: 100%|##################################################################################################################################################| 61/61 [00:00<00:00, 206.87frame/s]
+Normalization summary: method=clahe, frames=61, shape=(61, 1024, 1280, 3), dtype=uint8, overwrite=False
+clahe        dtype=uint8 min=13.00 max=216.00
+Running normalization hist-equal on frames (overwrite=False)...
+Normalization hist-equal: 100%|##############################################################################################################################################| 61/61 [00:02<00:00, 24.57frame/s]
+Normalization summary: method=hist-equal, frames=61, shape=(61, 1024, 1280, 3), dtype=uint8, overwrite=False
+hist_equal   dtype=uint8 min=0.00 max=255.00
+Running normalization log on frames (overwrite=False)...
+Normalization log: 100%|#####################################################################################################################################################| 61/61 [00:02<00:00, 21.46frame/s]
+Normalization summary: method=log, frames=61, shape=(61, 1024, 1280, 3), dtype=uint8, overwrite=False
+log          dtype=uint8 min=0.00 max=255.00
+Running normalization median on frames (overwrite=False)...
+Normalization median: 100%|##################################################################################################################################################| 61/61 [00:03<00:00, 19.29frame/s]
+Normalization summary: method=median, frames=61, shape=(61, 1024, 1280, 3), dtype=uint8, overwrite=False
+median       dtype=uint8 min=0.00 max=255.00
+Running normalization min-max on frames (overwrite=False)...
+Normalization min-max: 100%|#################################################################################################################################################| 61/61 [00:01<00:00, 33.85frame/s]
+Normalization summary: method=min-max, frames=61, shape=(61, 1024, 1280, 3), dtype=uint8, overwrite=False
+min_max      dtype=uint8 min=0.00 max=255.00
+Running normalization z-score on frames (overwrite=False)...
+Normalization z-score: 100%|#################################################################################################################################################| 61/61 [00:02<00:00, 25.21frame/s]
+Normalization summary: method=z-score, frames=61, shape=(61, 1024, 1280, 3), dtype=float32, overwrite=False
+z_score      dtype=float32 min=-3.17 max=19.84
+
+In [20]: z = pc.io.load_default_data(final_frame=30, verbose=False)
+    ...: z.preprocessing.grayscale()
+    ...: z.preprocessing.normalization.clahe()
+    ...: z.preprocessing.binarization.otsu()
+    ...: print([k for k in z.get_video() if k.endswith("video")])
+Loading video: 100%|########################################################################################################################################################| 31/31 [00:00<00:00, 256.26frame/s]
+Running preprocessing grayscale on frames...
+Preprocessing grayscale: 100%|##############################################################################################################################################| 31/31 [00:00<00:00, 111.85frame/s]
+Grayscale summary: frames=31, shape=(31, 1024, 1280), dtype=uint8, overwrite=False
+Running normalization clahe on frames (overwrite=False, clip_limit=2.000, tile_grid_size=(8, 8))...
+Normalization clahe: 100%|##################################################################################################################################################| 31/31 [00:00<00:00, 204.34frame/s]
+Normalization summary: method=clahe, frames=31, shape=(31, 1024, 1280, 3), dtype=uint8, overwrite=False
+Running binarization otsu on frames...
+Binarization otsu: 100%|####################################################################################################################################################| 31/31 [00:00<00:00, 116.28frame/s]
+Binarization summary: method=otsu, frames=31, shape=(31, 1024, 1280), dtype=uint8
+['original_video', 'grayscale_video', 'normalized_video', 'binary_video']
+
+In [21]: def dene(fn, **kw):
+    ...:     s = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...:     fn(s, **kw)
+    ...:     s.assessment.evaluate_detections()
+    ...:     a = copy.deepcopy(s.get_assessment()["detection"])
+    ...:     print(f"  tp={a['tp']:5d} fp={a['fp']:5d} fn={a['fn']:5d} P={a['precision']:6.2f} R={a['recall']:6.2f} F1={a['F1']:6.2f}")
+    ...:     return s, a
+    ...:
+
+In [22]: print("yolo26 varsayilan (conf=0.15)")
+    ...: s_y26, a_y26 = dene(lambda s: s.detection.yolo(yolo_model="yolo26"))
+yolo26 varsayilan (conf=0.15)
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 263.95frame/s]
+Running YOLO26 on frames...
+YOLO26 summary: frames_processed=61, detections_found=9488, confidence p5/p50/p95=0.194/0.869/0.902, mean+/-std=0.755+/-0.229
+Detection assessment results (detection_method=yolo26): tp=6138, fp=3350, fn=81, precision=64.69%, recall=98.7%, F1=78.16%, evaluated_frames=61
+Detection assessment is performed on frames: 0-60
+  tp= 6138 fp= 3350 fn=   81 P= 64.69 R= 98.70 F1= 78.16
+
+In [23]: print("conf=0.5"); dene(lambda s: s.detection.yolo(yolo_model="yolo26", conf=0.5))
+    ...: print("conf=0.01"); dene(lambda s: s.detection.yolo(yolo_model="yolo26", conf=0.01))
+conf=0.5
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 206.86frame/s]
+Running YOLO26 on frames...
+YOLO26 summary: frames_processed=61, detections_found=8618, confidence p5/p50/p95=0.586/0.874/0.903, mean+/-std=0.832+/-0.096
+Detection assessment results (detection_method=yolo26): tp=6059, fp=2559, fn=160, precision=70.31%, recall=97.43%, F1=81.67%, evaluated_frames=61
+Detection assessment is performed on frames: 0-60
+  tp= 6059 fp= 2559 fn=  160 P= 70.31 R= 97.43 F1= 81.67
+conf=0.01
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 222.66frame/s]
+Running YOLO26 on frames...
+YOLO26 summary: frames_processed=61, detections_found=17814, confidence p5/p50/p95=0.013/0.163/0.899, mean+/-std=0.416+/-0.398
+Detection assessment results (detection_method=yolo26): tp=6201, fp=11613, fn=18, precision=34.81%, recall=99.71%, F1=51.6%, evaluated_frames=61
+Detection assessment is performed on frames: 0-60
+  tp= 6201 fp=11613 fn=   18 P= 34.81 R= 99.71 F1= 51.60
+Out[23]:
+(<pycasa.casa.casa.Casa at 0x1743b507b60>,
+ {'tp': 6201,
+  'fp': 11613,
+  'fn': 18,
+  'precision': np.float64(34.81),
+  'recall': np.float64(99.71),
+  'F0.5': np.float64(40.02),
+  'F1': np.float64(51.6),
+  'F2': np.float64(72.63),
+  'evaluated_frames': 61})
+
+In [24]: print(np.asarray(s_y26.get_detections()["0"])[:2].tolist())
+[['0', '0.910138', '0.828910', '0.037355', '0.046788'], ['0', '0.556985', '0.449665', '0.036418', '0.045641']]
+
+In [25]: print("yolov5"); dene(lambda s: s.detection.yolo(yolo_model="yolov5"))
+yolov5
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 233.86frame/s]
+Running YOLOV5 on frames...
+YOLOV5 summary: frames_processed=61, detections_found=6373, confidence p5/p50/p95=0.199/0.584/0.749, mean+/-std=0.540+/-0.165
+Detection assessment results (detection_method=yolov5): tp=4647, fp=1726, fn=1572, precision=72.92%, recall=74.72%, F1=73.81%, evaluated_frames=61
+Detection assessment is performed on frames: 0-60
+  tp= 4647 fp= 1726 fn= 1572 P= 72.92 R= 74.72 F1= 73.81
+Out[25]:
+(<pycasa.casa.casa.Casa at 0x174b032f0b0>,
+ {'tp': 4647,
+  'fp': 1726,
+  'fn': 1572,
+  'precision': np.float64(72.92),
+  'recall': np.float64(74.72),
+  'F0.5': np.float64(73.27),
+  'F1': np.float64(73.81),
+  'F2': np.float64(74.35),
+  'evaluated_frames': 61})
+
+In [26]: for kw in [dict(yolo_model="yolo99"), dict(weights="C:/yok.pt")]:
+    ...:     try: pc.io.load_default_data(final_frame=5, verbose=False).detection.yolo(**kw)
+    ...:     except Exception as e: print(type(e).__name__, ":", str(e)[:90])
+    ...:
+Loading video: 100%|##########################################################################################################################################################| 6/6 [00:00<00:00, 176.01frame/s]
+ValueError : `yolo_model` must be one of ('yolov5', 'yolo26'), got 'yolo99'.
+Loading video: 100%|##########################################################################################################################################################| 6/6 [00:00<00:00, 194.17frame/s]
+FileNotFoundError : Custom `weights` path was not found: 'C:/yok.pt'. On Windows use a raw string: r'D:\path\t
+
+In [27]: for m in ["cv-gmg", "cv-mog", "cv-mog2", "gm"]:
+    ...:     print(m); dene(lambda s, mm=m: s.detection.detect_moving_cells(method=mm))
+    ...:
+cv-gmg
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 216.33frame/s]
+Running moving-cells detection on frames (method=cv-gmg)...
+Detection moving-cells (cv-gmg): 100%|#######################################################################################################################################| 61/61 [00:04<00:00, 13.56frame/s]
+Detection moving-cells blobs: 100%|##########################################################################################################################################| 41/41 [00:00<00:00, 51.37frame/s]
+Moving-cells summary: frames_processed=61, frames_with_detections=41, detections_found=8204, method=cv-gmg, training_frames=20, blob_min_pixel_area=20
+Detection assessment results (detection_method=moving_cells): tp=3417, fp=4787, fn=776, precision=41.65%, recall=81.49%, F1=55.13%, evaluated_frames=41
+Detection assessment is performed on frames: 20-60
+  tp= 3417 fp= 4787 fn=  776 P= 41.65 R= 81.49 F1= 55.13
+cv-mog
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 224.91frame/s]
+Running moving-cells detection on frames (method=cv-mog)...
+Detection moving-cells (cv-mog): 100%|#######################################################################################################################################| 61/61 [00:01<00:00, 46.75frame/s]
+Detection moving-cells blobs: 100%|##########################################################################################################################################| 41/41 [00:00<00:00, 95.29frame/s]
+Moving-cells summary: frames_processed=61, frames_with_detections=41, detections_found=3869, method=cv-mog, training_frames=20, blob_min_pixel_area=20
+Detection assessment results (detection_method=moving_cells): tp=3241, fp=628, fn=952, precision=83.77%, recall=77.3%, F1=80.4%, evaluated_frames=41
+Detection assessment is performed on frames: 20-60
+  tp= 3241 fp=  628 fn=  952 P= 83.77 R= 77.30 F1= 80.40
+cv-mog2
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 259.70frame/s]
+Running moving-cells detection on frames (method=cv-mog2)...
+Detection moving-cells (cv-mog2): 100%|######################################################################################################################################| 61/61 [00:01<00:00, 47.96frame/s]
+Detection moving-cells blobs: 100%|##########################################################################################################################################| 41/41 [00:03<00:00, 11.40frame/s]
+Moving-cells summary: frames_processed=61, frames_with_detections=41, detections_found=16508, method=cv-mog2, training_frames=20, blob_min_pixel_area=20
+Detection assessment results (detection_method=moving_cells): tp=3829, fp=12679, fn=364, precision=23.19%, recall=91.32%, F1=36.99%, evaluated_frames=41
+Detection assessment is performed on frames: 20-60
+  tp= 3829 fp=12679 fn=  364 P= 23.19 R= 91.32 F1= 36.99
+gm
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 255.48frame/s]
+Running moving-cells detection on frames (method=gm)...
+Gaussian mixture preparation: 100%|##########################################################################################################################################| 61/61 [00:05<00:00, 10.78frame/s]
+Gaussian mixture: Moving cells detection: 100%|##############################################################################################################################| 41/41 [00:27<00:00,  1.48frame/s]
+Detection moving-cells blobs: 100%|##########################################################################################################################################| 41/41 [00:00<00:00, 43.06frame/s]
+Moving-cells summary: frames_processed=61, frames_with_detections=41, detections_found=3720, method=gm, training_frames=20, blob_min_pixel_area=20
+Detection assessment results (detection_method=moving_cells): tp=3207, fp=513, fn=986, precision=86.21%, recall=76.48%, F1=81.06%, evaluated_frames=41
+Detection assessment is performed on frames: 20-60
+  tp= 3207 fp=  513 fn=  986 P= 86.21 R= 76.48 F1= 81.06
+
+In [28]: print("gm + low_memory"); dene(lambda s: s.detection.detect_moving_cells(method="gm", low_memory=True))
+gm + low_memory
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 256.45frame/s]
+Running moving-cells detection on frames (method=gm)...
+Gaussian mixture preparation: 100%|##########################################################################################################################################| 20/20 [00:01<00:00, 12.43frame/s]
+Gaussian mixture: Moving cells detection: 100%|##############################################################################################################################| 41/41 [00:30<00:00,  1.33frame/s]
+Detection moving-cells blobs: 100%|#########################################################################################################################################| 41/41 [00:00<00:00, 105.60frame/s]
+Moving-cells summary: frames_processed=61, frames_with_detections=41, detections_found=3720, method=gm, training_frames=20, blob_min_pixel_area=20
+Detection assessment results (detection_method=moving_cells): tp=3207, fp=513, fn=986, precision=86.21%, recall=76.48%, F1=81.06%, evaluated_frames=41
+Detection assessment is performed on frames: 20-60
+  tp= 3207 fp=  513 fn=  986 P= 86.21 R= 76.48 F1= 81.06
+Out[28]:
+(<pycasa.casa.casa.Casa at 0x174b1f9b800>,
+ {'tp': 3207,
+  'fp': 513,
+  'fn': 986,
+  'precision': np.float64(86.21),
+  'recall': np.float64(76.48),
+  'F0.5': np.float64(84.07),
+  'F1': np.float64(81.06),
+  'F2': np.float64(78.25),
+  'evaluated_frames': 41})
+
+In [29]: print("digital_washing"); dene(lambda s: s.detection.digital_washing())
+digital_washing
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 250.84frame/s]
+Running digital-washing detection on frames...
+Gaussian mixture preparation: 100%|##########################################################################################################################################| 20/20 [00:01<00:00, 12.41frame/s]
+Gaussian mixture: Moving cells detection: 100%|##############################################################################################################################| 41/41 [00:31<00:00,  1.30frame/s]
+Digital Washing binarization:   0%|---------------------------------------------------------------------------------------------------------------------------------------------------| 0/61 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:176: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  eroded = binary_erosion(binary_filled, disk(2))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:177: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  dilated = binary_dilation(eroded, disk(2))
+Digital Washing binarization: 100%|##########################################################################################################################################| 61/61 [00:42<00:00,  1.43frame/s]
+Digital Washing motion/background separation: 100%|##########################################################################################################################| 41/41 [00:02<00:00, 18.31frame/s]
+Digital Washing motion features extraction:   0%|-------------------------------------------------------------------------------------------------------------------------------------| 0/41 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:342: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  binary = binary_dilation(binary, disk(3))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:344: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  binary = binary_erosion(binary, disk(9))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:345: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  binary = remove_small_objects(binary.astype(bool), min_size=50)
+Digital Washing motion features extraction: 100%|############################################################################################################################| 41/41 [00:56<00:00,  1.38s/frame]
+Digital Washing background features extraction: 100%|########################################################################################################################| 41/41 [00:13<00:00,  3.00frame/s]
+Digital-washing summary: frames_processed=61, frames_with_detections=41, detections_found=4159, motion_feature_rows=3720, background_feature_rows=1207
+Detection assessment results (detection_method=digital_washing): tp=3382, fp=777, fn=811, precision=81.32%, recall=80.66%, F1=80.99%, evaluated_frames=41
+Detection assessment is performed on frames: 20-60
+  tp= 3382 fp=  777 fn=  811 P= 81.32 R= 80.66 F1= 80.99
+Out[29]:
+(<pycasa.casa.casa.Casa at 0x174c90752e0>,
+ {'tp': 3382,
+  'fp': 777,
+  'fn': 811,
+  'precision': np.float64(81.32),
+  'recall': np.float64(80.66),
+  'F0.5': np.float64(81.18),
+  'F1': np.float64(80.99),
+  'F2': np.float64(80.79),
+  'evaluated_frames': 41})
+
+In [30]: print("digital_washing"); dene(lambda s: s.detection.digital_washing())
+digital_washing
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 259.61frame/s]
+Running digital-washing detection on frames...
+Gaussian mixture preparation: 100%|##########################################################################################################################################| 20/20 [00:01<00:00, 12.15frame/s]
+Gaussian mixture: Moving cells detection: 100%|##############################################################################################################################| 41/41 [00:28<00:00,  1.43frame/s]
+Digital Washing binarization:   0%|---------------------------------------------------------------------------------------------------------------------------------------------------| 0/61 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:176: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  eroded = binary_erosion(binary_filled, disk(2))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:177: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  dilated = binary_dilation(eroded, disk(2))
+Digital Washing binarization: 100%|##########################################################################################################################################| 61/61 [00:36<00:00,  1.68frame/s]
+Digital Washing motion/background separation: 100%|##########################################################################################################################| 41/41 [00:02<00:00, 18.33frame/s]
+Digital Washing motion features extraction:   0%|-------------------------------------------------------------------------------------------------------------------------------------| 0/41 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:342: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  binary = binary_dilation(binary, disk(3))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:344: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  binary = binary_erosion(binary, disk(9))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:345: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  binary = remove_small_objects(binary.astype(bool), min_size=50)
+Digital Washing motion features extraction: 100%|############################################################################################################################| 41/41 [00:43<00:00,  1.06s/frame]
+Digital Washing background features extraction: 100%|########################################################################################################################| 41/41 [00:13<00:00,  2.99frame/s]
+Digital-washing summary: frames_processed=61, frames_with_detections=41, detections_found=4159, motion_feature_rows=3720, background_feature_rows=1207
+Detection assessment results (detection_method=digital_washing): tp=3382, fp=777, fn=811, precision=81.32%, recall=80.66%, F1=80.99%, evaluated_frames=41
+Detection assessment is performed on frames: 20-60
+  tp= 3382 fp=  777 fn=  811 P= 81.32 R= 80.66 F1= 80.99
+Out[30]:
+(<pycasa.casa.casa.Casa at 0x174cb2beab0>,
+ {'tp': 3382,
+  'fp': 777,
+  'fn': 811,
+  'precision': np.float64(81.32),
+  'recall': np.float64(80.66),
+  'F0.5': np.float64(81.18),
+  'F1': np.float64(80.99),
+  'F2': np.float64(80.79),
+  'evaluated_frames': 41})
+
+In [31]: print("digital_washing sikilastirilmis")
+    ...: dene(lambda s: s.detection.digital_washing(motion_threshold=5, blob_min_pixel_area=30))
+digital_washing sikilastirilmis
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 257.14frame/s]
+Running digital-washing detection on frames...
+Gaussian mixture preparation: 100%|##########################################################################################################################################| 20/20 [00:01<00:00, 12.32frame/s]
+Gaussian mixture: Moving cells detection: 100%|##############################################################################################################################| 41/41 [00:24<00:00,  1.69frame/s]
+Digital Washing binarization:   0%|---------------------------------------------------------------------------------------------------------------------------------------------------| 0/61 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:176: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  eroded = binary_erosion(binary_filled, disk(2))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:177: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  dilated = binary_dilation(eroded, disk(2))
+Digital Washing binarization: 100%|##########################################################################################################################################| 61/61 [00:34<00:00,  1.76frame/s]
+Digital Washing motion/background separation: 100%|##########################################################################################################################| 41/41 [00:01<00:00, 21.42frame/s]
+Digital Washing motion features extraction:   0%|-------------------------------------------------------------------------------------------------------------------------------------| 0/41 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:342: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  binary = binary_dilation(binary, disk(3))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:344: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  binary = binary_erosion(binary, disk(9))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_digital_washing.py:345: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  binary = remove_small_objects(binary.astype(bool), min_size=50)
+Digital Washing motion features extraction: 100%|############################################################################################################################| 41/41 [00:31<00:00,  1.30frame/s]
+Digital Washing background features extraction: 100%|########################################################################################################################| 41/41 [00:17<00:00,  2.31frame/s]
+Digital-washing summary: frames_processed=61, frames_with_detections=41, detections_found=2921, motion_feature_rows=2225, background_feature_rows=1558
+Detection assessment results (detection_method=digital_washing): tp=2651, fp=270, fn=1542, precision=90.76%, recall=63.22%, F1=74.53%, evaluated_frames=41
+Detection assessment is performed on frames: 20-60
+  tp= 2651 fp=  270 fn= 1542 P= 90.76 R= 63.22 F1= 74.53
+Out[31]:
+(<pycasa.casa.casa.Casa at 0x174cb34ef90>,
+ {'tp': 2651,
+  'fp': 270,
+  'fn': 1542,
+  'precision': np.float64(90.76),
+  'recall': np.float64(63.22),
+  'F0.5': np.float64(83.49),
+  'F1': np.float64(74.53),
+  'F2': np.float64(67.31),
+  'evaluated_frames': 41})
+
+In [32]: print("urbano"); dene(lambda s: s.detection.urbano_detection())
+    ...: print("urbano ayarli"); dene(lambda s: s.detection.urbano_detection(blob_min_pixel_area=10, log_size=7))
+urbano
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 258.95frame/s]
+Running Urbano detection on frames...
+---------------------------------------------------------------------------
+MemoryError                               Traceback (most recent call last)
+Cell In[32], line 1
+----> 1 print("urbano"); dene(lambda s: s.detection.urbano_detection())
+      2 print("urbano ayarli"); dene(lambda s: s.detection.urbano_detection(blob_min_pixel_area=10, log_size=7))
+
+Cell In[21], line 3, in dene(fn, **kw)
+      1 def dene(fn, **kw):
+      2     s = pc.io.load_default_data(final_frame=60, verbose=False)
+----> 3     fn(s, **kw)
+      4     s.assessment.evaluate_detections()
+      5     a = copy.deepcopy(s.get_assessment()["detection"])
+
+Cell In[32], line 1, in <lambda>(s)
+----> 1 print("urbano"); dene(lambda s: s.detection.urbano_detection())
+      2 print("urbano ayarli"); dene(lambda s: s.detection.urbano_detection(blob_min_pixel_area=10, log_size=7))
+
+File ~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\casa\detection\detection_wrapper.py:251, in _SessionDetectionNamespace.urbano_detection(self, weight, gaussian_size, gaussian_iters, log_size, blob_min_pixel_area, show_progress, verbose)
+    216 """Run Urbano et al. (2017) LoG-based sperm detection on the current video.
+    217
+    218 Parameters:
+   (...)    246     >>> session = session.detection.urbano_detection()
+    247 """
+    248 from ...detection import urbano_detection as _urbano_detection
+    250 return self._session._sync_from(
+--> 251     _urbano_detection(
+    252         self._session._as_dict(),
+    253         weight=weight,
+    254         gaussian_size=gaussian_size,
+    255         gaussian_iters=gaussian_iters,
+    256         log_size=log_size,
+    257         blob_min_pixel_area=blob_min_pixel_area,
+    258         show_progress=show_progress,
+    259         verbose=verbose,
+    260     )
+    261 )
+
+File ~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_urbano.py:160, in urbano_detection(casa, weight, gaussian_size, gaussian_iters, log_size, blob_min_pixel_area, show_progress, verbose)
+    157 if verbose:
+    158     print("Running Urbano detection on frames...")
+--> 160 grayscale_video = _convert_video_to_grayscale(original_video)
+    161 initial_frame = int(casa.get("video", {}).get("initial_frame", 0) or 0)
+    163 detections: dict[str, list[list[str]]] = {}
+
+File ~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\utils\_video_helpers.py:64, in _convert_video_to_grayscale(original_video)
+     62     g = block[..., 1].astype(np.float32)
+     63     r = block[..., 2].astype(np.float32)
+---> 64     gray = 0.114 * b + 0.587 * g + 0.299 * r
+     65     output[start : start + _GRAYSCALE_BLOCK_FRAMES] = np.clip(gray, 0, 255).astype(
+     66         np.uint8
+     67     )
+     68 return output
+
+MemoryError: Unable to allocate 160. MiB for an array with shape (32, 1024, 1280) and data type float32
+
+In [33]: print("urbano"); dene(lambda s: s.detection.urbano_detection())
+    ...: print("urbano ayarli"); dene(lambda s: s.detection.urbano_detection(blob_min_pixel_area=10, log_size=7))
+urbano
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 234.62frame/s]
+Running Urbano detection on frames...
+---------------------------------------------------------------------------
+MemoryError                               Traceback (most recent call last)
+Cell In[33], line 1
+----> 1 print("urbano"); dene(lambda s: s.detection.urbano_detection())
+      2 print("urbano ayarli"); dene(lambda s: s.detection.urbano_detection(blob_min_pixel_area=10, log_size=7))
+
+Cell In[21], line 3, in dene(fn, **kw)
+      1 def dene(fn, **kw):
+      2     s = pc.io.load_default_data(final_frame=60, verbose=False)
+----> 3     fn(s, **kw)
+      4     s.assessment.evaluate_detections()
+      5     a = copy.deepcopy(s.get_assessment()["detection"])
+
+Cell In[33], line 1, in <lambda>(s)
+----> 1 print("urbano"); dene(lambda s: s.detection.urbano_detection())
+      2 print("urbano ayarli"); dene(lambda s: s.detection.urbano_detection(blob_min_pixel_area=10, log_size=7))
+
+File ~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\casa\detection\detection_wrapper.py:251, in _SessionDetectionNamespace.urbano_detection(self, weight, gaussian_size, gaussian_iters, log_size, blob_min_pixel_area, show_progress, verbose)
+    216 """Run Urbano et al. (2017) LoG-based sperm detection on the current video.
+    217
+    218 Parameters:
+   (...)    246     >>> session = session.detection.urbano_detection()
+    247 """
+    248 from ...detection import urbano_detection as _urbano_detection
+    250 return self._session._sync_from(
+--> 251     _urbano_detection(
+    252         self._session._as_dict(),
+    253         weight=weight,
+    254         gaussian_size=gaussian_size,
+    255         gaussian_iters=gaussian_iters,
+    256         log_size=log_size,
+    257         blob_min_pixel_area=blob_min_pixel_area,
+    258         show_progress=show_progress,
+    259         verbose=verbose,
+    260     )
+    261 )
+
+File ~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_urbano.py:160, in urbano_detection(casa, weight, gaussian_size, gaussian_iters, log_size, blob_min_pixel_area, show_progress, verbose)
+    157 if verbose:
+    158     print("Running Urbano detection on frames...")
+--> 160 grayscale_video = _convert_video_to_grayscale(original_video)
+    161 initial_frame = int(casa.get("video", {}).get("initial_frame", 0) or 0)
+    163 detections: dict[str, list[list[str]]] = {}
+
+File ~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\utils\_video_helpers.py:58, in _convert_video_to_grayscale(original_video)
+     53     raise ValueError(f"Unsupported channel count: {channels}")
+     55 # Input convention is BGR to match load_video/OpenCV path. Converted in
+     56 # frame blocks so the transient float32 working set does not scale with clip
+     57 # length; the arithmetic is element-wise, so the result is unchanged.
+---> 58 output = np.empty(original_video.shape[:3], dtype=np.uint8)
+     59 for start in range(0, int(original_video.shape[0]), _GRAYSCALE_BLOCK_FRAMES):
+     60     block = original_video[start : start + _GRAYSCALE_BLOCK_FRAMES]
+
+MemoryError: Unable to allocate 76.2 MiB for an array with shape (61, 1024, 1280) and data type uint8
+
+In [34]: print("urbano"); dene(lambda s: s.detection.urbano_detection())
+    ...: print("urbano ayarli"); dene(lambda s: s.detection.urbano_detection(blob_min_pixel_area=10, log_size=7))
+urbano
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 255.92frame/s]
+Running Urbano detection on frames...
+Detection urbano:   0%|---------------------------------------------------------------------------------------------------------------------------------------------------------------| 0/61 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_urbano.py:55: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  binary = binary_erosion(binary, diamond(2))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_urbano.py:58: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  binary = binary_dilation(binary, diamond(1))
+Detection urbano: 100%|######################################################################################################################################################| 61/61 [00:14<00:00,  4.34frame/s]
+Urbano detection summary: frames_processed=61, frames_with_detections=61, detections_found=7246
+Detection assessment results (detection_method=urbano_detection): tp=5618, fp=1628, fn=601, precision=77.53%, recall=90.34%, F1=83.45%, evaluated_frames=61
+Detection assessment is performed on frames: 0-60
+  tp= 5618 fp= 1628 fn=  601 P= 77.53 R= 90.34 F1= 83.45
+urbano ayarli
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 265.18frame/s]
+Running Urbano detection on frames...
+Detection urbano: 100%|######################################################################################################################################################| 61/61 [00:12<00:00,  5.01frame/s]
+Urbano detection summary: frames_processed=61, frames_with_detections=61, detections_found=6826
+Detection assessment results (detection_method=urbano_detection): tp=5262, fp=1564, fn=957, precision=77.09%, recall=84.61%, F1=80.67%, evaluated_frames=61
+Detection assessment is performed on frames: 0-60
+  tp= 5262 fp= 1564 fn=  957 P= 77.09 R= 84.61 F1= 80.67
+Out[34]:
+(<pycasa.casa.casa.Casa at 0x175327902f0>,
+ {'tp': 5262,
+  'fp': 1564,
+  'fn': 957,
+  'precision': np.float64(77.09),
+  'recall': np.float64(84.61),
+  'F0.5': np.float64(78.48),
+  'F1': np.float64(80.67),
+  'F2': np.float64(82.99),
+  'evaluated_frames': 61})
+
+In [35]: ov = pc.io.load_default_data(final_frame=30, verbose=False)
+    ...: ov.detection.urbano_detection()
+    ...: ov.detection.detect_moving_cells()
+Loading video: 100%|########################################################################################################################################################| 31/31 [00:00<00:00, 250.91frame/s]
+Running Urbano detection on frames...
+Detection urbano:   0%|---------------------------------------------------------------------------------------------------------------------------------------------------------------| 0/31 [00:00<?, ?frame/s]C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_urbano.py:55: FutureWarning: `binary_erosion` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.erosion` instead. Note the pixel shift by 1 for even-sized footprints (see docstring notes).
+  binary = binary_erosion(binary, diamond(2))
+C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\detection\_urbano.py:58: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  binary = binary_dilation(binary, diamond(1))
+Detection urbano: 100%|######################################################################################################################################################| 31/31 [00:07<00:00,  4.43frame/s]
+Urbano detection summary: frames_processed=31, frames_with_detections=31, detections_found=3681
+Warning: Previous detection result overwritten (urbano_detection -> moving_cells).
+Running moving-cells detection on frames (method=cv-gmg)...
+Detection moving-cells (cv-gmg): 100%|#######################################################################################################################################| 31/31 [00:02<00:00, 14.13frame/s]
+Detection moving-cells blobs: 100%|##########################################################################################################################################| 11/11 [00:00<00:00, 20.11frame/s]
+Moving-cells summary: frames_processed=31, frames_with_detections=11, detections_found=2394, method=cv-gmg, training_frames=20, blob_min_pixel_area=20
+Out[35]: <pycasa.casa.casa.Casa at 0x174c97fdc70>
+
+In [36]: s_y26.assessment.evaluate_detections(match_min_distance_pixel=10)
+    ...: print(s_y26.get_assessment()["detection"])
+Detection assessment results (detection_method=yolo26): tp=5309, fp=4179, fn=910, precision=55.95%, recall=85.37%, F1=67.6%, evaluated_frames=61
+Detection assessment is performed on frames: 0-60
+{'tp': 5309, 'fp': 4179, 'fn': 910, 'precision': np.float64(55.95), 'recall': np.float64(85.37), 'F0.5': np.float64(60.1), 'F1': np.float64(67.6), 'F2': np.float64(77.25), 'evaluated_frames': 61}
+
+In [37]: def izle(fn, **kw):
+    ...:     s = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...:     fn(s)
+    ...:     tr = s.get_tracks(); b = list(tr)[0]
+    ...:     for src in tr[b]:
+    ...:         n = len(tr[b][src]); L = sum(len(t) for t in tr[b][src].values())/n
+    ...:         print(f"  {b}/{src}: {n} track, ortalama uzunluk {L:.1f}")
+    ...:     return s
+    ...:
+
+In [38]: def izle(fn, **kw):
+    ...:     s = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...:     fn(s)
+    ...:     tr = s.get_tracks(); b = list(tr)[0]
+    ...:     for src in tr[b]:
+    ...:         n = len(tr[b][src]); L = sum(len(t) for t in tr[b][src].values())/n
+    ...:         print(f"  {b}/{src}: {n} track, ortalama uzunluk {L:.1f}")
+    ...:     return
+    ...:
+
+In [39]: def izle(fn, **kw):
+    ...:     s = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...:     fn(s)
+    ...:     tr = s.get_tracks(); b = list(tr)[0]
+    ...:     for src in tr[b]:
+    ...:         n = len(tr[b][src]); L = sum(len(t) for t in tr[b][src].values())/n
+    ...:         print(f"  {b}/{src}: {n} track, ortalama uzunluk {L:.1f}")
+    ...:     return s
+    ...:
+
+In [40]: print("sort varsayilan"); t_sort = izle(lambda s: s.tracking.sort())
+sort varsayilan
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 260.56frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Running SORT tracking on frames (sources=groundtruth)...
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 173.79frame/s]
+SORT summary: sources_processed=['groundtruth'], input_frames=61, output_tracks=127
+- groundtruth: tracks=127, average_track_length=45.94
+  sort/groundtruth: 127 track, ortalama uzunluk 45.9
+
+In [41]: print("sort gevsek"); izle(lambda s: s.tracking.sort(max_age=5, min_hits=1, iou_threshold=0.3))
+    ...: print("sort initial_frame=10"); izle(lambda s: s.tracking.sort(initial_frame=10))
+sort gevsek
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 261.92frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Running SORT tracking on frames (sources=groundtruth)...
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 170.07frame/s]
+SORT summary: sources_processed=['groundtruth'], input_frames=61, output_tracks=219
+- groundtruth: tracks=219, average_track_length=27.77
+  sort/groundtruth: 219 track, ortalama uzunluk 27.8
+sort initial_frame=10
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 257.19frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Running SORT tracking on frames (sources=groundtruth)...
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 51/51 [00:00<00:00, 164.65frame/s]
+SORT summary: sources_processed=['groundtruth'], input_frames=51, output_tracks=122
+- groundtruth: tracks=122, average_track_length=39.75
+  sort/groundtruth: 122 track, ortalama uzunluk 39.8
+Out[41]: <pycasa.casa.casa.Casa at 0x1751f0dbfe0>
+
+In [42]: print("jpdaf"); t_jp = izle(lambda s: s.tracking.jpdaf())
+jpdaf
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 259.72frame/s]
+JPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.
+
+Warning: No detections found, tracking will only run on GT
+Running JPDAF tracking on frames (sources=groundtruth, fps=30.00)...
+Tracking jpdaf (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:04<00:00, 12.22frame/s]
+JPDAF summary: sources_processed=['groundtruth'], input_frames=61, output_tracks=128
+- groundtruth: tracks=128, average_track_length=48.81
+  jpdaf/groundtruth: 128 track, ortalama uzunluk 48.8
+
+In [43]: print("jpdaf ayarli"); izle(lambda s: s.tracking.jpdaf(frame_rate=60, p_delete=0.3, sigma_n_um=1.0))
+    ...: print("jpdaf dar kapi"); izle(lambda s: s.tracking.jpdaf(position_gate=5, velocity_gate_um=20, detection_probability=0.9))
+jpdaf ayarli
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 262.88frame/s]
+JPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.
+
+Warning: No detections found, tracking will only run on GT
+Running JPDAF tracking on frames (sources=groundtruth, fps=60.00)...
+Tracking jpdaf (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:06<00:00,  9.31frame/s]
+JPDAF summary: sources_processed=['groundtruth'], input_frames=61, output_tracks=172
+- groundtruth: tracks=172, average_track_length=38.73
+  jpdaf/groundtruth: 172 track, ortalama uzunluk 38.7
+jpdaf dar kapi
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 170.14frame/s]
+JPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.
+
+Warning: No detections found, tracking will only run on GT
+Running JPDAF tracking on frames (sources=groundtruth, fps=30.00)...
+Tracking jpdaf (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:42<00:00,  1.44frame/s]
+JPDAF summary: sources_processed=['groundtruth'], input_frames=61, output_tracks=215
+- groundtruth: tracks=215, average_track_length=3.89
+  jpdaf/groundtruth: 215 track, ortalama uzunluk 3.9
+Out[43]: <pycasa.casa.casa.Casa at 0x17538997fe0>
+
+In [44]: print("deepsort"); izle(lambda s: s.tracking.deepsort())
+    ...: print("deepsort ayarli"); izle(lambda s: s.tracking.deepsort(max_age=10, n_init=2, max_iou_distance=0.5))
+deepsort
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 261.87frame/s]
+Warning: No detections found, tracking will only run on GT
+Running DeepSORT tracking on frames (sources=groundtruth)...
+Tracking deepsort (groundtruth): 100%|#######################################################################################################################################| 61/61 [00:01<00:00, 30.98frame/s]
+DeepSORT summary: sources_processed=['groundtruth'], input_frames=61, output_tracks=153
+- groundtruth: tracks=153, average_track_length=37.98
+  deepsort/groundtruth: 153 track, ortalama uzunluk 38.0
+deepsort ayarli
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 184.50frame/s]
+Warning: No detections found, tracking will only run on GT
+Running DeepSORT tracking on frames (sources=groundtruth)...
+Tracking deepsort (groundtruth): 100%|#######################################################################################################################################| 61/61 [00:02<00:00, 22.30frame/s]
+DeepSORT summary: sources_processed=['groundtruth'], input_frames=61, output_tracks=286
+- groundtruth: tracks=286, average_track_length=19.87
+  deepsort/groundtruth: 286 track, ortalama uzunluk 19.9
+Out[44]: <pycasa.casa.casa.Casa at 0x17548f3bfb0>
+
+In [45]: d = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...: d.detection.yolo(yolo_model="yolo26")
+    ...: d.tracking.sort()
+    ...: tr = d.get_tracks()["sort"]
+    ...: print({k: len(v) for k, v in tr.items()})
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 264.66frame/s]
+Running YOLO26 on frames...
+YOLO26 summary: frames_processed=61, detections_found=8939, confidence p5/p50/p95=0.259/0.872/0.902, mean+/-std=0.789+/-0.191
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+GT and detections found, tracking will run on both
+Running SORT tracking on frames (sources=groundtruth, yolo26)...
+Tracking sort (groundtruth): 100%|###########################################################################################################################################| 61/61 [00:00<00:00, 95.69frame/s]
+Tracking sort (yolo26): 100%|################################################################################################################################################| 61/61 [00:00<00:00, 79.99frame/s]
+SORT summary: sources_processed=['groundtruth', 'yolo26'], input_frames=122, output_tracks=333
+- groundtruth: tracks=127, average_track_length=45.94
+- yolo26: tracks=206, average_track_length=40.49
+{'groundtruth': 127, 'yolo26': 206}
+
+In [46]: d2 = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...: d2.detection.yolo(yolo_model="yolo26")
+    ...: d2.tracking.sort(skip_gt=True)
+    ...: print(list(d2.get_tracks()["sort"]))
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 266.01frame/s]
+Running YOLO26 on frames...
+YOLO26 summary: frames_processed=61, detections_found=8939, confidence p5/p50/p95=0.259/0.872/0.902, mean+/-std=0.789+/-0.191
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Running SORT tracking on frames (sources=yolo26)...
+Tracking sort (yolo26): 100%|################################################################################################################################################| 61/61 [00:00<00:00, 66.99frame/s]
+SORT summary: sources_processed=['yolo26'], input_frames=61, output_tracks=206
+- yolo26: tracks=206, average_track_length=40.49
+['yolo26']
+
+In [47]: w = pc.io.load_default_data(final_frame=30, verbose=False)
+    ...: w.tracking.sort(); w.tracking.jpdaf()
+    ...: print("backend:", list(w.get_tracks()))
+    ...: print("sort hala var mi:", w.get_tracks(backend="sort"))
+Loading video: 100%|########################################################################################################################################################| 31/31 [00:00<00:00, 256.06frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Running SORT tracking on frames (sources=groundtruth)...
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 31/31 [00:00<00:00, 160.76frame/s]
+SORT summary: sources_processed=['groundtruth'], input_frames=31, output_tracks=117
+- groundtruth: tracks=117, average_track_length=25.79
+JPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.
+
+Warning: Previous tracking result overwritten (sort -> jpdaf).
+Warning: No detections found, tracking will only run on GT
+Running JPDAF tracking on frames (sources=groundtruth, fps=30.00)...
+Tracking jpdaf (groundtruth): 100%|##########################################################################################################################################| 31/31 [00:02<00:00, 14.46frame/s]
+JPDAF summary: sources_processed=['groundtruth'], input_frames=31, output_tracks=118
+- groundtruth: tracks=118, average_track_length=25.45
+backend: ['jpdaf']
+sort hala var mi: {}
+
+In [48]: d.assessment.evaluate_tracks()
+    ...: print(list(d.get_assessment()["tracking"]))
+Track assessment - pairwise (2 track sets, threshold=20px) (no imported truth present)
+  - sort:groundtruth: 127 tracks
+  - sort:yolo26: 206 tracks
+
+MOTA (%)  [row = ground-truth role, col = prediction role]
+                 | sort:groundtruth |      sort:yolo26
+------------------------------------------------------
+sort:groundtruth |                - |            52.12
+sort:yolo26      |            66.79 |                -
+
+IDF1 (%)  [symmetric]
+                 | sort:groundtruth |      sort:yolo26
+------------------------------------------------------
+sort:groundtruth |                - |            77.21
+sort:yolo26      |            77.21 |                -
+['sources', 'reference', 'track_counts', 'match_min_distance_pixel', 'pairs', 'skipped']
+
+In [49]: tek = pc.io.load_default_data(final_frame=30, verbose=False)
+    ...: tek.tracking.sort(); tek.assessment.evaluate_tracks()
+    ...: print(tek.get_assessment()["tracking"]["reason"])
+Loading video: 100%|########################################################################################################################################################| 31/31 [00:00<00:00, 252.48frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Running SORT tracking on frames (sources=groundtruth)...
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 31/31 [00:00<00:00, 162.06frame/s]
+SORT summary: sources_processed=['groundtruth'], input_frames=31, output_tracks=117
+- groundtruth: tracks=117, average_track_length=25.79
+Warning: track assessment skipped (need_at_least_two_track_sets).
+need_at_least_two_track_sets
+
+In [50]: m = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...: m.tracking.sort()
+    ...: m.motility.kinematic_parameters()
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 215.73frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Running SORT tracking on frames (sources=groundtruth)...
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 159.61frame/s]
+SORT summary: sources_processed=['groundtruth'], input_frames=61, output_tracks=127
+- groundtruth: tracks=127, average_track_length=45.94
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Running kinematic parameters on tracks (sources=['groundtruth'])...
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 1984.52track/s]
+Motility parameter summary (sort:groundtruth)
+- tracks=101, average windows per track=1.72
+- VCL=29.43+/-11.20 um/s, VSL=18.32+/-9.80 um/s
+- VAP=20.30+/-9.58 um/s, LIN=0.58+/-0.23
+- ALH=1.11+/-0.51 um, WOB=0.66+/-0.18
+- STR=0.83+/-0.21, MAD=43.52+/-15.24 deg
+Out[50]: <pycasa.casa.casa.Casa at 0x1761bf0ac60>
+
+In [51]: k = m.get_motility()["kinematic_parameters"]["groundtruth"]
+    ...: print("track sayisi:", len(k))
+    ...: print("parametreler:", list(next(iter(k.values()))))
+    ...: print("ornek track:", {kk: round(vv[0], 2) for kk, vv in list(next(iter(k.values())).items())[:8]})
+track sayisi: 101
+parametreler: ['VCL', 'VSL', 'VAP', 'LIN', 'ALH', 'WOB', 'STR', 'MAD', 'frame_ranges']
+ornek track: {'VCL': 17.18, 'VSL': 6.26, 'VAP': 10.15, 'LIN': 0.36, 'ALH': 0.52, 'WOB': 0.59, 'STR': 0.62, 'MAD': 72.95}
+
+In [52]: m.motility.casa_parameters()
+    ...: c = copy.deepcopy(m.get_motility()["casa_parameters"]["groundtruth"])
+    ...: print(c["grades"]); print("motil %:", c["percent_motile"], "| konsantrasyon:", c["concentration_M_per_ml"])
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+CASA parameters (sort:groundtruth)
+- tracks classified=101 (metric=VCL, rapid>=29, immotile<19 um/s, progressive STR>=0.68)
+- %rapid=47.52+/-4.97, %slow=28.71+/-4.5, %non-progressive=2.97+/-1.69, %immotile=20.79+/-4.04 (%motile=79.21+/-4.04)
+- concentration=61.21+/-0.35 x10^6/mL (cells/frame=95.66)
+- volume=2.2 mL
+- total sperm count=134.66+/-0.77 x10^6
+{'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79}
+motil %: 79.21 | konsantrasyon: 61.21
+
+In [53]: def kin(**kw):
+    ...:     s = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...:     s.tracking.sort(verbose=False)
+    ...:     s.motility.kinematic_parameters(verbose=False, **kw)
+    ...:     s.motility.casa_parameters(verbose=False)
+    ...:     print(" ", s.get_motility()["casa_parameters"]["groundtruth"]["grades"])
+    ...:
+    ...: print("varsayilan");      kin()
+    ...: print("kucuk pencere");   kin(window_size=15, overlap=0.5, smoothing_window=3, denoise_window=1, min_frame_rate_warn=0)
+    ...: print("frame_rate=60");   kin(frame_rate=60)
+    ...: print("piksel birimi");   kin(conversion_required=False)
+varsayilan
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 237.61frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 157.93frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 2474.78track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+  {'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79}
+kucuk pencere
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 239.15frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 144.72frame/s]
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 109/109 [00:00<00:00, 1199.27track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+  {'rapid': 52.29, 'slow': 9.17, 'non_progressive': 29.36, 'immotile': 9.17}
+frame_rate=60
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 229.80frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 107.03frame/s]
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|########################################################################################################################################| 101/101 [00:00<00:00, 889.08track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+  {'rapid': 80.2, 'slow': 0.0, 'non_progressive': 17.82, 'immotile': 1.98}
+piksel birimi
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 158.86frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|###########################################################################################################################################| 61/61 [00:00<00:00, 67.06frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 1044.05track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+  {'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79}
+
+In [54]: def casa(**kw):
+    ...:     s = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...:     s.tracking.sort(verbose=False); s.motility.kinematic_parameters(verbose=False)
+    ...:     s.motility.casa_parameters(verbose=False, **kw)
+    ...:     print(" ", s.get_motility()["casa_parameters"]["groundtruth"]["grades"])
+    ...:
+    ...: print("VCL varsayilan"); casa()
+    ...: print("VAP + dusuk esik"); casa(velocity_metric="VAP", rapid_threshold=25, immotile_threshold=10, progressive_str_threshold=0.5)
+    ...: print("VSL");             casa(velocity_metric="VSL")
+    ...: print("hacim/derinlik/dilusyon"); casa(volume_ml=1, chamber_depth_um=10, dilution_factor=2)
+VCL varsayilan
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 242.79frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 143.01frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 2268.08track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+  {'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79}
+VAP + dusuk esik
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 235.90frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|###########################################################################################################################################| 61/61 [00:00<00:00, 74.62frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 1577.29track/s]
+  {'rapid': 36.63, 'slow': 41.58, 'non_progressive': 0.99, 'immotile': 20.79}
+VSL
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 166.55frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|###########################################################################################################################################| 61/61 [00:00<00:00, 71.62frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|########################################################################################################################################| 101/101 [00:00<00:00, 963.72track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VSL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+  {'rapid': 12.87, 'slow': 42.57, 'non_progressive': 0.0, 'immotile': 44.55}
+hacim/derinlik/dilusyon
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 160.01frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|###########################################################################################################################################| 61/61 [00:01<00:00, 60.65frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 1145.72track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+  {'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79}
+
+In [55]: e = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...: e.tracking.sort(verbose=False); e.motility.kinematic_parameters(verbose=False)
+    ...: e.motility.casa_parameters(experimental_parameters=True, n_subpopulations=2, verbose=False)
+    ...: print(list(e.get_motility()["casa_parameters"]["groundtruth"]))
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 247.91frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 137.35frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 2349.14track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+Warning: Experimental parameters enabled (beat-cross frequency, hyperactivation, kinematic subpopulations). These are provided for exploratory analysis and, unlike the motility grades and concentration, have not yet been systematically validated against a reference CASA system on the sys-casa dataset. Treat them as preliminary and interpret with care.
+['grades', 'grades_std', 'percent_motile', 'percent_motile_std', 'counts', 'track_count', 'cells_per_frame', 'concentration_M_per_ml', 'concentration_M_per_ml_std', 'dilution_factor', 'volume_ml', 'total_sperm_count_M', 'total_sperm_count_M_std', 'velocity_metric', 'thresholds', 'skipped', 'experimental']
+
+In [56]: bos = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...: bos.motility.kinematic_parameters()
+    ...: print("BULGU, sessizce bos dondu:", bos.get_motility())
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 221.38frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+No tracks found under 'sort'. Run tracking first.
+BULGU, sessizce bos dondu: {'kinematic_parameters': {}}
+
+In [57]: for ov in (1.5, -0.5, 5.0):
+    ...:     s = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...:     s.tracking.sort(verbose=False)
+    ...:     s.motility.kinematic_parameters(overlap=ov, verbose=False)
+    ...:     t0 = next(iter(s.get_motility()["kinematic_parameters"]["groundtruth"].values()))
+    ...:     print(f"BULGU overlap={ov}: hata yok, {len(t0['VCL'])} pencere")
+    ...:
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 220.55frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 134.10frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|########################################################################################################################################| 101/101 [00:00<00:00, 164.73track/s]
+BULGU overlap=1.5: hata yok, 32 pencere
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 218.28frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 122.11frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 4314.64track/s]
+BULGU overlap=-0.5: hata yok, 1 pencere
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 255.69frame/s]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+Warning: No detections found, tracking will only run on GT
+Tracking sort (groundtruth): 100%|##########################################################################################################################################| 61/61 [00:00<00:00, 139.78frame/s]
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#########################################################################################################################################| 101/101 [00:01<00:00, 81.87track/s]
+BULGU overlap=5.0: hata yok, 32 pencere
+
+In [58]: vis = pc.io.load_default_data(final_frame=60, verbose=False)
+    ...: vis.preprocessing.grayscale(); vis.preprocessing.binarization.otsu()
+    ...: vis.preprocessing.normalization.clahe()
+    ...: vis.detection.yolo(yolo_model="yolo26"); vis.tracking.sort()
+    ...: vis.motility.kinematic_parameters(verbose=False); vis.motility.casa_parameters(verbose=False)
+Loading video: 100%|########################################################################################################################################################| 61/61 [00:00<00:00, 261.85frame/s]
+Running preprocessing grayscale on frames...
+Preprocessing grayscale: 100%|##############################################################################################################################################| 61/61 [00:00<00:00, 173.28frame/s]
+Grayscale summary: frames=61, shape=(61, 1024, 1280), dtype=uint8, overwrite=False
+Running binarization otsu on frames...
+Binarization otsu: 100%|####################################################################################################################################################| 61/61 [00:00<00:00, 113.88frame/s]
+Binarization summary: method=otsu, frames=61, shape=(61, 1024, 1280), dtype=uint8
+Running normalization clahe on frames (overwrite=False, clip_limit=2.000, tile_grid_size=(8, 8))...
+Normalization clahe: 100%|###################################################################################################################################################| 61/61 [00:00<00:00, 70.29frame/s]
+Normalization summary: method=clahe, frames=61, shape=(61, 1024, 1280, 3), dtype=uint8, overwrite=False
+Running YOLO26 on frames...
+YOLO26 summary: frames_processed=61, detections_found=8939, confidence p5/p50/p95=0.259/0.872/0.902, mean+/-std=0.789+/-0.191
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+GT and detections found, tracking will run on both
+Running SORT tracking on frames (sources=groundtruth, yolo26)...
+Tracking sort (groundtruth): 100%|###########################################################################################################################################| 61/61 [00:00<00:00, 79.98frame/s]
+Tracking sort (yolo26): 100%|################################################################################################################################################| 61/61 [00:01<00:00, 45.26frame/s]
+SORT summary: sources_processed=['groundtruth', 'yolo26'], input_frames=122, output_tracks=333
+- groundtruth: tracks=127, average_track_length=45.94
+- yolo26: tracks=206, average_track_length=40.49
+Warning: Frame rate (30 fps) is below the 50 fps recommended for reliable velocity and lateral-displacement metrics (VCL, ALH); these may be underestimated because the curvilinear path is undersampled. Higher acquisition rates improve fidelity. Pass min_frame_rate_warn to change the threshold or 0 to disable this check.
+Warning: window_size / denoise_window default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system (window_size=30 points ~1 s at 30 fps, denoise_window=2). window_size is in points, so scale it with your frame rate; pass window_size / denoise_window to override.
+Motility (sort:groundtruth): 100%|#######################################################################################################################################| 101/101 [00:00<00:00, 1003.91track/s]
+Motility (sort:yolo26): 100%|############################################################################################################################################| 137/137 [00:00<00:00, 2157.52track/s]
+Warning: CASA grade thresholds default to values optimized to act as close as possible to the SCA (Sperm Class Analyzer, Microptic) system on the sys-casa dataset (velocity_metric=VCL, immotile<19, rapid>29 um/s, progressive STR>=0.68). These are instrument-specific; pass rapid_threshold / immotile_threshold / progressive_str_threshold / velocity_metric to calibrate for your own CASA system.
+Out[58]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [59]: vis.visualization.plot_frame("original", frame_index=5)
+Out[59]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [60]:
+
+In [60]: vis.visualization.plot_frame(["original", "grayscale", "binarized", "normalized"], frame_index=5)
+Out[60]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [61]: try: pc.io.load_default_data(final_frame=5, verbose=False).visualization.plot_frame("binarized")
+    ...: except ValueError as e: print("dogru hata:", e)
+Loading video: 100%|##########################################################################################################################################################| 6/6 [00:00<00:00, 192.23frame/s]
+dogru hata: No binarized video found. Run `self.preprocessing.binarization.otsu()` first.
+
+In [62]: try: pc.io.load_default_data(final_frame=5, verbose=False).visualization.plot_frame("binarized")
+    ...: except ValueError as e: print("dogru hata:", e)
+Loading video: 100%|##########################################################################################################################################################| 6/6 [00:00<00:00, 203.39frame/s]
+dogru hata: No binarized video found. Run `self.preprocessing.binarization.otsu()` first.
+
+In [63]: vis.visualization.timelapse()
+Out[63]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [64]: vis.visualization.timelapse(video_type="grayscale+binarized", show_tracks=True, show_track_ids=True,
+    ...:                             detection_color="blue", groundtruth_color="red",
+    ...:                             track_colors={"groundtruth": "yellow", "detection": "orange"}, max_track_gap=5)
+invalid command name "1607403415808_on_timer"
+    while executing
+"1607403415808_on_timer"
+    ("after" script)
+Out[64]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [65]: vis.visualization.motility_radar()
+Out[65]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [66]: vis.visualization.motility_radar(show_legend=False, show_text=False)
+Out[66]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [67]: vis.visualization.motility_density_scatter()
+Out[67]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [68]: vis.visualization.interactive_motility_calculator()
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\tkinter\__init__.py", line 1968, in __call__
+    return self.func(*args)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\tkinter\__init__.py", line 862, in callit
+    func(*args)
+  File "C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\matplotlib\backends\_backend_tk.py", line 302, in idle_draw
+    self.draw()
+  File "C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\matplotlib\backends\backend_tkagg.py", line 10, in draw
+    super().draw()
+  File "C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\matplotlib\backends\backend_agg.py", line 377, in draw
+    self.renderer = self.get_renderer()
+                    ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\matplotlib\backends\backend_agg.py", line 392, in get_renderer
+    self.renderer = RendererAgg(w, h, self.figure.dpi)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Esmer\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\matplotlib\backends\backend_agg.py", line 69, in __init__
+    self._renderer = _RendererAgg(int(width), int(height), dpi)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+MemoryError: bad allocation
+Out[68]: <pycasa.casa.casa.Casa at 0x1754bfa01d0>
+
+In [69]: print(vis.get_meta()["last_visualization"])
+{'type': 'interactive_motility_calculator', 'tracking_backend': 'sort', 'detection_method': 'groundtruth', 'frame_rate': None, 'smoothing_window': 5}
+
+In [70]: print(vis.get_meta()["last_visualization"])
+{'type': 'interactive_motility_calculator', 'tracking_backend': 'sort', 'detection_method': 'groundtruth', 'frame_rate': None, 'smoothing_window': 5}
+
+In [71]: python scripts/step7_full_api_test.py
+  Cell In[71], line 1
+    python scripts/step7_full_api_test.py
+           ^
+SyntaxError: invalid syntax
+
+
+In [72]: !python scripts/step7_full_api_test.py
+
+============================== BOLUM: io ==============================
+
+>>> io.load_default_data(final_frame=20)
+    PASS 0.3s frames=21
+
+>>> io.load_default_data(um_per_px/volume_ml/chamber_depth_um override)
+    PASS 0.6s {'um_per_px': 0.5, 'volume_ml': 3.0, 'chamber_depth_um': 10.0}
+
+>>> io.load_default_data(initial_frame=10, final_frame=20)
+    PASS 0.2s frames=11
+
+>>> io.load_default_data(sampling_rate=15)
+    PASS 0.2s fps=15.0
+
+>>> io.load_default_data(magnification='20x')
+    PASS 0.2s magnification=20x
+
+>>> io.load_default_data(download=False) cache'den
+    PASS 0.2s frames=21
+
+>>> session.io.load_default_data() wrapper
+    PASS 0.1s um_per_px=0.24
+
+>>> session.io.load_default_data(volume_ml=...) wrapper/module imza paritesi
+    FAIL TypeError: _SessionIONamespace.load_default_data() got an unexpected keyword argument 'volume_ml'
+
+>>> io.load_video(video, groundtruth_detections_path)
+    PASS 0.2s frames=21 gt_frames=900 fps=30.0
+
+>>> io.load_video(video) GT'siz, sampling_rate=25
+    PASS 0.0s fps=25.0
+
+>>> io.load_video(groundtruth_tracks_path=GT_DIR) (GT'de track id yok)
+    PASS 0.2s gt_tracks=1
+
+>>> io.load_video(dilution_factor=2)
+    PASS 0.0s dilution=2.0
+
+>>> io.load_video(olmayan dosya) -> hata beklenir
+    PASS (beklenen hata) FileNotFoundError: Video file does not exist: C:\nope\x.avi
+
+>>> session.io.load_video() wrapper
+    PASS 0.0s frames=6
+
+============================== BOLUM: casa ==============================
+
+>>> Casa.info()
+Casa Info
+
+[session]
+- video_path: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data\sys-casa\rawdata\sub-HC004\ses-01\sys-casa_sub-HC004_ses-01_run-005_video.avi
+- groundtruth_detections_path: C:\Users\Esmer\OneDrive\Masaüstü\PYCASA TRY\pycasa_data\sys-casa\rawdata\sub-HC004\ses-01\sys-casa_sub-HC004_ses-01_run-005_gt
+- groundtruth_tracks_path: None
+
+[video specifications]
+- total number of frames: 901 frames
+- total video duration: 30.03 sec
+- width: 1280 px
+- height: 1024 px
+- um per px: 0.24 um/px
+- magnification: None
+- sampling rate: 30.0 fps
+
+- number of processed frames: 21 frames
+- processed video duration: 0.70 sec
+- initial frame: 0
+- final frame: 20
+
+[videos]
+- original: present=True shape=(21, 1024, 1280, 3) dtype=uint8
+- grayscale: present=False shape=None dtype=None
+- normalized: present=False shape=None dtype=None
+- binarized: present=False shape=None dtype=None
+- moving_cells: present=False shape=None dtype=None
+
+[methods]
+- detection: ['groundtruth']
+- tracking: []
+- motility: []
+- assessment: []
+
+[tracking]
+- tracking: none
+
+[motility]
+- Kinematic Parameters
+- none
+
+[casa_parameters]
+- CASA Parameters (WHO motility grades)
+- none
+
+[assessment]
+- detection: none
+- tracking: none
+
+[last performed operations]
+- last_preprocessing: None
+- last_tracking: None
+- last_motility: None
+- last_assessment: None
+    PASS 0.0s ekrana basildi
+
+>>> Casa.copy() bagimsiz kopya mi
+    PASS 0.1s yeni nesne=True, meta ayni=True
+
+>>> set_um_per_px(0.3)
+    PASS 0.2s 0.3
+
+>>> set_volume_ml(1.5)
+    PASS 0.2s 1.5
+
+>>> set_chamber_depth_um(10)
+    PASS 0.2s 10.0
+
+>>> set_dilution_factor(2)
+    PASS 0.2s 2.0
+
+>>> set_um_per_px(-1) -> ValueError beklenir
+    PASS (beklenen hata) ValueError: `um_per_px` must be > 0.
+
+>>> set_volume_ml('abc') -> TypeError beklenir
+    PASS (beklenen hata) TypeError: `volume_ml` must be a numeric value.
+
+>>> set_chamber_depth_um(0) -> hata beklenir
+    PASS (beklenen hata) ValueError: `chamber_depth_um` must be > 0.
+
+>>> set_dilution_factor(-5) -> hata beklenir
+    PASS (beklenen hata) ValueError: `dilution_factor` must be > 0.
+
+>>> get_casa() keys
+    PASS 0.0s ['meta', 'video', 'detections', 'tracks', 'motility', 'assessment']
+
+>>> get_meta() keys
+    PASS 0.0s ['chamber_depth_um', 'duration_sec', 'height', 'magnification', 'sampling_rate', 'total_duration_sec', 'total_number_frame', 'um_per_px', 'video_path', 'volume_ml', 'width']
+
+>>> get_video() keys
+    PASS 0.0s ['path', 'initial_frame', 'final_frame', 'number_frame_used', 'original_video']
+
+>>> get_groundtruth() frame sayisi
+    PASS 0.0s 900
+
+>>> get_groundtruth_tracks() (bos olmali)
+    PASS 0.0s {}
+
+>>> get_detections() (bos)
+    PASS 0.0s {}
+
+>>> get_detections(include_groundtruth=True)
+    PASS 0.0s ['groundtruth', 'groundtruth_detections_path']
+
+>>> get_tracks() (bos)
+    PASS 0.0s {}
+
+>>> get_tracks(backend='sort') tracking yokken
+    PASS 0.0s {}
+
+>>> get_motility() (bos)
+    PASS 0.0s {}
+
+>>> get_assessment() (bos)
+    PASS 0.0s {}
+
+>>> get_assesment() (yazim hatali alias)
+    PASS 0.0s {}
+
+>>> get_assessment() canli referans mi (mutasyon testi)
+    PASS 0.0s session'a sizdi=True
+
+============================== BOLUM: preprocessing ==============================
+
+>>> preprocessing.grayscale()
+Running preprocessing grayscale on frames...
+Grayscale summary: frames=21, shape=(21, 1024, 1280), dtype=uint8, overwrite=False
+    PASS 0.2s ['original_video', 'grayscale_video']
+
+>>> preprocessing.grayscale(overwrite=True)
+Running preprocessing grayscale on frames...
+Grayscale summary: frames=21, shape=(21, 1024, 1280), dtype=uint8, overwrite=True
+    PASS 0.4s original_video.shape=(21, 1024, 1280)
+
+>>> preprocessing.binarization.otsu()
+Running binarization otsu on frames...
+Binarization summary: method=otsu, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 0.5s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.adaptive_gaussian()
+Running binarization adaptive-gaussian on frames (block_size=15, c=3.000)...
+Binarization summary: method=adaptive-gaussian, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 0.4s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.adaptive_mean()
+Running binarization adaptive-mean on frames (block_size=11, c=2.000)...
+Binarization summary: method=adaptive-mean, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 0.4s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.niblack()
+Running binarization niblack on frames (window_size=21, k=-0.200)...
+Binarization summary: method=niblack, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 1.5s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.sauvola()
+Running binarization sauvola on frames (window_size=25, k=0.200, r=128.000)...
+Binarization summary: method=sauvola, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 1.4s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]
+
+>>> preprocessing.binarization.urbano()
+Running binarization urbano on frames...
+Binarization summary: method=urbano, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 5.1s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 1]
+
+>>> binarization.otsu() grayscale yapilmadan (ham renkli video)
+Running binarization otsu on frames...
+Binarization summary: method=otsu, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 1.0s ['original_video', 'binary_video']
+
+>>> binarization.adaptive_gaussian(block_size=4 cift) -> hata beklenir
+    PASS (beklenen hata) ValueError: `block_size` must be an odd integer >= 3.
+
+>>> binarization.niblack(window_size=0) -> hata beklenir
+    PASS (beklenen hata) ValueError: `window_size` must be >= 3.
+
+>>> preprocessing.normalization.clahe()
+Running normalization clahe on frames (overwrite=False, clip_limit=3.000, tile_grid_size=(4, 4))...
+Normalization summary: method=clahe, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 0.2s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.hist_equal()
+Running normalization hist-equal on frames (overwrite=False)...
+Normalization summary: method=hist-equal, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 1.3s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.log()
+Running normalization log on frames (overwrite=False)...
+Normalization summary: method=log, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 1.4s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.median()
+Running normalization median on frames (overwrite=False)...
+Normalization summary: method=median, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 1.4s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.min_max()
+Running normalization min-max on frames (overwrite=False)...
+Normalization summary: method=min-max, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+    PASS 0.7s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+
+>>> preprocessing.normalization.z_score()
+Running normalization z-score on frames (overwrite=False)...
+Normalization summary: method=z-score, frames=21, shape=(21, 1024, 1280, 3), dtype=float32, overwrite=False
+    PASS 0.9s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=float32
+
+>>> normalization.min_max(overwrite=True)
+Running normalization min-max on frames (overwrite=True)...
+Normalization summary: method=min-max, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=True
+    PASS 0.7s ['original_video', 'normalized_video']
+
+>>> zincir: grayscale -> clahe -> otsu
+Running preprocessing grayscale on frames...
+Grayscale summary: frames=21, shape=(21, 1024, 1280), dtype=uint8, overwrite=False
+Running normalization clahe on frames (overwrite=False, clip_limit=2.000, tile_grid_size=(8, 8))...
+Normalization summary: method=clahe, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
+Running binarization otsu on frames...
+Binarization summary: method=otsu, frames=21, shape=(21, 1024, 1280), dtype=uint8
+    PASS 1.0s ['original_video', 'grayscale_video', 'normalized_video', 'binary_video']
+
+============================== BOLUM: detection_yolo26 ==============================
+
+>>> detection.yolo() varsayilan (yolo26) + evaluate_detections
+Detection assessment results (detection_method=yolo26): tp=2101, fp=1221, fn=26, precision=63.25%, recall=98.78%, F1=77.12%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 4.5s tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21
+
+>>> detection.yolo(weights=<ASCII tam yol>) ozel agirlik
+Detection assessment results (detection_method=yolo26): tp=2101, fp=1221, fn=26, precision=63.25%, recall=98.78%, F1=77.12%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 2.3s tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21
+
+>>> detection.yolo(conf=0.5) yuksek esik
+Detection assessment results (detection_method=yolo26): tp=2068, fp=1141, fn=59, precision=64.44%, recall=97.23%, F1=77.51%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 2.0s tp=2068 fp=1141 fn=59 P=64.44 R=97.23 F1=77.51 frames=21
+
+>>> detection.yolo(conf=0.01) dusuk esik
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> detection.yolo(yolo_model='yolo99') -> hata beklenir
+    PASS (beklenen hata) MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> detection.yolo(weights='C:/nope.pt') -> hata beklenir
+    PASS (beklenen hata) MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> detection.yolo(download=False) managed agirlik cache'de
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> get_detections() satir formati (yolo26, frame 0)
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+============================== BOLUM: detection_classic ==============================
+
+>>> detection.detect_moving_cells(method='cv-gmg')
+Detection assessment results (detection_method=moving_cells): tp=0, fp=1, fn=101, precision=0.0%, recall=0.0%, F1=0.0%, evaluated_frames=1
+Detection assessment is performed on frames: 20
+    PASS 1.5s tp=0 fp=1 fn=101 P=0.0 R=0.0 F1=0.0 frames=1
+
+>>> detection.detect_moving_cells(method='cv-mog')
+Detection assessment results (detection_method=moving_cells): tp=69, fp=16, fn=32, precision=81.18%, recall=68.32%, F1=74.19%, evaluated_frames=1
+Detection assessment is performed on frames: 20
+    PASS 0.7s tp=69 fp=16 fn=32 P=81.18 R=68.32 F1=74.19 frames=1
+
+>>> detection.detect_moving_cells(method='cv-mog2')
+Detection assessment results (detection_method=moving_cells): tp=90, fp=248, fn=11, precision=26.63%, recall=89.11%, F1=41.0%, evaluated_frames=1
+Detection assessment is performed on frames: 20
+    PASS 0.5s tp=90 fp=248 fn=11 P=26.63 R=89.11 F1=41.0 frames=1
+
+>>> detection.detect_moving_cells(method='gm')
+Detection assessment results (detection_method=moving_cells): tp=79, fp=9, fn=22, precision=89.77%, recall=78.22%, F1=83.6%, evaluated_frames=1
+Detection assessment is performed on frames: 20
+    PASS 3.3s tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1
+
+>>> detection.detect_moving_cells(method='gm', low_memory=True)
+Detection assessment results (detection_method=moving_cells): tp=79, fp=9, fn=22, precision=89.77%, recall=78.22%, F1=83.6%, evaluated_frames=1
+Detection assessment is performed on frames: 20
+    PASS 2.8s tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1
+
+>>> detection.detect_moving_cells(method='xyz') -> hata beklenir
+Running moving-cells detection on frames (method=xyz)...
+    PASS (beklenen hata) ValueError: method xyz is invalid.
+
+>>> detection.digital_washing() n_jobs=1
+Detection assessment results (detection_method=digital_washing): tp=84, fp=15, fn=17, precision=84.85%, recall=83.17%, F1=84.0%, evaluated_frames=1
+Detection assessment is performed on frames: 20
+    PASS 14.9s tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1
+
+>>> detection.digital_washing(n_jobs=4) paralel
+    FAIL MemoryError: Unable to allocate 105. MiB for an array with shape (21, 1024, 1280) and data type float32
+
+>>> detection.digital_washing(motion_threshold=5, blob_min_pixel_area=30)
+    FAIL MemoryError: Unable to allocate 105. MiB for an array with shape (21, 1024, 1280) and data type float32
+
+>>> detection.urbano_detection()
+Detection assessment results (detection_method=urbano_detection): tp=1920, fp=589, fn=207, precision=76.52%, recall=90.27%, F1=82.83%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 4.9s tp=1920 fp=589 fn=207 P=76.52 R=90.27 F1=82.83 frames=21
+
+>>> detection.urbano_detection(blob_min_pixel_area=10, log_size=7)
+Detection assessment results (detection_method=urbano_detection): tp=1813, fp=546, fn=314, precision=76.85%, recall=85.24%, F1=80.83%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 4.7s tp=1813 fp=546 fn=314 P=76.85 R=85.24 F1=80.83 frames=21
+
+>>> assessment.evaluate_detections(match_min_distance_pixel=10)
+Detection assessment results (detection_method=urbano_detection): tp=1599, fp=910, fn=528, precision=63.73%, recall=75.18%, F1=68.98%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 4.7s {'tp': 1599, 'fp': 910, 'fn': 528, 'precision': np.float64(63.73), 'recall': np.float64(75.18), 'F0.5': np.float64(65.73), 'F1': np.float64(68.98), 'F2': np.float64(72.57), 'evaluated_frames': 21}
+
+>>> assessment.evaluate_detections() detection YOKKEN -> hata beklenir
+Warning: no active predicted detection method was found in casa['detections']. Detection assessment will run with empty predictions.
+Detection assessment results (detection_method=none): tp=0, fp=0, fn=0, precision=0.0%, recall=0.0%, F1=0.0%, evaluated_frames=0
+No frames available for detection assessment.
+    FAIL (beklenen Exception gelmedi)
+
+>>> detection overwrite uyarisi (urbano -> moving_cells)
+    PASS 5.8s detection frame sayisi=1
+
+============================== BOLUM: detection_yolov5 ==============================
+
+>>> detection.yolo(yolo_model='yolov5') + evaluate_detections
+Detection assessment results (detection_method=yolov5): tp=1539, fp=631, fn=588, precision=70.92%, recall=72.36%, F1=71.63%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 6.0s tp=1539 fp=631 fn=588 P=70.92 R=72.36 F1=71.63 frames=21
+
+>>> detection.yolo(yolov5, conf=0.4)
+Detection assessment results (detection_method=yolov5): tp=1413, fp=315, fn=714, precision=81.77%, recall=66.43%, F1=73.31%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 2.1s tp=1413 fp=315 fn=714 P=81.77 R=66.43 F1=73.31 frames=21
+
+>>> YOLOv5'ten SONRA yolo26 (sira bagimliligi testi)
+Detection assessment results (detection_method=yolo26): tp=2101, fp=1025, fn=26, precision=67.21%, recall=98.78%, F1=79.99%, evaluated_frames=21
+Detection assessment is performed on frames: 0-20
+    PASS 3.0s tp=2101 fp=1025 fn=26 P=67.21 R=98.78 F1=79.99 frames=21
+
+============================== BOLUM: tracking ==============================
+
+>>> tracking.sort() sadece GT
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 0.8s backend=sort groundtruth:114 track
+
+>>> tracking.sort(max_age=5, min_hits=1, iou_threshold=0.3)
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 0.3s backend=sort groundtruth:168 track
+
+>>> tracking.sort(initial_frame=10)
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 0.3s backend=sort groundtruth:105 track
+
+>>> tracking.sort(delete_temp=False)
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 0.3s backend=sort groundtruth:114 track
+
+>>> tracking.sort() GT + yolo26 (iki kaynak)
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+GT and detections found, tracking will run on both
+    FAIL MemoryError:
+
+>>> tracking.sort(skip_gt=True) sadece yolo26
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> tracking.sort(skip_gt=True) detection YOKKEN
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> tracking.jpdaf() sadece GT
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> tracking.jpdaf(frame_rate=60, p_delete=0.3, sigma_n_um=1)
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> tracking.jpdaf(position_gate=5, velocity_gate_um=20, detection_probability=0.9)
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> tracking.jpdaf(skip_gt=True) yolo26
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> tracking.deepsort() sadece GT
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> tracking.deepsort(max_age=10, n_init=2, max_iou_distance=0.5)
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> tracking overwrite: sort -> jpdaf, get_tracks() tek backend
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> get_tracks(backend='jpdaf') sort varken
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> assessment.evaluate_tracks() GT-sort vs yolo26-sort
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> assessment.evaluate_tracks(match_min_distance_pixel=10, backend='sort')
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> assessment.evaluate_tracks() tek kaynakla (sadece GT)
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> assessment.evaluate_tracks() tracking YOKKEN -> hata beklenir
+    PASS (beklenen hata) MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+============================== BOLUM: motility ==============================
+
+>>> kinematic_parameters() + casa_parameters() [sort/GT]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 1.7s groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
+
+>>> motility [jpdaf/GT]
+JPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.
+
+    PASS 4.5s groundtruth: grades={'rapid': 41.51, 'slow': 31.13, 'non_progressive': 2.83, 'immotile': 24.53} motile=75.47 conc=67.76 tracks=106
+
+>>> motility [deepsort/GT]
+    PASS 2.0s groundtruth: grades={'rapid': 44.33, 'slow': 29.9, 'non_progressive': 5.15, 'immotile': 20.62} motile=79.38 conc=63.02 tracks=97
+
+>>> motility [sort/GT+yolo26 iki kaynak]
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+GT and detections found, tracking will run on both
+    PASS 9.2s groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
+
+>>> kinematic_parameters(window_size=15, overlap=0.5, smoothing_window=3, denoise_window=1, min_frame_rate_warn=0)
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 0.8s groundtruth: grades={'rapid': 52.29, 'slow': 9.17, 'non_progressive': 29.36, 'immotile': 9.17} motile=90.83 conc=61.21 tracks=109
+
+>>> kinematic_parameters(frame_rate=60)
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 0.7s groundtruth: grades={'rapid': 80.2, 'slow': 0.0, 'non_progressive': 17.82, 'immotile': 1.98} motile=98.02 conc=61.21 tracks=101
+
+>>> kinematic_parameters(conversion_required=False) piksel birimi
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 0.8s groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
+
+>>> kinematic_parameters(overlap=1.5) gecersiz -> hata beklenir
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    FAIL (beklenen Exception gelmedi)
+
+>>> casa_parameters(velocity_metric='VAP', rapid=25, immotile=10, progressive_str=0.5)
+This SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).
+
+    PASS 0.9s groundtruth: grades={'rapid': 36.63, 'slow': 41.58, 'non_progressive': 0.99, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
+
+>>> casa_parameters(velocity_metric='VSL')
+    FAIL MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+
+>>> casa_parameters(volume_ml=1, chamber_depth_um=10, dilution_factor=2)
+    FAIL MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+
+>>> casa_parameters(experimental_parameters=True, n_subpopulations=2)
+    FAIL MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+
+>>> casa_parameters(hyperactivation esikleri, experimental)
+    FAIL MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+
+>>> casa_parameters(velocity_metric='XYZ') -> hata beklenir
+    PASS (beklenen hata) MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+
+>>> casa_parameters() kinematic YOKKEN -> hata beklenir
+    PASS (beklenen hata) MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+
+>>> kinematic_parameters() tracking YOKKEN -> hata beklenir
+    PASS (beklenen hata) MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+
+>>> kinematic_parameters() um_per_px=None iken
+    FAIL MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+
+>>> get_motility() track basina kinematik anahtarlar
+    FAIL MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+
+============================== BOLUM: visualization ==============================
+
+>>> visualization.plot_frame('original')
+Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
+    PASS 0.1s png kaydedildi
+
+>>> visualization.plot_frame(frame_index=5, show_detections=False)
+Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
+    PASS 0.1s png kaydedildi
+
+>>> visualization.plot_frame('binarized') binarization YOKKEN -> hata beklenir
+    PASS (beklenen hata) ValueError: No binarized video found. Run `self.preprocessing.binarization.otsu()` first.
+
+>>> visualization.plot_frame(frame_index=999) -> hata beklenir
+    PASS (beklenen hata) ValueError: `frame_index`=999 is out of range for 61 frame(s).
+
+>>> visualization.timelapse() varsayilan (GT overlay)
+Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
+    PASS 0.2s png kaydedildi
+
+>>> visualization.timelapse(image_type='original') eski alias
+Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
+    PASS 0.1s png kaydedildi
+
+>>> visualization.timelapse('normalized') katman YOKKEN -> hata beklenir
+Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
+    PASS (beklenen hata) ValueError: `normalized` video is not available in casa['video']. Run the relevant preprocessing step first.
+Running preprocessing grayscale on frames...
+Grayscale summary: frames=61, shape=(61, 1024, 1280), dtype=uint8, overwrite=False
+Running binarization otsu on frames...
+
+===== 90 PASS / 29 FAIL / 119 test =====
+FAIL: io | session.io.load_default_data(volume_ml=...) wrapper/module imza paritesi -> TypeError: _SessionIONamespace.load_default_data() got an unexpected keyword argument 'volume_ml'
+FAIL: detection_yolo26 | detection.yolo(conf=0.01) dusuk esik -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: detection_yolo26 | detection.yolo(download=False) managed agirlik cache'de -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: detection_yolo26 | get_detections() satir formati (yolo26, frame 0) -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: detection_classic | detection.digital_washing(n_jobs=4) paralel -> MemoryError: Unable to allocate 105. MiB for an array with shape (21, 1024, 1280) and data type float32
+FAIL: detection_classic | detection.digital_washing(motion_threshold=5, blob_min_pixel_area=30) -> MemoryError: Unable to allocate 105. MiB for an array with shape (21, 1024, 1280) and data type float32
+FAIL: detection_classic | assessment.evaluate_detections() detection YOKKEN -> hata beklenir -> beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x0000022A04AE7BF0>
+FAIL: tracking | tracking.sort() GT + yolo26 (iki kaynak) -> MemoryError:
+FAIL: tracking | tracking.sort(skip_gt=True) sadece yolo26 -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | tracking.sort(skip_gt=True) detection YOKKEN -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | tracking.jpdaf() sadece GT -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | tracking.jpdaf(frame_rate=60, p_delete=0.3, sigma_n_um=1) -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | tracking.jpdaf(position_gate=5, velocity_gate_um=20, detection_probability=0.9) -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | tracking.jpdaf(skip_gt=True) yolo26 -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | tracking.deepsort() sadece GT -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | tracking.deepsort(max_age=10, n_init=2, max_iou_distance=0.5) -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | tracking overwrite: sort -> jpdaf, get_tracks() tek backend -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | get_tracks(backend='jpdaf') sort varken -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | assessment.evaluate_tracks() GT-sort vs yolo26-sort -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | assessment.evaluate_tracks(match_min_distance_pixel=10, backend='sort') -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: tracking | assessment.evaluate_tracks() tek kaynakla (sadece GT) -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: motility | kinematic_parameters(overlap=1.5) gecersiz -> hata beklenir -> beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x00000222F8BCBBC0>
+FAIL: motility | casa_parameters(velocity_metric='VSL') -> MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+FAIL: motility | casa_parameters(volume_ml=1, chamber_depth_um=10, dilution_factor=2) -> MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+FAIL: motility | casa_parameters(experimental_parameters=True, n_subpopulations=2) -> MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+FAIL: motility | casa_parameters(hyperactivation esikleri, experimental) -> MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+FAIL: motility | kinematic_parameters() um_per_px=None iken -> MemoryError: Unable to allocate 78.8 MiB for an array with shape (21, 1024, 1280, 3) and data type uint8
+FAIL: motility | get_motility() track basina kinematik anahtarlar -> MemoryError: Unable to allocate 229. MiB for an array with shape (61, 1024, 1280, 3) and data type uint8
+FAIL: visualization | BOLUM visualization cokti -> s\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\pycasa\utils\_video_helpers.py", line 64, in _convert_video_to_grayscale
+    gray = 0.114 * b + 0

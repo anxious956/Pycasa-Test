@@ -1,0 +1,331 @@
+{
+  "tarih": "20 September 2026",
+  "meta": [
+    [
+      "Video",
+      "sys-casa_sub-HC004_ses-01_run-005_video.avi",
+      "HC004 donor, session 01, run 005"
+    ],
+    [
+      "Resolution",
+      "1280 x 1024 px",
+      "Single field of view"
+    ],
+    [
+      "Frame rate",
+      "30 fps",
+      "Below the 50 fps the library recommends for VCL and ALH"
+    ],
+    [
+      "Frames loaded",
+      "101 of 901",
+      "Library default; 3.4 s of a 30 s recording"
+    ],
+    [
+      "Ground-truth labels",
+      "81,179 over 900 frames",
+      "Detections only, no track identities"
+    ],
+    [
+      "um_per_px",
+      "0.24",
+      "Pixel-to-micrometre scale; every velocity metric depends on it"
+    ],
+    [
+      "volume_ml",
+      "2.2",
+      "Ejaculate volume; converts concentration to total count"
+    ],
+    [
+      "chamber_depth_um",
+      "20.7",
+      "Counting-chamber depth; sets the imaged volume"
+    ]
+  ],
+  "detection101": [
+    [
+      "YOLOv5",
+      "7,716",
+      "2,976",
+      "2,376",
+      "72.17%",
+      "76.46%",
+      "74.25%",
+      "101"
+    ],
+    [
+      "YOLO26 (after YOLOv5)",
+      "9,985",
+      "4,797",
+      "107",
+      "67.55%",
+      "98.94%",
+      "80.28%",
+      "101"
+    ],
+    [
+      "YOLO26 (isolated)",
+      "9,985",
+      "5,806",
+      "107",
+      "63.23%",
+      "98.94%",
+      "77.15%",
+      "101"
+    ],
+    [
+      "Moving cells (cv-gmg)",
+      "6,800",
+      "8,069",
+      "1,266",
+      "45.73%",
+      "84.30%",
+      "59.30%",
+      "81"
+    ]
+  ],
+  "tracking101": [
+    [
+      "SORT",
+      141,
+      66.63,
+      "~100 frame/s"
+    ],
+    [
+      "JPDAF",
+      142,
+      74.94,
+      "~10 frame/s"
+    ]
+  ],
+  "kinematik101": [
+    [
+      "GT + SORT",
+      "111",
+      "28.31",
+      "17.80",
+      "19.64",
+      "0.58",
+      "1.06",
+      "0.66",
+      "0.83",
+      "43.31"
+    ],
+    [
+      "YOLO26 + SORT",
+      "154",
+      "22.20",
+      "14.93",
+      "16.25",
+      "0.58",
+      "0.85",
+      "0.67",
+      "0.82",
+      "38.97"
+    ]
+  ],
+  "casa101": [
+    [
+      "Real CASA machine (HSTLI)",
+      42,
+      23,
+      9,
+      26,
+      "-",
+      69,
+      151.8
+    ],
+    [
+      "pycasa: GT + SORT",
+      49.55,
+      27.03,
+      2.7,
+      20.72,
+      79.28,
+      59.52,
+      130.95
+    ],
+    [
+      "pycasa: YOLO26 + SORT",
+      37.01,
+      20.78,
+      1.95,
+      40.26,
+      59.74,
+      85.39,
+      187.86
+    ]
+  ],
+  "trackingUzun": [
+    [
+      "SORT",
+      141,
+      66.63,
+      298,
+      168.3
+    ],
+    [
+      "JPDAF",
+      142,
+      74.94,
+      215,
+      293.16
+    ]
+  ],
+  "casaUzun": [
+    [
+      "Real CASA machine (HSTLI)",
+      42,
+      23,
+      9,
+      26,
+      69,
+      151.8
+    ],
+    [
+      "pycasa: GT + SORT (601f)",
+      56.41,
+      23.08,
+      1.28,
+      19.23,
+      53.4,
+      117.47
+    ]
+  ],
+  "uzun": {
+    "frames": 601,
+    "saniye": 20.0,
+    "jpdafKat": 74,
+    "jpdafAz": 28,
+    "yorum": "For ground truth with SORT the concentration error did not improve with more footage: 59.52 M/mL on 101 frames and 53.4 M/mL on 601 frames, against the machine's 69 M/mL, a 14 percent and 23 percent gap respectively. The motility grades did move: rapid rose from 49.55 to 56.41 percent and immotile fell from 20.72 to 19.23 percent, both moving away from the reference rather than towards it. Longer tracks let more cells accumulate enough displacement to be graded rapid, which suggests the 101-frame agreement on grades was partly coincidental."
+  },
+  "api": {
+    "satirlar": [
+      [
+        "io",
+        14,
+        13,
+        "load_default_data and load_video, frame ranges, calibration overrides, missing files"
+      ],
+      [
+        "casa",
+        23,
+        23,
+        "every getter and setter, copy, info, invalid calibration values"
+      ],
+      [
+        "preprocessing",
+        16,
+        16,
+        "grayscale, 6 binarization methods, 6 normalization methods, chaining, overwrite"
+      ],
+      [
+        "detection yolo26",
+        4,
+        2,
+        "default and custom weights, four confidence thresholds, invalid model and path"
+      ],
+      [
+        "detection classic",
+        7,
+        6,
+        "4 moving-cells methods, digital washing, urbano, assessment thresholds"
+      ],
+      [
+        "detection yolov5",
+        2,
+        1,
+        "YOLOv5 weights, confidence variants, and the ordering test"
+      ],
+      [
+        "tracking",
+        11,
+        9,
+        "SORT, JPDAF, DeepSORT with parameter variants, multi-source, overwrite, MOTA/IDF1"
+      ],
+      [
+        "motility",
+        15,
+        13,
+        "kinematic and CASA parameters, all threshold and window variants, experimental mode"
+      ]
+    ],
+    "gecen": 83,
+    "toplam": 92,
+    "kalan": 9
+  },
+  "bulgular": [
+    [
+      "1",
+      "YOLO26 results depend on run order",
+      "Importing the YOLOv5 modules changes YOLO26's low-confidence output; F1 shifts by about 3 points",
+      "Run each detector in a separate Python process"
+    ],
+    [
+      "2",
+      "Result getters return live dictionaries",
+      "get_assessment() and get_motility() hand back the session's own objects, so a captured result changes when the next detector runs",
+      "Deep-copy any result you intend to compare"
+    ],
+    [
+      "3",
+      "kinematic_parameters() fails silently",
+      "Called without tracking it returns an empty result with no error and no warning",
+      "Check get_tracks() before calling it"
+    ],
+    [
+      "4",
+      "The overlap parameter is not validated",
+      "Values of 1.5, 5.0 and -0.5 are all accepted; passing 50 as a percentage silently multiplies the work",
+      "Keep overlap between 0 and 1"
+    ],
+    [
+      "5",
+      "Session wrapper is missing parameters",
+      "session.io.load_default_data() has no volume_ml or chamber_depth_um, although the module function does",
+      "Use the module function, or the setters afterwards"
+    ],
+    [
+      "6",
+      "Video is held as one contiguous array",
+      "The full 899-frame clip needs a single 3.3 GB allocation, which caps the usable clip length",
+      "Load a shorter window, or free memory first"
+    ]
+  ],
+  "y26karsilastirma": [
+    [
+      "Isolated, this machine",
+      "9,985",
+      "5,806",
+      "107",
+      "77.15%"
+    ],
+    [
+      "After YOLOv5, this machine",
+      "9,985",
+      "4,797",
+      "107",
+      "80.28%"
+    ],
+    [
+      "Independent run, different machine",
+      "9,982",
+      "3,951",
+      "110",
+      "83.10%"
+    ]
+  ],
+  "acikSoru": "Ground truth with SORT under-reports concentration by roughly a fifth, and more footage does not close the gap. Since these are the dataset's own annotations, the detector cannot be blamed. Two explanations are worth testing: the commercial machine may count cells the annotation protocol excludes, such as debris-adjacent or partially out-of-focus heads, or the imaged volume implied by um_per_px and chamber depth may not correspond to the volume the machine samples. Resolving this would tell the group whether pycasa's concentration output can be compared to a commercial report at all, or only to itself.",
+  "komutlar": [
+    "import pycasa as pc, copy",
+    "self = pc.io.load_default_data()",
+    "self.visualization.timelapse(show_detections=False, show_groundtruth=True)",
+    "",
+    "self.detection.yolo(yolo_model=\"yolo26\"); self.assessment.evaluate_detections()",
+    "result = copy.deepcopy(self.get_assessment()[\"detection\"])",
+    "",
+    "self.tracking.sort()            # tracks ground truth when no detector is active",
+    "self.motility.kinematic_parameters()",
+    "self.motility.casa_parameters()"
+  ]
+}

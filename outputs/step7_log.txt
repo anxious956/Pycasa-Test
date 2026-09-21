@@ -1,4 +1,4 @@
-﻿
+
 ============================== BOLUM: io ==============================
 
 >>> io.load_default_data(final_frame=20)
@@ -20,7 +20,7 @@
     PASS 0.2s frames=21
 
 >>> session.io.load_default_data() wrapper
-    PASS 0.1s um_per_px=0.24
+    PASS 0.2s um_per_px=0.24
 
 >>> session.io.load_default_data(volume_ml=...) wrapper/module imza paritesi
     FAIL TypeError: _SessionIONamespace.load_default_data() got an unexpected keyword argument 'volume_ml'
@@ -29,7 +29,7 @@
     PASS 0.2s frames=21 gt_frames=900 fps=30.0
 
 >>> io.load_video(video) GT'siz, sampling_rate=25
-    PASS 0.1s fps=25.0
+    PASS 0.0s fps=25.0
 
 >>> io.load_video(groundtruth_tracks_path=GT_DIR) (GT'de track id yok)
     PASS 0.2s gt_tracks=1
@@ -208,12 +208,12 @@ Binarization summary: method=sauvola, frames=21, shape=(21, 1024, 1280), dtype=u
 >>> preprocessing.binarization.urbano()
 Running binarization urbano on frames...
 Binarization summary: method=urbano, frames=21, shape=(21, 1024, 1280), dtype=uint8
-    PASS 4.7s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 1]
+    PASS 5.0s ['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 1]
 
 >>> binarization.otsu() grayscale yapilmadan (ham renkli video)
 Running binarization otsu on frames...
 Binarization summary: method=otsu, frames=21, shape=(21, 1024, 1280), dtype=uint8
-    PASS 0.8s ['original_video', 'binary_video']
+    PASS 0.7s ['original_video', 'binary_video']
 
 >>> binarization.adaptive_gaussian(block_size=4 cift) -> hata beklenir
     PASS (beklenen hata) ValueError: `block_size` must be an odd integer >= 3.
@@ -229,17 +229,17 @@ Normalization summary: method=clahe, frames=21, shape=(21, 1024, 1280, 3), dtype
 >>> preprocessing.normalization.hist_equal()
 Running normalization hist-equal on frames (overwrite=False)...
 Normalization summary: method=hist-equal, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
-    PASS 1.2s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+    PASS 1.0s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
 
 >>> preprocessing.normalization.log()
 Running normalization log on frames (overwrite=False)...
 Normalization summary: method=log, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
-    PASS 1.2s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+    PASS 1.1s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
 
 >>> preprocessing.normalization.median()
 Running normalization median on frames (overwrite=False)...
 Normalization summary: method=median, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
-    PASS 1.3s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
+    PASS 1.2s ['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8
 
 >>> preprocessing.normalization.min_max()
 Running normalization min-max on frames (overwrite=False)...
@@ -263,70 +263,36 @@ Running normalization clahe on frames (overwrite=False, clip_limit=2.000, tile_g
 Normalization summary: method=clahe, frames=21, shape=(21, 1024, 1280, 3), dtype=uint8, overwrite=False
 Running binarization otsu on frames...
 Binarization summary: method=otsu, frames=21, shape=(21, 1024, 1280), dtype=uint8
-    PASS 1.2s ['original_video', 'grayscale_video', 'normalized_video', 'binary_video']
+    PASS 1.3s ['original_video', 'grayscale_video', 'normalized_video', 'binary_video']
 
 ============================== BOLUM: detection_yolo26 ==============================
 
 >>> detection.yolo() varsayilan (yolo26) + evaluate_detections
-Detection assessment results (detection_method=yolo26): tp=2101, fp=1221, fn=26, precision=63.25%, recall=98.78%, F1=77.12%, evaluated_frames=21
-Detection assessment is performed on frames: 0-20
-    PASS 5.0s tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21
+    FAIL RuntimeError: [enforce fail at alloc_cpu.cpp:114] data. DefaultCPUAllocator: not enough memory: you tried to allocate 294912 bytes.
 
 >>> detection.yolo(weights=<ASCII tam yol>) ozel agirlik
-Detection assessment results (detection_method=yolo26): tp=2101, fp=1221, fn=26, precision=63.25%, recall=98.78%, F1=77.12%, evaluated_frames=21
-Detection assessment is performed on frames: 0-20
-    PASS 3.3s tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21
-
->>> detection.yolo(conf=0.5) yuksek esik
-Detection assessment results (detection_method=yolo26): tp=2068, fp=1141, fn=59, precision=64.44%, recall=97.23%, F1=77.51%, evaluated_frames=21
-Detection assessment is performed on frames: 0-20
-    PASS 2.8s tp=2068 fp=1141 fn=59 P=64.44 R=97.23 F1=77.51 frames=21
-
->>> detection.yolo(conf=0.01) dusuk esik
-Detection assessment results (detection_method=yolo26): tp=2120, fp=4024, fn=7, precision=34.51%, recall=99.67%, F1=51.26%, evaluated_frames=21
-Detection assessment is performed on frames: 0-20
-    PASS 3.2s tp=2120 fp=4024 fn=7 P=34.51 R=99.67 F1=51.26 frames=21
-
->>> detection.yolo(yolo_model='yolo99') -> hata beklenir
-    PASS (beklenen hata) ValueError: `yolo_model` must be one of ('yolov5', 'yolo26'), got 'yolo99'.
-
->>> detection.yolo(weights='C:/nope.pt') -> hata beklenir
-    PASS (beklenen hata) FileNotFoundError: Custom `weights` path was not found: 'C:/nope.pt'. On Windows use a raw string: r'D:\path\to\weights.pt'
-
->>> detection.yolo(download=False) managed agirlik cache'de
-Detection assessment results (detection_method=yolo26): tp=2101, fp=1221, fn=26, precision=63.25%, recall=98.78%, F1=77.12%, evaluated_frames=21
-Detection assessment is performed on frames: 0-20
-    PASS 2.8s tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21
-
->>> get_detections() satir formati (yolo26, frame 0)
-    PASS 3.2s [['0', '0.910138', '0.828910', '0.037355', '0.046788'], ['0', '0.556985', '0.449665', '0.036418', '0.045641']]
 
 ============================== BOLUM: detection_classic ==============================
 
 >>> detection.detect_moving_cells(method='cv-gmg')
-Detection assessment results (detection_method=moving_cells): tp=0, fp=1, fn=101, precision=0.0%, recall=0.0%, F1=0.0%, evaluated_frames=1
-Detection assessment is performed on frames: 20
-    PASS 1.6s tp=0 fp=1 fn=101 P=0.0 R=0.0 F1=0.0 frames=1
+    FAIL error: OpenCV(4.14.0) D:\a\opencv-python\opencv-python\opencv\modules\core\src\alloc.cpp:73: error: (-4:Insufficient memory) Failed to allocate 335544320 bytes in function 'cv::OutOfMemoryError'
+
 
 >>> detection.detect_moving_cells(method='cv-mog')
-Detection assessment results (detection_method=moving_cells): tp=69, fp=16, fn=32, precision=81.18%, recall=68.32%, F1=74.19%, evaluated_frames=1
-Detection assessment is performed on frames: 20
-    PASS 0.8s tp=69 fp=16 fn=32 P=81.18 R=68.32 F1=74.19 frames=1
+    FAIL MemoryError: Unable to allocate 26.2 MiB for an array with shape (21, 1024, 1280) and data type uint8
 
 >>> detection.detect_moving_cells(method='cv-mog2')
 Detection assessment results (detection_method=moving_cells): tp=90, fp=248, fn=11, precision=26.63%, recall=89.11%, F1=41.0%, evaluated_frames=1
 Detection assessment is performed on frames: 20
-    PASS 0.6s tp=90 fp=248 fn=11 P=26.63 R=89.11 F1=41.0 frames=1
+    PASS 0.8s tp=90 fp=248 fn=11 P=26.63 R=89.11 F1=41.0 frames=1
 
 >>> detection.detect_moving_cells(method='gm')
-Detection assessment results (detection_method=moving_cells): tp=79, fp=9, fn=22, precision=89.77%, recall=78.22%, F1=83.6%, evaluated_frames=1
-Detection assessment is performed on frames: 20
-    PASS 3.8s tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1
+    FAIL MemoryError: Unable to allocate 200. MiB for an array with shape (20, 1024, 1280) and data type float64
 
 >>> detection.detect_moving_cells(method='gm', low_memory=True)
 Detection assessment results (detection_method=moving_cells): tp=79, fp=9, fn=22, precision=89.77%, recall=78.22%, F1=83.6%, evaluated_frames=1
 Detection assessment is performed on frames: 20
-    PASS 3.1s tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1
+    PASS 3.0s tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1
 
 >>> detection.detect_moving_cells(method='xyz') -> hata beklenir
 Running moving-cells detection on frames (method=xyz)...
@@ -335,22 +301,22 @@ Running moving-cells detection on frames (method=xyz)...
 >>> detection.digital_washing() n_jobs=1
 Detection assessment results (detection_method=digital_washing): tp=84, fp=15, fn=17, precision=84.85%, recall=83.17%, F1=84.0%, evaluated_frames=1
 Detection assessment is performed on frames: 20
-    PASS 16.9s tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1
+    PASS 16.1s tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1
 
 >>> detection.digital_washing(n_jobs=4) paralel
 Detection assessment results (detection_method=digital_washing): tp=84, fp=15, fn=17, precision=84.85%, recall=83.17%, F1=84.0%, evaluated_frames=1
 Detection assessment is performed on frames: 20
-    PASS 18.1s tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1
+    PASS 19.7s tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1
 
 >>> detection.digital_washing(motion_threshold=5, blob_min_pixel_area=30)
 Detection assessment results (detection_method=digital_washing): tp=58, fp=3, fn=43, precision=95.08%, recall=57.43%, F1=71.6%, evaluated_frames=1
 Detection assessment is performed on frames: 20
-    PASS 15.5s tp=58 fp=3 fn=43 P=95.08 R=57.43 F1=71.6 frames=1
+    PASS 17.2s tp=58 fp=3 fn=43 P=95.08 R=57.43 F1=71.6 frames=1
 
 >>> detection.urbano_detection()
 Detection assessment results (detection_method=urbano_detection): tp=1920, fp=589, fn=207, precision=76.52%, recall=90.27%, F1=82.83%, evaluated_frames=21
 Detection assessment is performed on frames: 0-20
-    PASS 4.9s tp=1920 fp=589 fn=207 P=76.52 R=90.27 F1=82.83 frames=21
+    PASS 4.8s tp=1920 fp=589 fn=207 P=76.52 R=90.27 F1=82.83 frames=21
 
 >>> detection.urbano_detection(blob_min_pixel_area=10, log_size=7)
 Detection assessment results (detection_method=urbano_detection): tp=1813, fp=546, fn=314, precision=76.85%, recall=85.24%, F1=80.83%, evaluated_frames=21
@@ -360,7 +326,7 @@ Detection assessment is performed on frames: 0-20
 >>> assessment.evaluate_detections(match_min_distance_pixel=10)
 Detection assessment results (detection_method=urbano_detection): tp=1599, fp=910, fn=528, precision=63.73%, recall=75.18%, F1=68.98%, evaluated_frames=21
 Detection assessment is performed on frames: 0-20
-    PASS 4.9s {'tp': 1599, 'fp': 910, 'fn': 528, 'precision': np.float64(63.73), 'recall': np.float64(75.18), 'F0.5': np.float64(65.73), 'F1': np.float64(68.98), 'F2': np.float64(72.57), 'evaluated_frames': 21}
+    PASS 5.1s {'tp': 1599, 'fp': 910, 'fn': 528, 'precision': np.float64(63.73), 'recall': np.float64(75.18), 'F0.5': np.float64(65.73), 'F1': np.float64(68.98), 'F2': np.float64(72.57), 'evaluated_frames': 21}
 
 >>> assessment.evaluate_detections() detection YOKKEN -> hata beklenir
 Warning: no active predicted detection method was found in casa['detections']. Detection assessment will run with empty predictions.
@@ -369,357 +335,6 @@ No frames available for detection assessment.
     FAIL (beklenen Exception gelmedi)
 
 >>> detection overwrite uyarisi (urbano -> moving_cells)
-    PASS 5.9s detection frame sayisi=1
+    PASS 6.0s detection frame sayisi=1
 
 ============================== BOLUM: detection_yolov5 ==============================
-
->>> detection.yolo(yolo_model='yolov5') + evaluate_detections
-Detection assessment results (detection_method=yolov5): tp=1539, fp=631, fn=588, precision=70.92%, recall=72.36%, F1=71.63%, evaluated_frames=21
-Detection assessment is performed on frames: 0-20
-    PASS 5.4s tp=1539 fp=631 fn=588 P=70.92 R=72.36 F1=71.63 frames=21
-
->>> detection.yolo(yolov5, conf=0.4)
-Detection assessment results (detection_method=yolov5): tp=1413, fp=315, fn=714, precision=81.77%, recall=66.43%, F1=73.31%, evaluated_frames=21
-Detection assessment is performed on frames: 0-20
-    PASS 2.3s tp=1413 fp=315 fn=714 P=81.77 R=66.43 F1=73.31 frames=21
-
->>> YOLOv5'ten SONRA yolo26 (sira bagimliligi testi)
-Detection assessment results (detection_method=yolo26): tp=2101, fp=1025, fn=26, precision=67.21%, recall=98.78%, F1=79.99%, evaluated_frames=21
-Detection assessment is performed on frames: 0-20
-    PASS 3.2s tp=2101 fp=1025 fn=26 P=67.21 R=98.78 F1=79.99 frames=21
-
-============================== BOLUM: tracking ==============================
-
->>> tracking.sort() sadece GT
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.8s backend=sort groundtruth:114 track
-
->>> tracking.sort(max_age=5, min_hits=1, iou_threshold=0.3)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.3s backend=sort groundtruth:168 track
-
->>> tracking.sort(initial_frame=10)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.3s backend=sort groundtruth:105 track
-
->>> tracking.sort(delete_temp=False)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.3s backend=sort groundtruth:114 track
-
->>> tracking.sort() GT + yolo26 (iki kaynak)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-GT and detections found, tracking will run on both
-    PASS 4.9s backend=sort groundtruth:114 track | yolo26:239 track
-
->>> tracking.sort(skip_gt=True) sadece yolo26
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 2.7s backend=sort yolo26:239 track
-
->>> tracking.sort(skip_gt=True) detection YOKKEN
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.2s backend=sort 
-
->>> tracking.jpdaf() sadece GT
-[93mJPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.[0m
-
-    PASS 1.4s backend=jpdaf groundtruth:115 track
-
->>> tracking.jpdaf(frame_rate=60, p_delete=0.3, sigma_n_um=1)
-[93mJPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.[0m
-
-    PASS 1.6s backend=jpdaf groundtruth:138 track
-
->>> tracking.jpdaf(position_gate=5, velocity_gate_um=20, detection_probability=0.9)
-[93mJPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.[0m
-
-    PASS 11.4s backend=jpdaf groundtruth:81 track
-
->>> tracking.jpdaf(skip_gt=True) yolo26
-[93mJPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.[0m
-
-    PASS 6.4s backend=jpdaf yolo26:203 track
-
->>> tracking.deepsort() sadece GT
-    PASS 0.7s backend=deepsort groundtruth:127 track
-
->>> tracking.deepsort(max_age=10, n_init=2, max_iou_distance=0.5)
-    PASS 0.8s backend=deepsort groundtruth:180 track
-
->>> tracking overwrite: sort -> jpdaf, get_tracks() tek backend
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-[93mJPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.[0m
-
-    PASS 1.6s backends=['jpdaf']
-
->>> get_tracks(backend='jpdaf') sort varken
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.3s {}
-
->>> assessment.evaluate_tracks() GT-sort vs yolo26-sort
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-GT and detections found, tracking will run on both
-Track assessment - pairwise (2 track sets, threshold=20px) (no imported truth present)
-  - sort:groundtruth: 114 tracks
-  - sort:yolo26: 239 tracks
-
-MOTA (%)  [row = ground-truth role, col = prediction role]
-                 | sort:groundtruth |      sort:yolo26
-------------------------------------------------------
-sort:groundtruth |                - |            49.17
-sort:yolo26      |            65.59 |                -
-
-IDF1 (%)  [symmetric]
-                 | sort:groundtruth |      sort:yolo26
-------------------------------------------------------
-sort:groundtruth |                - |            78.36
-sort:yolo26      |            78.36 |                -
-    PASS 3.5s {}
-
->>> assessment.evaluate_tracks(match_min_distance_pixel=10, backend='sort')
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-GT and detections found, tracking will run on both
-Track assessment - pairwise (2 track sets, threshold=10px) (no imported truth present)
-  - sort:groundtruth: 114 tracks
-  - sort:yolo26: 239 tracks
-
-MOTA (%)  [row = ground-truth role, col = prediction role]
-                 | sort:groundtruth |      sort:yolo26
-------------------------------------------------------
-sort:groundtruth |                - |            28.27
-sort:yolo26      |            51.22 |                -
-
-IDF1 (%)  [symmetric]
-                 | sort:groundtruth |      sort:yolo26
-------------------------------------------------------
-sort:groundtruth |                - |            69.87
-sort:yolo26      |            69.87 |                -
-    PASS 3.3s ok
-
->>> assessment.evaluate_tracks() tek kaynakla (sadece GT)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-Warning: track assessment skipped (need_at_least_two_track_sets).
-    PASS 0.3s {}
-
->>> assessment.evaluate_tracks() tracking YOKKEN -> hata beklenir
-Warning: track assessment skipped (need_at_least_two_track_sets).
-    FAIL (beklenen Exception gelmedi)
-
-============================== BOLUM: motility ==============================
-
->>> kinematic_parameters() + casa_parameters() [sort/GT]
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 1.2s groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
-
->>> motility [jpdaf/GT]
-[93mJPDAF tracker based on: Urbano et al. (2017), 'Automatic Tracking and Motility Analysis of Human Sperm in Time-Lapse Images', IEEE TMI 36(3), 792-801.[0m
-
-    PASS 4.2s groundtruth: grades={'rapid': 41.51, 'slow': 31.13, 'non_progressive': 2.83, 'immotile': 24.53} motile=75.47 conc=67.76 tracks=106
-
->>> motility [deepsort/GT]
-    PASS 2.3s groundtruth: grades={'rapid': 44.33, 'slow': 29.9, 'non_progressive': 5.15, 'immotile': 20.62} motile=79.38 conc=63.02 tracks=97
-
->>> motility [sort/GT+yolo26 iki kaynak]
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-GT and detections found, tracking will run on both
-    PASS 10.0s groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
-
->>> kinematic_parameters(window_size=15, overlap=0.5, smoothing_window=3, denoise_window=1, min_frame_rate_warn=0)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.8s groundtruth: grades={'rapid': 52.29, 'slow': 9.17, 'non_progressive': 29.36, 'immotile': 9.17} motile=90.83 conc=61.21 tracks=109
-
->>> kinematic_parameters(frame_rate=60)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.8s groundtruth: grades={'rapid': 80.2, 'slow': 0.0, 'non_progressive': 17.82, 'immotile': 1.98} motile=98.02 conc=61.21 tracks=101
-
->>> kinematic_parameters(conversion_required=False) piksel birimi
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.8s groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
-
->>> kinematic_parameters(overlap=1.5) gecersiz -> hata beklenir
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    FAIL (beklenen Exception gelmedi)
-
->>> casa_parameters(velocity_metric='VAP', rapid=25, immotile=10, progressive_str=0.5)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.8s groundtruth: grades={'rapid': 36.63, 'slow': 41.58, 'non_progressive': 0.99, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
-
->>> casa_parameters(velocity_metric='VSL')
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.8s groundtruth: grades={'rapid': 12.87, 'slow': 42.57, 'non_progressive': 0.0, 'immotile': 44.55} motile=55.45 conc=61.21 tracks=101
-
->>> casa_parameters(volume_ml=1, chamber_depth_um=10, dilution_factor=2)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.8s groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=253.4 tracks=101
-
->>> casa_parameters(experimental_parameters=True, n_subpopulations=2)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.9s keys=['grades', 'grades_std', 'percent_motile', 'percent_motile_std', 'counts', 'track_count', 'cells_per_frame', 'concentration_M_per_ml', 'concentration_M_per_ml_std', 'dilution_factor', 'volume_ml', 'total_sperm_count_M', 'total_sperm_count_M_std', 'velocity_metric', 'thresholds', 'skipped', 'experimental']
-
->>> casa_parameters(hyperactivation esikleri, experimental)
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.9s groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101
-
->>> casa_parameters(velocity_metric='XYZ') -> hata beklenir
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS (beklenen hata) ValueError: `velocity_metric` must be one of ('VAP', 'VCL', 'VSL'), got 'XYZ'.
-
->>> casa_parameters() kinematic YOKKEN -> hata beklenir
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS (beklenen hata) RuntimeError: No kinematic parameters found. Run `self.motility.kinematic_parameters()` before `casa_parameters()`.
-
->>> kinematic_parameters() tracking YOKKEN -> hata beklenir
-    FAIL (beklenen Exception gelmedi)
-
->>> kinematic_parameters() um_per_px=None iken
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    FAIL ValueError: `um_per_px` is required when conversion is requested.
-
->>> get_motility() track basina kinematik anahtarlar
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-    PASS 0.9s ['VCL', 'VSL', 'VAP', 'LIN', 'ALH', 'WOB', 'STR', 'MAD', 'frame_ranges']
-
-============================== BOLUM: visualization ==============================
-
->>> visualization.plot_frame('original')
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.plot_frame(frame_index=5, show_detections=False)
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.plot_frame('binarized') binarization YOKKEN -> hata beklenir
-    PASS (beklenen hata) ValueError: No binarized video found. Run `self.preprocessing.binarization.otsu()` first.
-
->>> visualization.plot_frame(frame_index=999) -> hata beklenir
-    PASS (beklenen hata) ValueError: `frame_index`=999 is out of range for 61 frame(s).
-
->>> visualization.timelapse() varsayilan (GT overlay)
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.timelapse(image_type='original') eski alias
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.timelapse('normalized') katman YOKKEN -> hata beklenir
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    PASS (beklenen hata) ValueError: `normalized` video is not available in casa['video']. Run the relevant preprocessing step first.
-Running preprocessing grayscale on frames...
-Grayscale summary: frames=61, shape=(61, 1024, 1280), dtype=uint8, overwrite=False
-Running binarization otsu on frames...
-Binarization summary: method=otsu, frames=61, shape=(61, 1024, 1280), dtype=uint8
-Running normalization clahe on frames (overwrite=False, clip_limit=2.000, tile_grid_size=(8, 8))...
-Normalization summary: method=clahe, frames=61, shape=(61, 1024, 1280, 3), dtype=uint8, overwrite=False
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-GT and detections found, tracking will run on both
-
->>> visualization.plot_frame(['original','grayscale','binarized','normalized'])
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.plot_frame('grayscale+binarized')
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.timelapse(tracks+ids+ozel renkler+max_track_gap)
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.interactive_motility_calculator()
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.interactive_motility_calculator(frame_rate=60, smoothing_window=3)
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.plot_frame('moving_cells')
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.timelapse('moving_cells')
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.motility_radar() motility YOKKEN -> hata beklenir
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    PASS (beklenen hata) RuntimeError: No motility parameters found under 'kinematic_parameters'. Run `self.motility.kinematic_parameters()` first.
-
->>> visualization.motility_density_scatter() motility YOKKEN -> hata beklenir
-    PASS (beklenen hata) RuntimeError: No motility parameters found under 'kinematic_parameters'. Run `self.motility.kinematic_parameters()` first.
-
->>> visualization.interactive_motility_calculator() tracking YOKKEN -> hata beklenir
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    PASS (beklenen hata) RuntimeError: No tracks found. Run tracking first, or load imported ground-truth tracks via load_video(groundtruth_tracks_path=...).
-[93mThis SORT implementation is adopted from https://github.com/abewley/sort, authored by Alex Bewley under the GPL-3.0 License, with a small modification to handle frames with zero detections (empty _iou_batch guard).[0m
-
-
->>> visualization.motility_radar()
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.motility_radar(show_legend=False, show_text=False)
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.motility_radar(axis=<verilen polar eksen>)
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> visualization.motility_density_scatter()
-Warning: matplotlib backend 'Agg' is non-interactive. No plot window may appear. Set `MPLBACKEND=tkagg` before running, or switch backend in code.
-    FAIL AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-
->>> meta['last_visualization'] yazildi mi
-    PASS 0.0s None
-
-===== 119 PASS / 21 FAIL / 140 test =====
-FAIL: io | session.io.load_default_data(volume_ml=...) wrapper/module imza paritesi -> TypeError: _SessionIONamespace.load_default_data() got an unexpected keyword argument 'volume_ml'
-FAIL: detection_classic | assessment.evaluate_detections() detection YOKKEN -> hata beklenir -> beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x0000019672E36F90>
-FAIL: tracking | assessment.evaluate_tracks() tracking YOKKEN -> hata beklenir -> beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x000001850690D490>
-FAIL: motility | kinematic_parameters(overlap=1.5) gecersiz -> hata beklenir -> beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x000001FD397712E0>
-FAIL: motility | kinematic_parameters() tracking YOKKEN -> hata beklenir -> beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x000001FD5C5DC890>
-FAIL: motility | kinematic_parameters() um_per_px=None iken -> ValueError: `um_per_px` is required when conversion is requested.
-FAIL: visualization | visualization.plot_frame('original') -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.plot_frame(frame_index=5, show_detections=False) -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.timelapse() varsayilan (GT overlay) -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.timelapse(image_type='original') eski alias -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.plot_frame(['original','grayscale','binarized','normalized']) -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.plot_frame('grayscale+binarized') -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.timelapse(tracks+ids+ozel renkler+max_track_gap) -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.interactive_motility_calculator() -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.interactive_motility_calculator(frame_rate=60, smoothing_window=3) -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.plot_frame('moving_cells') -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.timelapse('moving_cells') -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.motility_radar() -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.motility_radar(show_legend=False, show_text=False) -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.motility_radar(axis=<verilen polar eksen>) -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
-FAIL: visualization | visualization.motility_density_scatter() -> AttributeError: 'NoneType' object has no attribute 'FigureCanvas'
