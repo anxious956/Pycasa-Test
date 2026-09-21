@@ -163,3 +163,43 @@ Yorum:
 - Uyarı: 30 fps, önerilen 50 fps'nin altında; VCL ve ALH eğri yolun az örneklenmesi yüzünden düşük tahmin edilebilir.
 
 Script: `scripts/step6_motility.py` — ham sonuçlar `outputs/step6_motility_results.json`, karşılaştırma `outputs/step6_casa_vs_hstli.json`, log `outputs/step6_log.txt`
+
+---
+
+## 7) Tüm public API'nin tek tek test edilmesi
+
+`scripts/step7_full_api_test.py` pycasa'nın tüm public fonksiyonlarını HC004 verisiyle
+çalıştırır: her io/getter/setter/preprocessing/detection/tracking/motility/visualization
+fonksiyonu, önemli parametre kombinasyonları ve hatalı girdilerde doğru hata verip
+vermediği. Her bölüm ayrı Python process'inde çalışır (bellek ve YOLOv5 global durum izolasyonu).
+
+```bash
+python scripts/step7_full_api_test.py
+```
+
+**Sonuç: 140 testten 134'ü geçti.** Tam tablo: `outputs/step7_api_test_report.md`
+
+Çalıştığı doğrulananlar: 3 YOLO varyantı, 4 moving-cells yöntemi (cv-gmg, cv-mog,
+cv-mog2, gm), digital washing, urbano detection, 6 binarization, 6 normalization,
+3 tracker (sort, jpdaf, deepsort), kinematik ve CASA parametrelerinin tüm eşik
+varyantları, 5 görselleştirme fonksiyonu.
+
+### Bulunan sorunlar
+
+| # | Sorun | Etki | Geçici çözüm |
+|---|---|---|---|
+| 1 | YOLO26 sonucu, aynı process'te önce YOLOv5 çalıştıysa değişiyor | F1 %77.15 yerine %80.28 görünüyor | İki modeli ayrı process'te çalıştır |
+| 2 | `session.io.load_default_data()` wrapper'ında `volume_ml` ve `chamber_depth_um` yok, modül fonksiyonunda var | `TypeError` | `pc.io.load_default_data()` kullan veya sonradan `set_volume_ml()` |
+| 3 | `kinematic_parameters()` tracking yapılmadan çağrılınca sessizce boş dönüyor, uyarı yok | Sessiz başarısızlık | Önce `get_tracks()` ile kontrol et |
+| 4 | `overlap` parametresi doğrulanmıyor: 1.5, 5.0, -0.5 hepsi kabul ediliyor | `overlap=50` yazarsan sessizce 30 kat fazla pencere | 0 ile 1 arasında değer ver |
+| 5 | `get_assessment()` ve `get_motility()` canlı sözlük döndürüyor | Yeni run eski sonucu bozuyor | `copy.deepcopy()` ile sakla |
+| 6 | YOLOv5 ağırlıkları Türkçe karakterli yoldan yüklenemiyor | `errno 2` | Ağırlıkları ASCII klasörde tut |
+
+Daha küçük pürüzler: YOLOv5 repo klonlama sorusu `input()` ile soruluyor, stdin yoksa
+`EOFError` veriyor. `sort` paketi hiçbir pip extra'sına dahil değil. `digital_washing(n_jobs>1)`
+Windows'ta `BrokenProcessPool` veriyor. Paket sürümü hâlâ 0.0.1 ve açıklaması "minimal rebuild".
+`get_assesment` yazım hatalı alias duruyor. Timelapse penceresi kapanınca Tk timer hatası basıyor.
+
+Doğru davrandığı görülenler: `evaluate_tracks()` iki track seti yoksa `skipped=True` ile
+düzgün atlıyor, `evaluate_detections()` detection yoksa uyarı basıp sıfır sonuç yazıyor,
+görselleştirme fonksiyonları eksik veri durumunda net `ValueError`/`RuntimeError` veriyor.

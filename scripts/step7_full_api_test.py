@@ -34,7 +34,11 @@ def _fake_show(*a, **k):
     plt.close("all")
 
 plt.show = _fake_show
-plt.switch_backend = lambda *a, **k: None          # Agg'de kal, Tk penceresi acma
+# Arka ucu once gercekten baslat (yoksa _backend_mod None kalir ve FigureCanvas hatasi verir),
+# sonra pycasa'nin TkAgg'a gecmesini engelle: her istek Agg'e yonlendirilir.
+_real_switch = plt.switch_backend
+_real_switch("Agg")
+plt.switch_backend = lambda *a, **k: None
 
 import pycasa as pc
 
