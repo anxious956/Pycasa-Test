@@ -1,6 +1,6 @@
 import pycasa as pc
 
-# Adim 1: default datayi yukle
+# Step 1: load the default dataset
 self = pc.io.load_default_data()
 
 print("\n=== META ===")

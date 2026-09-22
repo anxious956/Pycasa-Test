@@ -1,65 +1,65 @@
-"""Sunumdaki durgun goruntuleri animasyonlu GIF'lerle degistir.
+"""Replace the static images in the presentation with animated GIFs.
 
-PowerPoint animasyonlu GIF'i slayt gosterisinde kendiliginden oynatir. Yapilan is:
-  1) GIF'leri ppt/media/ icine ekle
-  2) [Content_Types].xml'e gif uzantisini tanit
-  3) ilgili slaydin _rels dosyasinda hedefi png yerine gif'e cevir
-  4) artik kullanilmayan png'leri at
+PowerPoint plays an animated GIF by itself during a slide show. The steps are:
+  1) add the GIFs to ppt/media/
+  2) register the gif extension in [Content_Types].xml
+  3) in the slide's _rels file, point the target at the gif instead of the png
+  4) drop the png files that are no longer referenced
 
-Slayttaki cerceve boyutu (a:ext) degismiyor; GIF ayni kutuya oturuyor.
+The frame size on the slide (a:ext) is untouched; the GIF fits the same box.
 
-    python scripts/pptx_swap_gifs.py <girdi.pptx> <cikti.pptx>
+    python scripts/pptx_swap_gifs.py <input.pptx> <output.pptx>
 """
 import os, re, shutil, sys, zipfile
 
-# slayt numarasi -> (degistirilecek medya dosyasi, yerine konacak GIF)
-DEGISIM = {
+# slide number -> (media file to replace, GIF to put in its place)
+REPLACEMENTS = {
     8: ("image2.png", "outputs/report/02_gt_vs_yolo26.gif"),
     9: ("image3.png", "outputs/report/09_sort_vs_jpdaf.gif"),
 }
 
 
-def main(girdi, cikti):
-    z = zipfile.ZipFile(girdi)
-    icerik = {n: z.read(n) for n in z.namelist()}
+def main(src, dst):
+    z = zipfile.ZipFile(src)
+    parts = {n: z.read(n) for n in z.namelist()}
     z.close()
 
-    yeni_medya, eskiler = {}, []
-    for slayt, (eski_png, gif_yolu) in DEGISIM.items():
-        rels_yol = f"ppt/slides/_rels/slide{slayt}.xml.rels"
-        rels = icerik[rels_yol].decode("utf-8")
-        if f"media/{eski_png}" not in rels:
-            print(f"  ! slayt {slayt}: {eski_png} bulunamadi, atlaniyor")
+    new_media, old_media = {}, []
+    for slide, (old_png, gif_path) in REPLACEMENTS.items():
+        rels_path = f"ppt/slides/_rels/slide{slide}.xml.rels"
+        rels = parts[rels_path].decode("utf-8")
+        if f"media/{old_png}" not in rels:
+            print(f"  ! slide {slide}: {old_png} not found, skipping")
             continue
-        gif_ad = f"image_anim{slayt}.gif"
-        yeni_medya[f"ppt/media/{gif_ad}"] = open(gif_yolu, "rb").read()
-        icerik[rels_yol] = rels.replace(f"media/{eski_png}", f"media/{gif_ad}").encode("utf-8")
-        eskiler.append(f"ppt/media/{eski_png}")
-        mb = os.path.getsize(gif_yolu) / 1e6
-        print(f"  slayt {slayt}: {eski_png} -> {gif_ad}  ({mb:.1f} MB)")
+        gif_name = f"image_anim{slide}.gif"
+        new_media[f"ppt/media/{gif_name}"] = open(gif_path, "rb").read()
+        parts[rels_path] = rels.replace(f"media/{old_png}", f"media/{gif_name}").encode("utf-8")
+        old_media.append(f"ppt/media/{old_png}")
+        mb = os.path.getsize(gif_path) / 1e6
+        print(f"  slide {slide}: {old_png} -> {gif_name}  ({mb:.1f} MB)")
 
-    # gif uzantisini tanit
-    ct_yol = "[Content_Types].xml"
-    ct = icerik[ct_yol].decode("utf-8")
+    # register the gif extension
+    ct_path = "[Content_Types].xml"
+    ct = parts[ct_path].decode("utf-8")
     if 'Extension="gif"' not in ct:
         ct = ct.replace("<Default", '<Default Extension="gif" ContentType="image/gif"/><Default', 1)
-        icerik[ct_yol] = ct.encode("utf-8")
-        print("  [Content_Types].xml: gif tanitildi")
+        parts[ct_path] = ct.encode("utf-8")
+        print("  [Content_Types].xml: gif registered")
 
-    # baska slaytta kullanilmayan eski png'leri at
-    for eski in eskiler:
-        ad = eski.split("/")[-1]
-        hala = any(ad in v.decode("utf-8", "ignore")
-                   for k, v in icerik.items() if k.endswith(".rels"))
-        if not hala:
-            icerik.pop(eski, None)
-            print(f"  atildi: {eski}")
+    # drop old png files that no other slide still references
+    for old in old_media:
+        name = old.split("/")[-1]
+        still_used = any(name in v.decode("utf-8", "ignore")
+                         for k, v in parts.items() if k.endswith(".rels"))
+        if not still_used:
+            parts.pop(old, None)
+            print(f"  dropped: {old}")
 
-    icerik.update(yeni_medya)
-    with zipfile.ZipFile(cikti, "w", zipfile.ZIP_DEFLATED) as out:
-        for ad, veri in icerik.items():
-            out.writestr(ad, veri)
-    print(f"\n  yazildi: {cikti}  ({os.path.getsize(cikti)/1e6:.1f} MB)")
+    parts.update(new_media)
+    with zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as out:
+        for name, data in parts.items():
+            out.writestr(name, data)
+    print(f"\n  written: {dst}  ({os.path.getsize(dst)/1e6:.1f} MB)")
 
 
 if __name__ == "__main__":

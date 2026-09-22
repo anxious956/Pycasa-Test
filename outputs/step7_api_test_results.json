@@ -3,54 +3,54 @@
     "section": "io",
     "name": "io.load_default_data(final_frame=20)",
     "status": "PASS",
-    "sec": 0.3,
+    "sec": 13.9,
     "note": "frames=21"
   },
   {
     "section": "io",
     "name": "io.load_default_data(um_per_px/volume_ml/chamber_depth_um override)",
     "status": "PASS",
-    "sec": 0.7,
+    "sec": 1.1,
     "note": "{'um_per_px': 0.5, 'volume_ml': 3.0, 'chamber_depth_um': 10.0}"
   },
   {
     "section": "io",
     "name": "io.load_default_data(initial_frame=10, final_frame=20)",
     "status": "PASS",
-    "sec": 0.2,
+    "sec": 0.3,
     "note": "frames=11"
   },
   {
     "section": "io",
     "name": "io.load_default_data(sampling_rate=15)",
     "status": "PASS",
-    "sec": 0.2,
+    "sec": 0.3,
     "note": "fps=15.0"
   },
   {
     "section": "io",
     "name": "io.load_default_data(magnification='20x')",
     "status": "PASS",
-    "sec": 0.2,
+    "sec": 0.4,
     "note": "magnification=20x"
   },
   {
     "section": "io",
-    "name": "io.load_default_data(download=False) cache'den",
+    "name": "io.load_default_data(download=False) from cache",
     "status": "PASS",
-    "sec": 0.2,
+    "sec": 0.3,
     "note": "frames=21"
   },
   {
     "section": "io",
     "name": "session.io.load_default_data() wrapper",
     "status": "PASS",
-    "sec": 0.2,
+    "sec": 0.3,
     "note": "um_per_px=0.24"
   },
   {
     "section": "io",
-    "name": "session.io.load_default_data(volume_ml=...) wrapper/module imza paritesi",
+    "name": "session.io.load_default_data(volume_ml=...) wrapper/module signature parity",
     "status": "FAIL",
     "sec": 0.0,
     "note": "TypeError: _SessionIONamespace.load_default_data() got an unexpected keyword argument 'volume_ml'"
@@ -59,21 +59,21 @@
     "section": "io",
     "name": "io.load_video(video, groundtruth_detections_path)",
     "status": "PASS",
-    "sec": 0.2,
+    "sec": 0.3,
     "note": "frames=21 gt_frames=900 fps=30.0"
   },
   {
     "section": "io",
-    "name": "io.load_video(video) GT'siz, sampling_rate=25",
+    "name": "io.load_video(video) without GT, sampling_rate=25",
     "status": "PASS",
     "sec": 0.1,
     "note": "fps=25.0"
   },
   {
     "section": "io",
-    "name": "io.load_video(groundtruth_tracks_path=GT_DIR) (GT'de track id yok)",
+    "name": "io.load_video(groundtruth_tracks_path=GT_DIR) (GT has no track ids)",
     "status": "PASS",
-    "sec": 0.2,
+    "sec": 0.3,
     "note": "gt_tracks=1"
   },
   {
@@ -85,10 +85,10 @@
   },
   {
     "section": "io",
-    "name": "io.load_video(olmayan dosya) -> hata beklenir",
+    "name": "io.load_video(nonexistent file) -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: FileNotFoundError: Video file does not exist: C:\\nope\\x.avi"
+    "note": "expected error: FileNotFoundError: Video file does not exist: C:\\nope\\x.avi"
   },
   {
     "section": "io",
@@ -102,14 +102,14 @@
     "name": "Casa.info()",
     "status": "PASS",
     "sec": 0.0,
-    "note": "ekrana basildi"
+    "note": "printed to screen"
   },
   {
     "section": "casa",
-    "name": "Casa.copy() bagimsiz kopya mi",
+    "name": "Casa.copy() is it an independent copy",
     "status": "PASS",
-    "sec": 0.1,
-    "note": "yeni nesne=True, meta ayni=True"
+    "sec": 0.2,
+    "note": "new object=True, meta identical=True"
   },
   {
     "section": "casa",
@@ -141,31 +141,31 @@
   },
   {
     "section": "casa",
-    "name": "set_um_per_px(-1) -> ValueError beklenir",
+    "name": "set_um_per_px(-1) -> expects ValueError",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: ValueError: `um_per_px` must be > 0."
+    "note": "expected error: ValueError: `um_per_px` must be > 0."
   },
   {
     "section": "casa",
-    "name": "set_volume_ml('abc') -> TypeError beklenir",
+    "name": "set_volume_ml('abc') -> expects TypeError",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: TypeError: `volume_ml` must be a numeric value."
+    "note": "expected error: TypeError: `volume_ml` must be a numeric value."
   },
   {
     "section": "casa",
-    "name": "set_chamber_depth_um(0) -> hata beklenir",
+    "name": "set_chamber_depth_um(0) -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: ValueError: `chamber_depth_um` must be > 0."
+    "note": "expected error: ValueError: `chamber_depth_um` must be > 0."
   },
   {
     "section": "casa",
-    "name": "set_dilution_factor(-5) -> hata beklenir",
+    "name": "set_dilution_factor(-5) -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: ValueError: `dilution_factor` must be > 0."
+    "note": "expected error: ValueError: `dilution_factor` must be > 0."
   },
   {
     "section": "casa",
@@ -190,21 +190,21 @@
   },
   {
     "section": "casa",
-    "name": "get_groundtruth() frame sayisi",
+    "name": "get_groundtruth() frame count",
     "status": "PASS",
     "sec": 0.0,
     "note": "900"
   },
   {
     "section": "casa",
-    "name": "get_groundtruth_tracks() (bos olmali)",
+    "name": "get_groundtruth_tracks() (should be empty)",
     "status": "PASS",
     "sec": 0.0,
     "note": "{}"
   },
   {
     "section": "casa",
-    "name": "get_detections() (bos)",
+    "name": "get_detections() (empty)",
     "status": "PASS",
     "sec": 0.0,
     "note": "{}"
@@ -218,45 +218,45 @@
   },
   {
     "section": "casa",
-    "name": "get_tracks() (bos)",
+    "name": "get_tracks() (empty)",
     "status": "PASS",
     "sec": 0.0,
     "note": "{}"
   },
   {
     "section": "casa",
-    "name": "get_tracks(backend='sort') tracking yokken",
+    "name": "get_tracks(backend='sort') with no tracking",
     "status": "PASS",
     "sec": 0.0,
     "note": "{}"
   },
   {
     "section": "casa",
-    "name": "get_motility() (bos)",
+    "name": "get_motility() (empty)",
     "status": "PASS",
     "sec": 0.0,
     "note": "{}"
   },
   {
     "section": "casa",
-    "name": "get_assessment() (bos)",
+    "name": "get_assessment() (empty)",
     "status": "PASS",
     "sec": 0.0,
     "note": "{}"
   },
   {
     "section": "casa",
-    "name": "get_assesment() (yazim hatali alias)",
+    "name": "get_assesment() (misspelled alias)",
     "status": "PASS",
     "sec": 0.0,
     "note": "{}"
   },
   {
     "section": "casa",
-    "name": "get_assessment() canli referans mi (mutasyon testi)",
+    "name": "get_assessment() is it a live reference (mutation test)",
     "status": "PASS",
     "sec": 0.0,
-    "note": "session'a sizdi=True"
+    "note": "leaked into session=True"
   },
   {
     "section": "preprocessing",
@@ -269,196 +269,196 @@
     "section": "preprocessing",
     "name": "preprocessing.grayscale(overwrite=True)",
     "status": "PASS",
-    "sec": 0.4,
+    "sec": 0.5,
     "note": "original_video.shape=(21, 1024, 1280)"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.binarization.otsu()",
     "status": "PASS",
-    "sec": 0.4,
+    "sec": 0.6,
     "note": "['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.binarization.adaptive_gaussian()",
     "status": "PASS",
-    "sec": 0.4,
+    "sec": 0.5,
     "note": "['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.binarization.adaptive_mean()",
     "status": "PASS",
-    "sec": 0.3,
+    "sec": 0.5,
     "note": "['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.binarization.niblack()",
     "status": "PASS",
-    "sec": 1.0,
+    "sec": 1.3,
     "note": "['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.binarization.sauvola()",
     "status": "PASS",
-    "sec": 0.9,
+    "sec": 1.4,
     "note": "['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 255]"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.binarization.urbano()",
     "status": "PASS",
-    "sec": 4.3,
+    "sec": 5.2,
     "note": "['original_video', 'grayscale_video', 'binary_video'] dtype=uint8 uniq=[0, 1]"
   },
   {
     "section": "preprocessing",
-    "name": "binarization.otsu() grayscale yapilmadan (ham renkli video)",
+    "name": "binarization.otsu() without grayscale (raw colour video)",
     "status": "PASS",
-    "sec": 0.6,
+    "sec": 0.9,
     "note": "['original_video', 'binary_video']"
   },
   {
     "section": "preprocessing",
-    "name": "binarization.adaptive_gaussian(block_size=4 cift) -> hata beklenir",
+    "name": "binarization.adaptive_gaussian(block_size=4 even) -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: ValueError: `block_size` must be an odd integer >= 3."
+    "note": "expected error: ValueError: `block_size` must be an odd integer >= 3."
   },
   {
     "section": "preprocessing",
-    "name": "binarization.niblack(window_size=0) -> hata beklenir",
+    "name": "binarization.niblack(window_size=0) -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: ValueError: `window_size` must be >= 3."
+    "note": "expected error: ValueError: `window_size` must be >= 3."
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.normalization.clahe()",
     "status": "PASS",
-    "sec": 0.1,
+    "sec": 0.2,
     "note": "['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.normalization.hist_equal()",
     "status": "PASS",
-    "sec": 0.9,
+    "sec": 1.6,
     "note": "['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.normalization.log()",
     "status": "PASS",
-    "sec": 1.0,
+    "sec": 1.4,
     "note": "['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.normalization.median()",
     "status": "PASS",
-    "sec": 1.1,
+    "sec": 1.3,
     "note": "['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.normalization.min_max()",
     "status": "PASS",
-    "sec": 0.5,
+    "sec": 0.6,
     "note": "['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=uint8"
   },
   {
     "section": "preprocessing",
     "name": "preprocessing.normalization.z_score()",
     "status": "PASS",
-    "sec": 0.6,
+    "sec": 0.8,
     "note": "['original_video', 'grayscale_video', 'binary_video', 'normalized_video'] dtype=float32"
   },
   {
     "section": "preprocessing",
     "name": "normalization.min_max(overwrite=True)",
     "status": "PASS",
-    "sec": 0.7,
+    "sec": 1.0,
     "note": "['original_video', 'normalized_video']"
   },
   {
     "section": "preprocessing",
-    "name": "zincir: grayscale -> clahe -> otsu",
+    "name": "chain: grayscale -> clahe -> otsu",
     "status": "PASS",
-    "sec": 1.0,
+    "sec": 1.5,
     "note": "['original_video', 'grayscale_video', 'normalized_video', 'binary_video']"
   },
   {
     "section": "detection_yolo26",
-    "name": "detection.yolo() varsayilan (yolo26) + evaluate_detections",
+    "name": "detection.yolo() default (yolo26) + evaluate_detections",
     "status": "PASS",
-    "sec": 4.6,
+    "sec": 20.4,
     "note": "tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21"
   },
   {
     "section": "detection_yolo26",
-    "name": "detection.yolo(weights=<ASCII tam yol>) ozel agirlik",
-    "status": "PASS",
-    "sec": 2.4,
-    "note": "tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21"
-  },
-  {
-    "section": "detection_yolo26",
-    "name": "detection.yolo(conf=0.5) yuksek esik",
+    "name": "detection.yolo(weights=<full ASCII path>) custom weights",
     "status": "PASS",
     "sec": 2.3,
+    "note": "tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21"
+  },
+  {
+    "section": "detection_yolo26",
+    "name": "detection.yolo(conf=0.5) high threshold",
+    "status": "PASS",
+    "sec": 2.1,
     "note": "tp=2068 fp=1141 fn=59 P=64.44 R=97.23 F1=77.51 frames=21"
   },
   {
     "section": "detection_yolo26",
-    "name": "detection.yolo(conf=0.01) dusuk esik",
+    "name": "detection.yolo(conf=0.01) low threshold",
     "status": "PASS",
-    "sec": 2.8,
+    "sec": 2.6,
     "note": "tp=2120 fp=4024 fn=7 P=34.51 R=99.67 F1=51.26 frames=21"
   },
   {
     "section": "detection_yolo26",
-    "name": "detection.yolo(yolo_model='yolo99') -> hata beklenir",
+    "name": "detection.yolo(yolo_model='yolo99') -> expects error",
     "status": "PASS",
     "sec": 0.2,
-    "note": "beklenen hata: ValueError: `yolo_model` must be one of ('yolov5', 'yolo26'), got 'yolo99'."
+    "note": "expected error: ValueError: `yolo_model` must be one of ('yolov5', 'yolo26'), got 'yolo99'."
   },
   {
     "section": "detection_yolo26",
-    "name": "detection.yolo(weights='C:/nope.pt') -> hata beklenir",
+    "name": "detection.yolo(weights='C:/nope.pt') -> expects error",
     "status": "PASS",
     "sec": 0.2,
-    "note": "beklenen hata: FileNotFoundError: Custom `weights` path was not found: 'C:/nope.pt'. On Windows use a raw string: r'D:\\path\\to\\weights.pt'"
+    "note": "expected error: FileNotFoundError: Custom `weights` path was not found: 'C:/nope.pt'. On Windows use a raw string: r'D:\\path\\to\\weights.pt'"
   },
   {
     "section": "detection_yolo26",
-    "name": "detection.yolo(download=False) managed agirlik cache'de",
+    "name": "detection.yolo(download=False) managed weights in cache",
     "status": "PASS",
-    "sec": 2.5,
+    "sec": 2.3,
     "note": "tp=2101 fp=1221 fn=26 P=63.25 R=98.78 F1=77.12 frames=21"
   },
   {
     "section": "detection_yolo26",
-    "name": "get_detections() satir formati (yolo26, frame 0)",
+    "name": "get_detections() row format (yolo26, frame 0)",
     "status": "PASS",
-    "sec": 2.4,
+    "sec": 2.3,
     "note": "[['0', '0.910138', '0.828910', '0.037355', '0.046788'], ['0', '0.556985', '0.449665', '0.036418', '0.045641']]"
   },
   {
     "section": "detection_classic",
     "name": "detection.detect_moving_cells(method='cv-gmg')",
     "status": "PASS",
-    "sec": 1.5,
+    "sec": 1.6,
     "note": "tp=0 fp=1 fn=101 P=0.0 R=0.0 F1=0.0 frames=1"
   },
   {
     "section": "detection_classic",
     "name": "detection.detect_moving_cells(method='cv-mog')",
     "status": "PASS",
-    "sec": 0.7,
+    "sec": 0.8,
     "note": "tp=69 fp=16 fn=32 P=81.18 R=68.32 F1=74.19 frames=1"
   },
   {
@@ -472,112 +472,112 @@
     "section": "detection_classic",
     "name": "detection.detect_moving_cells(method='gm')",
     "status": "PASS",
-    "sec": 3.3,
+    "sec": 6.1,
     "note": "tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1"
   },
   {
     "section": "detection_classic",
     "name": "detection.detect_moving_cells(method='gm', low_memory=True)",
     "status": "PASS",
-    "sec": 2.9,
+    "sec": 3.0,
     "note": "tp=79 fp=9 fn=22 P=89.77 R=78.22 F1=83.6 frames=1"
   },
   {
     "section": "detection_classic",
-    "name": "detection.detect_moving_cells(method='xyz') -> hata beklenir",
+    "name": "detection.detect_moving_cells(method='xyz') -> expects error",
     "status": "PASS",
     "sec": 0.2,
-    "note": "beklenen hata: ValueError: method xyz is invalid."
+    "note": "expected error: ValueError: method xyz is invalid."
   },
   {
     "section": "detection_classic",
     "name": "detection.digital_washing() n_jobs=1",
     "status": "PASS",
-    "sec": 15.9,
+    "sec": 16.7,
     "note": "tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1"
   },
   {
     "section": "detection_classic",
-    "name": "detection.digital_washing(n_jobs=4) paralel",
+    "name": "detection.digital_washing(n_jobs=4) parallel",
     "status": "PASS",
-    "sec": 17.6,
+    "sec": 18.5,
     "note": "tp=84 fp=15 fn=17 P=84.85 R=83.17 F1=84.0 frames=1"
   },
   {
     "section": "detection_classic",
     "name": "detection.digital_washing(motion_threshold=5, blob_min_pixel_area=30)",
     "status": "PASS",
-    "sec": 15.7,
+    "sec": 18.3,
     "note": "tp=58 fp=3 fn=43 P=95.08 R=57.43 F1=71.6 frames=1"
   },
   {
     "section": "detection_classic",
     "name": "detection.urbano_detection()",
     "status": "PASS",
-    "sec": 4.9,
+    "sec": 6.1,
     "note": "tp=1920 fp=589 fn=207 P=76.52 R=90.27 F1=82.83 frames=21"
   },
   {
     "section": "detection_classic",
     "name": "detection.urbano_detection(blob_min_pixel_area=10, log_size=7)",
     "status": "PASS",
-    "sec": 4.8,
+    "sec": 6.1,
     "note": "tp=1813 fp=546 fn=314 P=76.85 R=85.24 F1=80.83 frames=21"
   },
   {
     "section": "detection_classic",
     "name": "assessment.evaluate_detections(match_min_distance_pixel=10)",
     "status": "PASS",
-    "sec": 4.9,
+    "sec": 6.1,
     "note": "{'tp': 1599, 'fp': 910, 'fn': 528, 'precision': np.float64(63.73), 'recall': np.float64(75.18), 'F0.5': np.float64(65.73), 'F1': np.float64(68.98), 'F2': np.float64(72.57), 'evaluated_frames': 21}"
   },
   {
     "section": "detection_classic",
-    "name": "assessment.evaluate_detections() detection YOKKEN -> hata beklenir",
+    "name": "assessment.evaluate_detections() with NO detection -> expects error",
     "status": "FAIL",
     "sec": 0.2,
-    "note": "beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x00000284FFF5CE60>"
+    "note": "expected Exception not raised, result: <pycasa.casa.casa.Casa object at 0x00000279B497A240>"
   },
   {
     "section": "detection_classic",
-    "name": "detection overwrite uyarisi (urbano -> moving_cells)",
+    "name": "detection overwrite warning (urbano -> moving_cells)",
     "status": "PASS",
     "sec": 6.0,
-    "note": "detection frame sayisi=1"
+    "note": "detection frame count=1"
   },
   {
     "section": "detection_yolov5",
     "name": "detection.yolo(yolo_model='yolov5') + evaluate_detections",
     "status": "PASS",
-    "sec": 6.1,
+    "sec": 15.9,
     "note": "tp=1539 fp=631 fn=588 P=70.92 R=72.36 F1=71.63 frames=21"
   },
   {
     "section": "detection_yolov5",
     "name": "detection.yolo(yolov5, conf=0.4)",
     "status": "PASS",
-    "sec": 2.2,
+    "sec": 2.1,
     "note": "tp=1413 fp=315 fn=714 P=81.77 R=66.43 F1=73.31 frames=21"
   },
   {
     "section": "detection_yolov5",
-    "name": "YOLOv5'ten SONRA yolo26 (sira bagimliligi testi)",
+    "name": "yolo26 AFTER YOLOv5 (ordering dependency test)",
     "status": "PASS",
     "sec": 3.0,
     "note": "tp=2101 fp=1025 fn=26 P=67.21 R=98.78 F1=79.99 frames=21"
   },
   {
     "section": "tracking",
-    "name": "tracking.sort() sadece GT",
+    "name": "tracking.sort() GT only",
     "status": "PASS",
-    "sec": 0.8,
+    "sec": 1.4,
     "note": "backend=sort groundtruth:114 track"
   },
   {
     "section": "tracking",
     "name": "tracking.sort(max_age=5, min_hits=1, iou_threshold=0.3)",
     "status": "PASS",
-    "sec": 0.3,
+    "sec": 0.4,
     "note": "backend=sort groundtruth:168 track"
   },
   {
@@ -591,35 +591,35 @@
     "section": "tracking",
     "name": "tracking.sort(delete_temp=False)",
     "status": "PASS",
-    "sec": 0.3,
+    "sec": 0.4,
     "note": "backend=sort groundtruth:114 track"
   },
   {
     "section": "tracking",
-    "name": "tracking.sort() GT + yolo26 (iki kaynak)",
+    "name": "tracking.sort() GT + yolo26 (two sources)",
     "status": "PASS",
-    "sec": 5.0,
+    "sec": 4.7,
     "note": "backend=sort groundtruth:114 track | yolo26:239 track"
   },
   {
     "section": "tracking",
-    "name": "tracking.sort(skip_gt=True) sadece yolo26",
+    "name": "tracking.sort(skip_gt=True) yolo26 only",
     "status": "PASS",
-    "sec": 2.8,
+    "sec": 2.6,
     "note": "backend=sort yolo26:239 track"
   },
   {
     "section": "tracking",
-    "name": "tracking.sort(skip_gt=True) detection YOKKEN",
+    "name": "tracking.sort(skip_gt=True) with NO detection",
     "status": "PASS",
     "sec": 0.2,
     "note": "backend=sort "
   },
   {
     "section": "tracking",
-    "name": "tracking.jpdaf() sadece GT",
+    "name": "tracking.jpdaf() GT only",
     "status": "PASS",
-    "sec": 1.4,
+    "sec": 1.5,
     "note": "backend=jpdaf groundtruth:115 track"
   },
   {
@@ -633,7 +633,7 @@
     "section": "tracking",
     "name": "tracking.jpdaf(position_gate=5, velocity_gate_um=20, detection_probability=0.9)",
     "status": "PASS",
-    "sec": 11.1,
+    "sec": 11.5,
     "note": "backend=jpdaf groundtruth:81 track"
   },
   {
@@ -645,93 +645,93 @@
   },
   {
     "section": "tracking",
-    "name": "tracking.deepsort() sadece GT",
+    "name": "tracking.deepsort() GT only",
     "status": "PASS",
-    "sec": 0.7,
+    "sec": 0.8,
     "note": "backend=deepsort groundtruth:127 track"
   },
   {
     "section": "tracking",
     "name": "tracking.deepsort(max_age=10, n_init=2, max_iou_distance=0.5)",
     "status": "PASS",
-    "sec": 0.7,
+    "sec": 0.8,
     "note": "backend=deepsort groundtruth:180 track"
   },
   {
     "section": "tracking",
-    "name": "tracking overwrite: sort -> jpdaf, get_tracks() tek backend",
+    "name": "tracking overwrite: sort -> jpdaf, get_tracks() single backend",
     "status": "PASS",
-    "sec": 1.5,
+    "sec": 1.6,
     "note": "backends=['jpdaf']"
   },
   {
     "section": "tracking",
-    "name": "get_tracks(backend='jpdaf') sort varken",
+    "name": "get_tracks(backend='jpdaf') while sort is present",
     "status": "PASS",
-    "sec": 0.3,
+    "sec": 0.4,
     "note": "{}"
   },
   {
     "section": "tracking",
     "name": "assessment.evaluate_tracks() GT-sort vs yolo26-sort",
     "status": "PASS",
-    "sec": 3.4,
+    "sec": 3.7,
     "note": "{}"
   },
   {
     "section": "tracking",
     "name": "assessment.evaluate_tracks(match_min_distance_pixel=10, backend='sort')",
     "status": "PASS",
-    "sec": 3.2,
+    "sec": 3.0,
     "note": "ok"
   },
   {
     "section": "tracking",
-    "name": "assessment.evaluate_tracks() tek kaynakla (sadece GT)",
+    "name": "assessment.evaluate_tracks() with a single source (GT only)",
     "status": "PASS",
-    "sec": 0.3,
+    "sec": 0.4,
     "note": "{}"
   },
   {
     "section": "tracking",
-    "name": "assessment.evaluate_tracks() tracking YOKKEN -> hata beklenir",
+    "name": "assessment.evaluate_tracks() with NO tracking -> expects error",
     "status": "FAIL",
     "sec": 0.2,
-    "note": "beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x00000240BBF31F10>"
+    "note": "expected Exception not raised, result: <pycasa.casa.casa.Casa object at 0x00000206E31A84D0>"
   },
   {
     "section": "motility",
     "name": "kinematic_parameters() + casa_parameters() [sort/GT]",
     "status": "PASS",
-    "sec": 1.2,
+    "sec": 1.3,
     "note": "groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101"
   },
   {
     "section": "motility",
     "name": "motility [jpdaf/GT]",
     "status": "PASS",
-    "sec": 4.1,
+    "sec": 4.3,
     "note": "groundtruth: grades={'rapid': 41.51, 'slow': 31.13, 'non_progressive': 2.83, 'immotile': 24.53} motile=75.47 conc=67.76 tracks=106"
   },
   {
     "section": "motility",
     "name": "motility [deepsort/GT]",
     "status": "PASS",
-    "sec": 2.2,
+    "sec": 2.3,
     "note": "groundtruth: grades={'rapid': 44.33, 'slow': 29.9, 'non_progressive': 5.15, 'immotile': 20.62} motile=79.38 conc=63.02 tracks=97"
   },
   {
     "section": "motility",
-    "name": "motility [sort/GT+yolo26 iki kaynak]",
+    "name": "motility [sort/GT+yolo26 two sources]",
     "status": "PASS",
-    "sec": 9.5,
+    "sec": 9.0,
     "note": "groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101"
   },
   {
     "section": "motility",
     "name": "kinematic_parameters(window_size=15, overlap=0.5, smoothing_window=3, denoise_window=1, min_frame_rate_warn=0)",
     "status": "PASS",
-    "sec": 0.8,
+    "sec": 0.9,
     "note": "groundtruth: grades={'rapid': 52.29, 'slow': 9.17, 'non_progressive': 29.36, 'immotile': 9.17} motile=90.83 conc=61.21 tracks=109"
   },
   {
@@ -743,17 +743,17 @@
   },
   {
     "section": "motility",
-    "name": "kinematic_parameters(conversion_required=False) piksel birimi",
+    "name": "kinematic_parameters(conversion_required=False) pixel units",
     "status": "PASS",
     "sec": 0.8,
     "note": "groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101"
   },
   {
     "section": "motility",
-    "name": "kinematic_parameters(overlap=1.5) gecersiz -> hata beklenir",
+    "name": "kinematic_parameters(overlap=1.5) invalid -> expects error",
     "status": "FAIL",
     "sec": 1.4,
-    "note": "beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x000002477F7B8890>"
+    "note": "expected Exception not raised, result: <pycasa.casa.casa.Casa object at 0x00000261CD952270>"
   },
   {
     "section": "motility",
@@ -785,196 +785,196 @@
   },
   {
     "section": "motility",
-    "name": "casa_parameters(hyperactivation esikleri, experimental)",
+    "name": "casa_parameters(hyperactivation thresholds, experimental)",
     "status": "PASS",
-    "sec": 1.5,
+    "sec": 0.9,
     "note": "groundtruth: grades={'rapid': 47.52, 'slow': 28.71, 'non_progressive': 2.97, 'immotile': 20.79} motile=79.21 conc=61.21 tracks=101"
   },
   {
     "section": "motility",
-    "name": "casa_parameters(velocity_metric='XYZ') -> hata beklenir",
+    "name": "casa_parameters(velocity_metric='XYZ') -> expects error",
     "status": "PASS",
     "sec": 0.9,
-    "note": "beklenen hata: ValueError: `velocity_metric` must be one of ('VAP', 'VCL', 'VSL'), got 'XYZ'."
+    "note": "expected error: ValueError: `velocity_metric` must be one of ('VAP', 'VCL', 'VSL'), got 'XYZ'."
   },
   {
     "section": "motility",
-    "name": "casa_parameters() kinematic YOKKEN -> hata beklenir",
+    "name": "casa_parameters() with NO kinematic -> expects error",
     "status": "PASS",
-    "sec": 0.9,
-    "note": "beklenen hata: RuntimeError: No kinematic parameters found. Run `self.motility.kinematic_parameters()` before `casa_parameters()`."
+    "sec": 0.8,
+    "note": "expected error: RuntimeError: No kinematic parameters found. Run `self.motility.kinematic_parameters()` before `casa_parameters()`."
   },
   {
     "section": "motility",
-    "name": "kinematic_parameters() tracking YOKKEN -> hata beklenir",
+    "name": "kinematic_parameters() with NO tracking -> expects error",
     "status": "FAIL",
     "sec": 0.4,
-    "note": "beklenen Exception gelmedi, sonuc: <pycasa.casa.casa.Casa object at 0x000002470DB49BB0>"
+    "note": "expected Exception not raised, result: <pycasa.casa.casa.Casa object at 0x00000261DA4DC260>"
   },
   {
     "section": "motility",
-    "name": "kinematic_parameters() um_per_px=None iken",
+    "name": "kinematic_parameters() when um_per_px=None",
     "status": "FAIL",
-    "sec": 0.6,
+    "sec": 0.4,
     "note": "ValueError: `um_per_px` is required when conversion is requested."
   },
   {
     "section": "motility",
-    "name": "get_motility() track basina kinematik anahtarlar",
+    "name": "get_motility() per-track kinematic keys",
     "status": "PASS",
-    "sec": 1.3,
+    "sec": 0.9,
     "note": "['VCL', 'VSL', 'VAP', 'LIN', 'ALH', 'WOB', 'STR', 'MAD', 'frame_ranges']"
   },
   {
     "section": "visualization",
     "name": "visualization.plot_frame('original')",
     "status": "PASS",
-    "sec": 0.1,
-    "note": "png kaydedildi"
+    "sec": 0.2,
+    "note": "png saved"
   },
   {
     "section": "visualization",
     "name": "visualization.plot_frame(frame_index=5, show_detections=False)",
     "status": "PASS",
     "sec": 0.1,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
-    "name": "visualization.plot_frame('binarized') binarization YOKKEN -> hata beklenir",
+    "name": "visualization.plot_frame('binarized') with NO binarization -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: ValueError: No binarized video found. Run `self.preprocessing.binarization.otsu()` first."
+    "note": "expected error: ValueError: No binarized video found. Run `self.preprocessing.binarization.otsu()` first."
   },
   {
     "section": "visualization",
-    "name": "visualization.plot_frame(frame_index=999) -> hata beklenir",
+    "name": "visualization.plot_frame(frame_index=999) -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: ValueError: `frame_index`=999 is out of range for 61 frame(s)."
+    "note": "expected error: ValueError: `frame_index`=999 is out of range for 61 frame(s)."
   },
   {
     "section": "visualization",
-    "name": "visualization.timelapse() varsayilan (GT overlay)",
+    "name": "visualization.timelapse() default (GT overlay)",
     "status": "PASS",
     "sec": 0.2,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
-    "name": "visualization.timelapse(image_type='original') eski alias",
+    "name": "visualization.timelapse(image_type='original') legacy alias",
     "status": "PASS",
     "sec": 0.1,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
-    "name": "visualization.timelapse('normalized') katman YOKKEN -> hata beklenir",
+    "name": "visualization.timelapse('normalized') with NO such layer -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: ValueError: `normalized` video is not available in casa['video']. Run the relevant preprocessing step first."
+    "note": "expected error: ValueError: `normalized` video is not available in casa['video']. Run the relevant preprocessing step first."
   },
   {
     "section": "visualization",
     "name": "visualization.plot_frame(['original','grayscale','binarized','normalized'])",
     "status": "PASS",
     "sec": 0.5,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
     "name": "visualization.plot_frame('grayscale+binarized')",
     "status": "PASS",
     "sec": 0.4,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
-    "name": "visualization.timelapse(tracks+ids+ozel renkler+max_track_gap)",
+    "name": "visualization.timelapse(tracks+ids+custom colours+max_track_gap)",
     "status": "PASS",
-    "sec": 0.7,
-    "note": "png kaydedildi"
+    "sec": 0.9,
+    "note": "png saved"
   },
   {
     "section": "visualization",
     "name": "visualization.interactive_motility_calculator()",
     "status": "PASS",
     "sec": 1.0,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
     "name": "visualization.interactive_motility_calculator(frame_rate=60, smoothing_window=3)",
     "status": "PASS",
-    "sec": 0.9,
-    "note": "png kaydedildi"
+    "sec": 0.8,
+    "note": "png saved"
   },
   {
     "section": "visualization",
     "name": "visualization.plot_frame('moving_cells')",
     "status": "PASS",
     "sec": 0.2,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
     "name": "visualization.timelapse('moving_cells')",
     "status": "PASS",
-    "sec": 0.3,
-    "note": "png kaydedildi"
+    "sec": 0.2,
+    "note": "png saved"
   },
   {
     "section": "visualization",
-    "name": "visualization.motility_radar() motility YOKKEN -> hata beklenir",
+    "name": "visualization.motility_radar() with NO motility -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: RuntimeError: No motility parameters found under 'kinematic_parameters'. Run `self.motility.kinematic_parameters()` first."
+    "note": "expected error: RuntimeError: No motility parameters found under 'kinematic_parameters'. Run `self.motility.kinematic_parameters()` first."
   },
   {
     "section": "visualization",
-    "name": "visualization.motility_density_scatter() motility YOKKEN -> hata beklenir",
+    "name": "visualization.motility_density_scatter() with NO motility -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: RuntimeError: No motility parameters found under 'kinematic_parameters'. Run `self.motility.kinematic_parameters()` first."
+    "note": "expected error: RuntimeError: No motility parameters found under 'kinematic_parameters'. Run `self.motility.kinematic_parameters()` first."
   },
   {
     "section": "visualization",
-    "name": "visualization.interactive_motility_calculator() tracking YOKKEN -> hata beklenir",
+    "name": "visualization.interactive_motility_calculator() with NO tracking -> expects error",
     "status": "PASS",
     "sec": 0.0,
-    "note": "beklenen hata: RuntimeError: No tracks found. Run tracking first, or load imported ground-truth tracks via load_video(groundtruth_tracks_path=...)."
+    "note": "expected error: RuntimeError: No tracks found. Run tracking first, or load imported ground-truth tracks via load_video(groundtruth_tracks_path=...)."
   },
   {
     "section": "visualization",
     "name": "visualization.motility_radar()",
     "status": "PASS",
-    "sec": 0.3,
-    "note": "png kaydedildi"
+    "sec": 0.2,
+    "note": "png saved"
   },
   {
     "section": "visualization",
     "name": "visualization.motility_radar(show_legend=False, show_text=False)",
     "status": "PASS",
     "sec": 0.1,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
-    "name": "visualization.motility_radar(axis=<verilen polar eksen>)",
+    "name": "visualization.motility_radar(axis=<supplied polar axis>)",
     "status": "PASS",
     "sec": 0.1,
-    "note": "png kaydedildi"
+    "note": "png saved"
   },
   {
     "section": "visualization",
     "name": "visualization.motility_density_scatter()",
     "status": "PASS",
-    "sec": 0.8,
-    "note": "png kaydedildi"
+    "sec": 0.3,
+    "note": "png saved"
   },
   {
     "section": "visualization",
-    "name": "meta['last_visualization'] yazildi mi",
+    "name": "meta['last_visualization'] was it written",
     "status": "PASS",
     "sec": 0.0,
     "note": "{'type': 'motility_density_scatter', 'tracking_backend': 'sort', 'detection_method': 'groundtruth'}"

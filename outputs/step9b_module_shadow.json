@@ -4,17 +4,17 @@
     "tp": 4120,
     "fp": 2270,
     "F1": 78.0,
-    "eklenen_modul": 0,
-    "golgeleyen": [],
-    "temizlenen_modul": 0
+    "modules_added": 0,
+    "shadowing": [],
+    "modules_removed": 0
   },
   "C": {
     "detections": 6003,
     "tp": 4120,
     "fp": 1883,
     "F1": 80.97,
-    "eklenen_modul": 2629,
-    "golgeleyen": [
+    "modules_added": 2629,
+    "shadowing": [
       "models",
       "models.common",
       "utils",
@@ -24,15 +24,15 @@
       "utils.general",
       "utils.metrics"
     ],
-    "temizlenen_modul": 0
+    "modules_removed": 0
   },
   "E": {
     "detections": 6003,
     "tp": 4120,
     "fp": 1883,
     "F1": 80.97,
-    "eklenen_modul": 2629,
-    "golgeleyen": [
+    "modules_added": 2629,
+    "shadowing": [
       "models",
       "models.common",
       "utils",
@@ -42,6 +42,6 @@
       "utils.general",
       "utils.metrics"
     ],
-    "temizlenen_modul": 9
+    "modules_removed": 9
   }
 }

@@ -37,7 +37,7 @@
       "80.97%"
     ]
   ],
-  "tarih": "21 September 2026",
+  "date": "22 September 2026",
   "meta": [
     [
       "Video",
@@ -136,7 +136,7 @@
       "~10 frame/s"
     ]
   ],
-  "kinematik101": [
+  "kinematics101": [
     [
       "GT + SORT",
       "111",
@@ -194,7 +194,7 @@
       187.86
     ]
   ],
-  "detectionUzun": [
+  "detectionFullClip": [
     [
       "YOLOv5",
       "63,128",
@@ -226,7 +226,7 @@
       "899"
     ]
   ],
-  "trackingUzun": [
+  "trackingFullClip": [
     [
       "SORT",
       141,
@@ -242,7 +242,7 @@
       368.96
     ]
   ],
-  "casaUzun": [
+  "casaFullClip": [
     [
       "Real CASA machine (HSTLI)",
       42,
@@ -271,15 +271,15 @@
       161.93
     ]
   ],
-  "uzun": {
+  "fullClip": {
     "frames": 899,
-    "saniye": 30.0,
-    "jpdafKat": 93,
-    "jpdafAz": 35,
-    "yorum": "This is the overturned conclusion, and the two pipelines move in opposite directions. YOLO26 with SORT was 24 percent above the machine on 101 frames at 85.39 M/mL; on the full clip it lands at 73.61 M/mL against the machine's 69, an error of only 7 percent. Its immotile fraction also settles at 38.24 percent. More footage lets the tracker discard the short spurious tracks that false positives create, so the detector's weakness largely washes out at scale. Ground truth with SORT went the other way: 59.52 M/mL on 101 frames and 54.48 M/mL on the full clip, widening the gap from 14 to 21 percent. Its grades drifted too, with rapid rising from 49.55 to 56.43 percent and immotile falling from 20.72 to 18.5 percent, both away from the reference. Longer tracks give each cell more opportunity to accumulate displacement and be graded rapid, which means the close agreement seen on 101 frames was partly an artefact of the short window."
+    "seconds": 30.0,
+    "jpdafLonger": 93,
+    "jpdafFewer": 35,
+    "commentary": "This is the overturned conclusion, and the two pipelines move in opposite directions. YOLO26 with SORT was 24 percent above the machine on 101 frames at 85.39 M/mL; on the full clip it lands at 73.61 M/mL against the machine's 69, an error of only 7 percent. Its immotile fraction also settles at 38.24 percent. More footage lets the tracker discard the short spurious tracks that false positives create, so the detector's weakness largely washes out at scale. Ground truth with SORT went the other way: 59.52 M/mL on 101 frames and 54.48 M/mL on the full clip, widening the gap from 14 to 21 percent. Its grades drifted too, with rapid rising from 49.55 to 56.43 percent and immotile falling from 20.72 to 18.5 percent, both away from the reference. Longer tracks give each cell more opportunity to accumulate displacement and be graded rapid, which means the close agreement seen on 101 frames was partly an artefact of the short window."
   },
   "api": {
-    "satirlar": [
+    "rows": [
       [
         "io",
         14,
@@ -335,11 +335,11 @@
         "plot_frame, timelapse, radar, density scatter, interactive calculator"
       ]
     ],
-    "gecen": 134,
-    "toplam": 140,
-    "kalan": 6
+    "passed": 134,
+    "total": 140,
+    "remaining": 6
   },
-  "bulgular": [
+  "findings": [
     [
       "1",
       "YOLO26 output depends on whether torchvision is imported",
@@ -377,7 +377,7 @@
       "Close other work, or load a shorter window"
     ]
   ],
-  "y26karsilastirma": [
+  "y26Comparison": [
     [
       "101 frames, isolated",
       "9,985",
@@ -414,8 +414,8 @@
       "84.71%"
     ]
   ],
-  "acikSoru": "The two pipelines diverge, and only one of them behaves the way more data should make it behave. YOLO26 with SORT converges on the machine once the full clip is used, ending within 7 percent on concentration. Ground truth with SORT does the opposite: it under-reports by a fifth and the gap widens with more footage. Since these are the dataset's own annotations, the detector cannot be blamed for it. Two explanations are worth testing. The commercial machine may count cells that the annotation protocol excludes, such as debris-adjacent or partially out-of-focus heads, which would make the ground truth a systematically sparser count than the machine's. Alternatively the imaged volume implied by um_per_px and chamber depth may not match the volume the machine samples, which would be a calibration question rather than an annotation one. Resolving this matters because it decides whether pycasa's concentration output can be compared to a commercial report at all, or only to itself.",
-  "komutlar": [
+  "openQuestion": "The two pipelines diverge, and only one of them behaves the way more data should make it behave. YOLO26 with SORT converges on the machine once the full clip is used, ending within 7 percent on concentration. Ground truth with SORT does the opposite: it under-reports by a fifth and the gap widens with more footage. Since these are the dataset's own annotations, the detector cannot be blamed for it. Two explanations are worth testing. The commercial machine may count cells that the annotation protocol excludes, such as debris-adjacent or partially out-of-focus heads, which would make the ground truth a systematically sparser count than the machine's. Alternatively the imaged volume implied by um_per_px and chamber depth may not match the volume the machine samples, which would be a calibration question rather than an annotation one. Resolving this matters because it decides whether pycasa's concentration output can be compared to a commercial report at all, or only to itself.",
+  "commands": [
     "import pycasa as pc, copy",
     "self = pc.io.load_default_data()",
     "self.visualization.timelapse(show_detections=False, show_groundtruth=True)",

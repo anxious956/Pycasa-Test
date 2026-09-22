@@ -9,3 +9,11 @@ pycasa_data/
 yolo26-weights/
 yolov5-weights/
 .cache/
+
+# calisma artiklari: ara veriler, gunlukler, onizlemeler
+outputs/rapor_sayfa/
+outputs/rapor_onizleme.pdf
+outputs/step7_figs/
+outputs/report/tracks_fullclip.json
+outputs/report/tracks_background.png
+Windows PowerShell.txt

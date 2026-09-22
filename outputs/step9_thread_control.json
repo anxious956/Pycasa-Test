@@ -1,13 +1,13 @@
 {
   "A": {
-    "kosul": "A",
-    "aciklama": [
+    "condition": "A",
+    "description": [
       "import yok",
       "thread varsayilan"
     ],
     "yolov5_import": false,
-    "cv2_varsayilan": 16,
-    "ortam": {
+    "cv2_default": 16,
+    "environment": {
       "cv2_threads": 16,
       "torch_threads": 12,
       "torch_interop": 12,
@@ -27,14 +27,14 @@
     "F1": 78.0
   },
   "B": {
-    "kosul": "B",
-    "aciklama": [
+    "condition": "B",
+    "description": [
       "import yok",
       "thread 1'e zorlanmis"
     ],
     "yolov5_import": false,
-    "cv2_varsayilan": 16,
-    "ortam": {
+    "cv2_default": 16,
+    "environment": {
       "cv2_threads": 1,
       "torch_threads": 12,
       "torch_interop": 12,
@@ -54,14 +54,14 @@
     "F1": 78.0
   },
   "C": {
-    "kosul": "C",
-    "aciklama": [
+    "condition": "C",
+    "description": [
       "import VAR",
       "thread 1 (import sonrasi hal)"
     ],
     "yolov5_import": true,
-    "cv2_varsayilan": 16,
-    "ortam": {
+    "cv2_default": 16,
+    "environment": {
       "cv2_threads": 1,
       "torch_threads": 12,
       "torch_interop": 12,
@@ -81,14 +81,14 @@
     "F1": 80.97
   },
   "D": {
-    "kosul": "D",
-    "aciklama": [
+    "condition": "D",
+    "description": [
       "import VAR",
       "thread varsayilana geri alinmis"
     ],
     "yolov5_import": true,
-    "cv2_varsayilan": 16,
-    "ortam": {
+    "cv2_default": 16,
+    "environment": {
       "cv2_threads": 16,
       "torch_threads": 12,
       "torch_interop": 12,

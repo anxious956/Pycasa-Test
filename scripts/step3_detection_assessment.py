@@ -1,11 +1,9 @@
-import json, sys, copy
+import json, copy
 import pycasa as pc
-sys.path.insert(0, "scripts")
-from render_gif import render
 
-# Adim 3: GT ustunde YOLOv5, YOLO26 ve moving-cells detection + assessment
-# Adim 4: pycasa ayni anda tek bir detection modeli tutar; yeni bir detector
-#         calistirinca onceki sonuc overwrite edilir (asagida print ile gosteriyoruz).
+# Step 3: YOLOv5, YOLO26 and moving-cells detection + assessment against the GT
+# Step 4: pycasa keeps only one detection result at a time; running a new detector
+#         overwrites the previous one (the prints below demonstrate this).
 self = pc.io.load_default_data()
 results = {}
 
@@ -18,10 +16,7 @@ def run(name, fn, **kw):
     self.assessment.evaluate_detections()
     a = self.get_assessment()
     print("assessment keys:", list(a.keys()))
-    results[name] = copy.deepcopy(a)   # deepcopy: get_assessment() ayni dict'i dondurur
-    render(self, f"outputs/step3_{name}_frame0.png", show_gt=True,
-           det_source=True, max_frames=1,
-           title=f"{name} (red) vs GT (green)")
+    results[name] = copy.deepcopy(a)   # deepcopy needed: get_assessment() returns the same dict every time
 
 run("yolov5", self.detection.yolo, yolo_model="yolov5")
 run("yolo26", self.detection.yolo, yolo_model="yolo26")

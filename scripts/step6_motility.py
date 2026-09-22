@@ -2,8 +2,8 @@ import json, copy, csv
 import numpy as np
 import pycasa as pc
 
-# Adim 6: (a) GT + SORT  (b) YOLO26 + SORT  -> kinematic + CASA parametreleri,
-#         HSTLI sys-casa_casaMotilityReports.csv (HC004, unwashed) ile karsilastirma.
+# Step 6: (a) GT + SORT  (b) YOLO26 + SORT  -> kinematic + CASA parameters,
+#         compared against HSTLI sys-casa_casaMotilityReports.csv (HC004, unwashed).
 
 def _clean(o):
     if isinstance(o, dict): return {str(k): _clean(v) for k, v in o.items()}
@@ -20,9 +20,9 @@ def pipeline(name, use_yolo26):
     s = pc.io.load_default_data()
     if use_yolo26:
         s.detection.yolo(yolo_model="yolo26")
-        s.tracking.sort(skip_gt=True)          # sadece yolo26 detectionlari track'le
+        s.tracking.sort(skip_gt=True)          # track the yolo26 detections only
     else:
-        s.tracking.sort()                       # detection yok -> sadece GT
+        s.tracking.sort()                       # no detections -> GT only
     s.motility.kinematic_parameters()          # VCL, VSL, VAP, LIN, ALH, WOB, STR, MAD
     s.motility.casa_parameters()               # %rapid/%slow/%non-progressive/%immotile, concentration
     m = copy.deepcopy(s.get_motility())

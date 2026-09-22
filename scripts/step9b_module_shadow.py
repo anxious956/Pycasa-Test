@@ -1,15 +1,15 @@
-"""Adim 9b: YOLO26 farkinin sebebi modul golgelemesi mi?
+"""Step 9b: is the YOLO26 difference caused by module shadowing?
 
-Gozlem: yolov5 reposunun paketleri GENEL isimli -- `models` ve `utils`.
-Import edilince sys.modules'a bu isimlerle giriyorlar. Ultralytics de kendi
-icinde `utils` gibi isimler kullaniyor; yolov5'inkini gorup yanlis modulu
-alabilir. Eger sebep buysa, import'tan sonra sys.modules'i temizlemek
-sonucu izole degere geri dondurur.
+Observation: the yolov5 repo's packages have GENERIC names -- `models` and
+`utils`. Importing them registers those names in sys.modules. Ultralytics also
+uses names like `utils` internally, so it may pick up yolov5's module instead of
+its own. If that is the cause, clearing sys.modules after the import should
+restore the isolated value.
 
-Kosullar (her biri ayri process):
-  A  import yok                          -> referans "izole" deger
-  C  import var, temizlik yok            -> referans "kirli" deger
-  E  import var, sys.modules temizlendi  -> A'ya donerse sebep golgeleme
+Conditions (each in its own process):
+  A  no import                          -> reference "isolated" value
+  C  import, no cleanup                 -> reference "contaminated" value
+  E  import, sys.modules cleared        -> if it returns to A, shadowing is the cause
 
     python scripts/step9b_module_shadow.py
 """
@@ -19,25 +19,25 @@ OUT = "outputs/step9b_module_shadow.json"
 FRAMES = 40
 
 
-def calistir(kod):
+def run_condition(code):
     import pycasa as pc
-    eklenen = []
+    added = []
 
-    if kod in ("C", "E"):
-        oncesi = set(sys.modules)
+    if code in ("C", "E"):
+        before_modules = set(sys.modules)
         from pycasa.detection._yolo import _temporary_sys_path, _ensure_yolov5_pkg
         with _temporary_sys_path(str(_ensure_yolov5_pkg())):
             from models.common import AutoShape, DetectMultiBackend   # noqa: F401
-        eklenen = sorted(set(sys.modules) - oncesi)
+        added = sorted(set(sys.modules) - before_modules)
 
-    temizlenen = []
-    if kod == "E":
-        # yolov5'in genel isimli paketlerini ve alt modullerini sys.modules'tan cikar
-        for ad in list(sys.modules):
-            kok = ad.split(".")[0]
-            if kok in ("models", "utils"):
-                del sys.modules[ad]
-                temizlenen.append(ad)
+    removed = []
+    if code == "E":
+        # drop yolov5's generically named packages and their submodules from sys.modules
+        for name in list(sys.modules):
+            root = name.split(".")[0]
+            if root in ("models", "utils"):
+                del sys.modules[name]
+                removed.append(name)
 
     s = pc.io.load_default_data(final_frame=FRAMES, verbose=False)
     s.detection.yolo(yolo_model="yolo26", show_progress=False, verbose=False)
@@ -46,18 +46,18 @@ def calistir(kod):
     n = sum(len(v) for v in s.get_detections().values())
 
     d = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
-    d[kod] = {"detections": n, "tp": a["tp"], "fp": a["fp"], "F1": a["F1"],
-              "eklenen_modul": len(eklenen),
-              "golgeleyen": [m for m in eklenen if m.split(".")[0] in ("models", "utils")][:8],
-              "temizlenen_modul": len(temizlenen)}
+    d[code] = {"detections": n, "tp": a["tp"], "fp": a["fp"], "F1": a["F1"],
+               "modules_added": len(added),
+               "shadowing": [m for m in added if m.split(".")[0] in ("models", "utils")][:8],
+               "modules_removed": len(removed)}
     json.dump(d, open(OUT, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
-    print(f"  {kod}: detections={n} tp={a['tp']} fp={a['fp']} F1={a['F1']} "
-          f"| eklenen={len(eklenen)} temizlenen={len(temizlenen)}")
+    print(f"  {code}: detections={n} tp={a['tp']} fp={a['fp']} F1={a['F1']} "
+          f"| added={len(added)} cleared={len(removed)}")
 
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        calistir(sys.argv[1])
+        run_condition(sys.argv[1])
     else:
         if os.path.exists(OUT):
             os.remove(OUT)
@@ -66,24 +66,24 @@ if __name__ == "__main__":
             p = subprocess.run([sys.executable, __file__, k],
                                env=dict(os.environ, PYTHONIOENCODING="utf-8"),
                                capture_output=True, text=True, encoding="utf-8", errors="replace")
-            for satir in (p.stdout or "").splitlines():
-                if satir.strip().startswith(k + ":"):
-                    print(" ", satir.strip())
+            for line in (p.stdout or "").splitlines():
+                if line.strip().startswith(k + ":"):
+                    print(" ", line.strip())
             if p.returncode != 0:
-                print("  !! hata:", (p.stderr or "")[-250:])
+                print("  !! error:", (p.stderr or "")[-250:])
 
         d = json.load(open(OUT, encoding="utf-8"))
         if all(k in d for k in "ACE"):
             A, C, E = (d[k]["detections"] for k in "ACE")
-            print(f"\n  A (izole)            : {A}")
-            print(f"  C (import, temizsiz) : {C}")
-            print(f"  E (import, temizli)  : {E}")
-            print(f"  golgeleyen modul     : {d['C']['golgeleyen']}")
+            print(f"\n  A (isolated)             : {A}")
+            print(f"  C (import, no cleanup)   : {C}")
+            print(f"  E (import, with cleanup) : {E}")
+            print(f"  shadowing modules        : {d['C']['shadowing']}")
             print()
             if E == A and C != A:
-                print("  SONUC: temizlik farki kapatti -> sebep MODUL GOLGELEMESI.")
-                print("  Duzeltme: yolov5 import'undan sonra sys.modules'tan 'models' ve 'utils' cikarilmali.")
+                print("  CONCLUSION: cleanup closed the gap -> the cause is MODULE SHADOWING.")
+                print("  Fix: remove 'models' and 'utils' from sys.modules after the yolov5 import.")
             elif E == C:
-                print("  SONUC: temizlik ise yaramadi -> sebep golgeleme DEGIL, baska bir kalici durum.")
+                print("  CONCLUSION: cleanup made no difference -> not shadowing, but some other persistent state.")
             else:
-                print("  SONUC: ucu de farkli, tablo belirsiz.")
+                print("  CONCLUSION: all three differ, the table is inconclusive.")

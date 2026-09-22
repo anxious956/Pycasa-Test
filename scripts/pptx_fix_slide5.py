@@ -1,17 +1,18 @@
-"""Slayt 5'teki iki metin sorununu duzelt.
+"""Fix the two text problems on slide 5.
 
-1) Yanlis iddia: "two of us compared numbers independently" -- bulgu tek kisilik
-   bir calismada, API test paketi her modul grubunu ayri process'te calistirdigi
-   icin ortaya cikti. Ikinci makinedeki calistirma sonradan geldi ve dogruladi.
-2) Belirsiz etiket: uc satir "Our own run" diyor, dinleyici kimin calistirdigini
-   ayirt edemiyor. Makine 1 / Makine 2 olarak netlestiriliyor.
+1) Incorrect claim: "two of us compared numbers independently" -- the finding
+   came out of a single-person study, because the API test suite runs each module
+   group in its own process. The run on the second machine came later and
+   confirmed it.
+2) Ambiguous labels: three rows say "Our own run", so the audience cannot tell
+   who ran what. They are clarified as Machine 1 / Machine 2.
 
-    python scripts/pptx_fix_slide5.py <girdi.pptx> <cikti.pptx>
+    python scripts/pptx_fix_slide5.py <input.pptx> <output.pptx>
 """
 import os, sys, zipfile
 
-DEGISIM = [
-    # (eski metin, yeni metin)
+REPLACEMENTS = [
+    # (old text, new text)
     ("This was only caught because two of us compared numbers independently — a single run would never reveal it",
      "This surfaced because our API test suite runs each module group in its own process — the isolated YOLO26 number did not match the one in our own report. A second machine then confirmed it with a third value."),
     ("Isolated process (clean)",
@@ -23,28 +24,28 @@ DEGISIM = [
 ]
 
 
-def main(girdi, cikti):
-    z = zipfile.ZipFile(girdi)
-    icerik = {n: z.read(n) for n in z.namelist()}
+def main(src, dst):
+    z = zipfile.ZipFile(src)
+    parts = {n: z.read(n) for n in z.namelist()}
     z.close()
 
-    yol = "ppt/slides/slide5.xml"
-    x = icerik[yol].decode("utf-8")
-    for eski, yeni in DEGISIM:
-        # uzun etiketler once: "Our own run — after YOLOv5..." icinde
-        # "After YOLOv5, same process" gecmiyor, yine de sira onemli
-        n = x.count(eski)
+    path = "ppt/slides/slide5.xml"
+    x = parts[path].decode("utf-8")
+    for old, new in REPLACEMENTS:
+        # longer labels first: "Our own run — after YOLOv5..." does not contain
+        # "After YOLOv5, same process", but the order still matters
+        n = x.count(old)
         if n == 0:
-            print(f"  ! bulunamadi: {eski[:55]!r}")
+            print(f"  ! not found: {old[:55]!r}")
             continue
-        x = x.replace(eski, yeni)
-        print(f"  {n}x degisti: {eski[:48]!r}")
-    icerik[yol] = x.encode("utf-8")
+        x = x.replace(old, new)
+        print(f"  replaced {n}x: {old[:48]!r}")
+    parts[path] = x.encode("utf-8")
 
-    with zipfile.ZipFile(cikti, "w", zipfile.ZIP_DEFLATED) as out:
-        for ad, veri in icerik.items():
-            out.writestr(ad, veri)
-    print(f"\n  yazildi: {cikti}  ({os.path.getsize(cikti)/1e6:.1f} MB)")
+    with zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as out:
+        for name, data in parts.items():
+            out.writestr(name, data)
+    print(f"\n  written: {dst}  ({os.path.getsize(dst)/1e6:.1f} MB)")
 
 
 if __name__ == "__main__":

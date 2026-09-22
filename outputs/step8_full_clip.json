@@ -93,7 +93,7 @@
       },
       "skipped": false
     },
-    "kinematik": {
+    "kinematics": {
       "VCL": [
         24.46,
         13.98
@@ -126,7 +126,7 @@
         39.85,
         14.98
       ],
-      "track_sayisi": 319
+      "track_count": 319
     }
   },
   "yolo26_sort": {
@@ -168,7 +168,7 @@
       },
       "skipped": false
     },
-    "kinematik": {
+    "kinematics": {
       "VCL": [
         20.35,
         15.29
@@ -201,7 +201,7 @@
         40.45,
         15.27
       ],
-      "track_sayisi": 510
+      "track_count": 510
     }
   }
 }

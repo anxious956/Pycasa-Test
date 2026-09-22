@@ -1,15 +1,15 @@
-"""Adim 9d: Sebep yolov5 reposu mu, yoksa ultralytics import'u mu?
+"""Step 9d: is the cause the yolov5 repo, or the ultralytics import itself?
 
-Bulgu: bu yolov5 reposu (Ultralytics'in yeni surumu) dogrudan ultralytics'e
-bagimli -- models/common.py `import ultralytics`, utils/__init__.py ise
-`from ultralytics.utils import ...` yapiyor. YOLO26 yolu da zaten ultralytics
-kullaniyor, yani paket ortak. Degisen sey SIRA olabilir.
+Finding: this yolov5 repo (Ultralytics' newer release) depends directly on
+ultralytics -- models/common.py does `import ultralytics` and utils/__init__.py
+does `from ultralytics.utils import ...`. The YOLO26 path already uses
+ultralytics too, so the package is shared. What changes may be the ORDER.
 
-Kosullar (her biri ayri process, hepsi YOLO26 calistirir):
-  A  hicbir on import yok                       -> izole referans (6390)
-  C  yolov5 reposu import edildi                -> kirli referans (6003)
-  G  sadece `import ultralytics`                -> C'ye esitse sebep ultralytics
-  H  sadece `ultralytics.utils.patches`         -> torch.load yamasi tek basina yetiyor mu
+Conditions (each in its own process, all run YOLO26):
+  A  no preceding import                       -> isolated reference (6390)
+  C  yolov5 repo imported                      -> contaminated reference (6003)
+  G  only `import ultralytics`                 -> if equal to C, ultralytics is the cause
+  H  only `ultralytics.utils.patches`          -> is the torch.load patch alone enough?
 
     python scripts/step9d_ultralytics_test.py
 """
@@ -18,20 +18,20 @@ import os, sys, json, subprocess
 OUT = "outputs/step9d_ultralytics.json"
 
 
-def calistir(kod):
-    if kod == "G":
+def run_condition(code):
+    if code == "G":
         import ultralytics  # noqa: F401
-    elif kod == "H":
+    elif code == "H":
         from ultralytics.utils import patches  # noqa: F401
 
     import pycasa as pc
-    if kod == "C":
+    if code == "C":
         from pycasa.detection._yolo import _temporary_sys_path, _ensure_yolov5_pkg
         with _temporary_sys_path(str(_ensure_yolov5_pkg())):
             from models.common import AutoShape  # noqa: F401
 
     import torch
-    torch_load_yamali = torch.load.__module__.startswith("ultralytics")
+    torch_load_is_patched = torch.load.__module__.startswith("ultralytics")
 
     s = pc.io.load_default_data(final_frame=40, verbose=False)
     s.detection.yolo(yolo_model="yolo26", show_progress=False, verbose=False)
@@ -40,46 +40,46 @@ def calistir(kod):
     n = sum(len(v) for v in s.get_detections().values())
 
     d = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
-    d[kod] = {"detections": n, "tp": a["tp"], "fp": a["fp"], "F1": a["F1"],
-              "torch_load_patched": torch_load_yamali}
+    d[code] = {"detections": n, "tp": a["tp"], "fp": a["fp"], "F1": a["F1"],
+               "torch_load_patched": torch_load_is_patched}
     json.dump(d, open(OUT, "w", encoding="utf-8"), indent=2)
-    print(f"  {kod}: detections={n} tp={a['tp']} fp={a['fp']} F1={a['F1']} "
-          f"| torch.load yamali={torch_load_yamali}")
+    print(f"  {code}: detections={n} tp={a['tp']} fp={a['fp']} F1={a['F1']} "
+          f"| torch.load patched={torch_load_is_patched}")
 
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        calistir(sys.argv[1])
+        run_condition(sys.argv[1])
     else:
         if os.path.exists(OUT):
             os.remove(OUT)
-        etiket = {"A": "on import yok", "C": "yolov5 reposu",
-                  "G": "sadece ultralytics", "H": "sadece ultralytics.utils.patches"}
+        labels = {"A": "no preceding import", "C": "yolov5 repo",
+                  "G": "ultralytics only", "H": "ultralytics.utils.patches only"}
         for k in ("A", "C", "G", "H"):
-            print(f"\n=== {k}: {etiket[k]} ===", flush=True)
+            print(f"\n=== {k}: {labels[k]} ===", flush=True)
             p = subprocess.run([sys.executable, __file__, k],
                                env=dict(os.environ, PYTHONIOENCODING="utf-8"),
                                capture_output=True, text=True, encoding="utf-8", errors="replace")
-            for satir in (p.stdout or "").splitlines():
-                if satir.strip().startswith(k + ":"):
-                    print(" ", satir.strip())
+            for line in (p.stdout or "").splitlines():
+                if line.strip().startswith(k + ":"):
+                    print(" ", line.strip())
             if p.returncode != 0:
-                print("  !! hata:", (p.stderr or "")[-250:])
+                print("  !! error:", (p.stderr or "")[-250:])
 
         d = json.load(open(OUT, encoding="utf-8"))
         if all(k in d for k in "ACGH"):
             A, C, G, Hh = (d[k]["detections"] for k in "ACGH")
-            print(f"\n  A on import yok      : {A}")
-            print(f"  C yolov5 reposu      : {C}")
-            print(f"  G sadece ultralytics : {G}")
-            print(f"  H sadece patches     : {Hh}")
+            print(f"\n  A no preceding import : {A}")
+            print(f"  C yolov5 repo         : {C}")
+            print(f"  G ultralytics only    : {G}")
+            print(f"  H patches only        : {Hh}")
             print()
             if G == C and C != A:
-                print("  SONUC: `import ultralytics` tek basina farki uretiyor.")
-                print("  Yani sebep yolov5 reposu degil, ultralytics'in import edilme SIRASI.")
+                print("  CONCLUSION: `import ultralytics` alone reproduces the difference.")
+                print("  So the cause is not the yolov5 repo but the ORDER in which ultralytics is imported.")
                 if Hh == C:
-                    print("  Ayrica ultralytics.utils.patches tek basina yetiyor (torch.load yamasi).")
+                    print("  ultralytics.utils.patches alone is also enough (the torch.load patch).")
             elif G == A:
-                print("  SONUC: ultralytics tek basina yetmiyor, fark yolov5 reposundan geliyor.")
+                print("  CONCLUSION: ultralytics alone is not enough; the difference comes from the yolov5 repo.")
             else:
-                print("  SONUC: tablo belirsiz.")
+                print("  CONCLUSION: the table is inconclusive.")

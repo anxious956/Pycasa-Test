@@ -1,12 +1,12 @@
 import pycasa as pc
 
-# Adim 2: default datayi sadece GT detectionlarla timelapse ile gorsellestir
-# (hicbir detection/tracking calistirilmadi; default datada GT track yok, sadece GT detection var)
+# Step 2: visualise the default dataset as a timelapse showing only the GT detections
+# (no detection/tracking was run; the default dataset has GT detections but no GT tracks)
 self = pc.io.load_default_data()
 
 self.visualization.timelapse(
     video_type="original",
-    show_detections=False,   # predicted detection yok
-    show_tracks=False,       # track yok
-    show_groundtruth=True,   # sadece GT bounding box'lar (lime)
+    show_detections=False,   # no predicted detections
+    show_tracks=False,       # no tracks
+    show_groundtruth=True,   # GT bounding boxes only (lime)
 )

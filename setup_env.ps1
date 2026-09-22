@@ -1,11 +1,11 @@
 # ===================================================================
-#  pycasa ortam ayari (PowerShell) - her oturumda bir kez:
+#  pycasa environment setup (PowerShell) - run once per session:
 #      . .\setup_env.ps1
 # ===================================================================
-#  Veri (1.2 GB) bu proje klasorunun icinde: pycasa_data\
-#  YOLO agirliklari C:\pycasa-weights icinde durmak ZORUNDA, cunku
-#  klasor yolunda Turkce karakter var ve YOLOv5'in torch.jit.load
-#  fonksiyonu Turkce karakterli yoldan dosya acamiyor.
+#  The data (1.2 GB) lives inside this project folder: pycasa_data\
+#  The YOLO weights MUST sit in C:\pycasa-weights, because the project
+#  path contains non-ASCII Turkish characters and YOLOv5's
+#  torch.jit.load cannot open a file from such a path.
 # ===================================================================
 $env:PYCASA_DATA         = Join-Path $PSScriptRoot "pycasa_data"
 $env:PYCASA_PROJECT_ROOT = "C:\pycasa-weights"
@@ -13,4 +13,4 @@ New-Item -ItemType Directory -Force -Path $env:PYCASA_PROJECT_ROOT | Out-Null
 Write-Host "PYCASA_DATA         = $env:PYCASA_DATA"
 Write-Host "PYCASA_PROJECT_ROOT = $env:PYCASA_PROJECT_ROOT"
 Write-Host ""
-Write-Host "Hazir.  python -m IPython   veya   python scripts\step1_load.py"
+Write-Host "Ready.  python -m IPython   or   python scripts\step1_load.py"
