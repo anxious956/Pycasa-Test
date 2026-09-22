@@ -143,8 +143,8 @@ def render():
 
 
 if __name__ == "__main__":
-    mode = sys.argv[1] if len(sys.argv) > 1 else "hepsi"
-    if mode in ("extract", "hepsi"):
+    mode = sys.argv[1] if len(sys.argv) > 1 else "all"
+    if mode in ("extract", "all"):
         extract()
-    if mode in ("render", "hepsi"):
+    if mode in ("render", "all"):
         render()

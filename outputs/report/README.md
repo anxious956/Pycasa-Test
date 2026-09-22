@@ -31,9 +31,9 @@ the slide, then set Automatic and Loop under the Playback tab.
 |---|---|
 | `06_radar_gt` | Radar chart of the eight kinematic parameters, ground truth |
 | `06_radar_yolo26` | The same chart computed from YOLO26 detections |
-| `07_yogunluk_gt` | Density scatter of parameter pairs, ground truth |
-| `07_yogunluk_yolo26` | The same, from YOLO26 detections |
-| `08_katmanlar` | Original, grayscale, binarized and normalized frames side by side |
+| `07_density_gt` | Density scatter of parameter pairs, ground truth |
+| `07_density_yolo26` | The same, from YOLO26 detections |
+| `08_layers` | Original, grayscale, binarized and normalized frames side by side |
 
 `screenshots/` holds console and interactive-viewer captures taken during the work.
 

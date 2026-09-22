@@ -258,7 +258,7 @@ commands = [
 control2x2 = [["A", "no", "16", "6,390", "4,120", "2,270", "78.00%"], ["B", "no", "1", "6,390", "4,120", "2,270", "78.00%"], ["C", "yes", "1", "6,003", "4,120", "1,883", "80.97%"], ["D", "yes", "16", "6,003", "4,120", "1,883", "80.97%"]]
 
 json.dump({
-    "kontrol2x2": control2x2,
+    "control2x2": control2x2,
     "date": datetime.date.today().strftime("%d %B %Y"),
     "meta": meta,
     "detection101": detection101,

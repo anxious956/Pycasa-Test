@@ -43,7 +43,7 @@ for label, yolo in [("gt", False), ("yolo26", True)]:
     s.motility.kinematic_parameters(show_progress=False, verbose=False)
     s.motility.casa_parameters(verbose=False)
     _name_holder[0] = f"06_radar_{label}";     s.visualization.motility_radar()
-    _name_holder[0] = f"07_yogunluk_{label}";  s.visualization.motility_density_scatter()
+    _name_holder[0] = f"07_density_{label}";  s.visualization.motility_density_scatter()
     del s; gc.collect()
 
 # --- 2) Four-layer panel: a small session, otherwise drawing runs out of memory
@@ -52,6 +52,6 @@ p.preprocessing.grayscale(show_progress=False, verbose=False)
 p.preprocessing.binarization.otsu(show_progress=False, verbose=False)
 p.preprocessing.normalization.clahe(show_progress=False, verbose=False)
 p.detection.yolo(yolo_model="yolo26", show_progress=False, verbose=False)
-_name_holder[0] = "08_katmanlar"
+_name_holder[0] = "08_layers"
 p.visualization.plot_frame(["original", "grayscale", "binarized", "normalized"], frame_index=5)
 print("\nDone ->", os.path.abspath(OUT))
