@@ -1,5 +1,9 @@
 # pycasa Test — HC004 default data ile adım adım deneme
 
+> **For the lab / in English:** [FINDINGS.md](FINDINGS.md) — the 140-case API
+> coverage table and the full step-by-step evidence chain for the YOLO26 / NMS
+> finding. All numbers generated from `outputs/*.json`, nothing typed by hand.
+
 Kütüphane: https://github.com/DFL-KamLab/pycasa (docs: https://dfl-kamlab.github.io/pycasa/)
 
 Tüm scriptler `scripts/` altında, çıktılar (`.json`, log, GIF/PNG) `outputs/` altında.
