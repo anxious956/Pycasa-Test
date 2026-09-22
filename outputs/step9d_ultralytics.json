@@ -1,0 +1,30 @@
+{
+  "A": {
+    "detections": 6390,
+    "tp": 4120,
+    "fp": 2270,
+    "F1": 78.0,
+    "torch_load_patched": false
+  },
+  "C": {
+    "detections": 6003,
+    "tp": 4120,
+    "fp": 1883,
+    "F1": 80.97,
+    "torch_load_patched": false
+  },
+  "G": {
+    "detections": 6390,
+    "tp": 4120,
+    "fp": 2270,
+    "F1": 78.0,
+    "torch_load_patched": false
+  },
+  "H": {
+    "detections": 6390,
+    "tp": 4120,
+    "fp": 2270,
+    "F1": 78.0,
+    "torch_load_patched": false
+  }
+}
