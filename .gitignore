@@ -17,3 +17,4 @@ outputs/step7_figs/
 outputs/report/tracks_fullclip.json
 outputs/report/tracks_background.png
 Windows PowerShell.txt
+outputs/*_log.txt
