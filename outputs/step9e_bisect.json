@@ -1,0 +1,44 @@
+{
+  "none": {
+    "detections": 6390,
+    "tp": 4120,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "plotting": {
+    "detections": 6390,
+    "tp": 4120,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "utils_init": {
+    "detections": 6390,
+    "tp": 4120,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "dataloaders": {
+    "detections": 6003,
+    "tp": 4120,
+    "fp": 1883,
+    "F1": 80.97
+  },
+  "general": {
+    "detections": 6003,
+    "tp": 4120,
+    "fp": 1883,
+    "F1": 80.97
+  },
+  "torch_utils": {
+    "detections": 6003,
+    "tp": 4120,
+    "fp": 1883,
+    "F1": 80.97
+  },
+  "common_full": {
+    "detections": 6003,
+    "tp": 4120,
+    "fp": 1883,
+    "F1": 80.97
+  }
+}

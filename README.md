@@ -168,6 +168,22 @@ Script: `scripts/step6_motility.py` — ham sonuçlar `outputs/step6_motility_re
 
 ---
 
+## Kök neden: YOLO26 sıra bağımlılığı (adım 9)
+
+`scripts/step9_*.py` serisi sorunu adım adım daralttı:
+- `step9_thread_control.py`: 2x2 tasarım, OpenCV thread sayısı elendi.
+- `step9b_module_shadow.py`: `sys.modules` gölgelemesi elendi.
+- `step9c_env_test.py`: import'un yazdığı ortam değişkenleri elendi.
+- `step9d_ultralytics_test.py`: `import ultralytics` tek başına yetmiyor.
+- `step9e_bisect.py`: yolov5 import zinciri bölündü → suçlu `utils/general.py`.
+- `step9f_bisect_general.py`: general.py bölündü → suçlu tek satır: `import torchvision`.
+
+Kesin doğrulama: torchvision import edilip `sys.modules`'tan silinince sonuç izole değere (6390) geri dönüyor.
+Yani anahtar, ultralytics'in `utils/nms.py` 152. satırındaki `if "torchvision" in sys.modules` kontrolü.
+Docstring TorchNMS'in torchvision ile "birebir aynı" olduğunu iddia ediyor; veri bunu yalanlıyor.
+
+**Düzeltme:** pycasa YOLO26 çalıştırmadan önce `import torchvision` yapmalı (tek satır). Ultralytics'e de bildirilmeli.
+
 ## 7) Tüm public API'nin tek tek test edilmesi
 
 `scripts/step7_full_api_test.py` pycasa'nın tüm public fonksiyonlarını HC004 verisiyle
@@ -190,7 +206,7 @@ varyantları, 5 görselleştirme fonksiyonu.
 
 | # | Sorun | Etki | Geçici çözüm |
 |---|---|---|---|
-| 1 | YOLO26 sonucu, aynı process'te önce YOLOv5 çalıştıysa değişiyor | F1 %77.15 yerine %80.28 görünüyor | İki modeli ayrı process'te çalıştır |
+| 1 | YOLO26 sonucu, process'te `torchvision` import edilmiş mi ona göre değişiyor. Kök neden: `ultralytics/utils/nms.py:152`, `"torchvision" in sys.modules` ise torchvision NMS, değilse kendi `TorchNMS`'ini kullanıyor; ikisi düşük güvenli kutuların ~%6'sında ayrışıyor | F1 %77.15 yerine %80.28 görünüyor | YOLO26'dan önce `import torchvision` yap |
 | 2 | `session.io.load_default_data()` wrapper'ında `volume_ml` ve `chamber_depth_um` yok, modül fonksiyonunda var | `TypeError` | `pc.io.load_default_data()` kullan veya sonradan `set_volume_ml()` |
 | 3 | `kinematic_parameters()` tracking yapılmadan çağrılınca sessizce boş dönüyor, uyarı yok | Sessiz başarısızlık | Önce `get_tracks()` ile kontrol et |
 | 4 | `overlap` parametresi doğrulanmıyor: 1.5, 5.0, -0.5 hepsi kabul ediliyor | `overlap=50` yazarsan sessizce 30 kat fazla pencere | 0 ile 1 arasında değer ver |

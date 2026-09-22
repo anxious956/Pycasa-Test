@@ -1,0 +1,72 @@
+{
+  "none": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "torchvision": {
+    "detections": 6003,
+    "fp": 1883,
+    "F1": 80.97
+  },
+  "yaml_packaging": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "ul_data_conv": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "ul_checks": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "ul_files": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "ul_git": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "ul_ops": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "ul_torch_utils": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "ul_patches": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "y5_downloads": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "y5_metrics": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "ayar_blogu": {
+    "detections": 6390,
+    "fp": 2270,
+    "F1": 78.0
+  },
+  "general_full": {
+    "detections": 6003,
+    "fp": 1883,
+    "F1": 80.97
+  }
+}

@@ -342,9 +342,9 @@
   "bulgular": [
     [
       "1",
-      "YOLO26 results depend on run order",
-      "Importing the YOLOv5 modules changes YOLO26's low-confidence output; F1 shifts by about 3 points",
-      "Run each detector in a separate Python process"
+      "YOLO26 output depends on whether torchvision is imported",
+      "ultralytics picks torchvision NMS or its own TorchNMS on a sys.modules check (utils/nms.py:152); the two disagree on about 6 percent of low-confidence boxes and F1 moves by about 3 points",
+      "import torchvision before running YOLO26"
     ],
     [
       "2",

@@ -214,9 +214,9 @@ if not api_satirlar:                       # JSON yoksa dogrulanmis rakamlarla d
 
 # ---------------------------------------------------------------- bulgular
 bulgular = [
-    ["1", "YOLO26 results depend on run order",
-     "Importing the YOLOv5 modules changes YOLO26's low-confidence output; F1 shifts by about 3 points",
-     "Run each detector in a separate Python process"],
+    ["1", "YOLO26 output depends on whether torchvision is imported",
+     "ultralytics picks torchvision NMS or its own TorchNMS on a sys.modules check (utils/nms.py:152); the two disagree on about 6 percent of low-confidence boxes and F1 moves by about 3 points",
+     "import torchvision before running YOLO26"],
     ["2", "Result getters return live dictionaries",
      "get_assessment() and get_motility() hand back the session's own objects, so a captured result changes when the next detector runs",
      "Deep-copy any result you intend to compare"],
