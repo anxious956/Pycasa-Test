@@ -503,13 +503,29 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
   s.addText([
     { text: "Why? ", options: { bold: true, color: ORANGE } },
     { text: "The program quietly switches between two methods for removing duplicate boxes, depending on what else was loaded first." },
-  ], { x: x0, y: 5.45, w: 2 * cw + gap, h: 0.8, fontFace: FONT, fontSize: 18, color: TEXT, margin: 0, valign: "top", isTextBox: true });
+  ], { x: x0, y: 5.4, w: cw + 0.7, h: 0.85, fontFace: FONT, fontSize: 16, color: TEXT, margin: 0, valign: "top", isTextBox: true });
   s.addText([
     { text: "Fix: ", options: { bold: true, color: ORANGE } },
     { text: "one line of code, " },
     { text: "import torchvision", options: { fontFace: MONO, color: INK } },
     { text: ", before running the detector." },
-  ], { x: x0, y: 6.35, w: 2 * cw + gap, h: 0.5, fontFace: FONT, fontSize: 18, color: TEXT, margin: 0, isTextBox: true });
+  ], { x: x0, y: 6.35, w: cw + 0.7, h: 0.6, fontFace: FONT, fontSize: 16, color: TEXT, margin: 0, valign: "top", isTextBox: true });
+
+  // bottom right: how the score is calculated
+  const fx = x0 + cw + gap;
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+    x: fx, y: 5.4, w: cw, h: 1.55, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
+  });
+  s.addText([
+    { text: "How the score is calculated", options: { fontSize: 12, bold: true, color: MUTED, breakLine: true } },
+    { text: "F1 = 2 · P · R / (P + R)", options: { fontSize: 20, bold: true, color: INK, breakLine: true } },
+    { text: "P = correct boxes ÷ all boxes drawn", options: { fontSize: 12, color: TEXT, breakLine: true } },
+    { text: "R = cells found ÷ all real cells", options: { fontSize: 12, color: TEXT, breakLine: true } },
+    { text: "77%:  P 63%, R 99%     80%:  P 68%, R 99%", options: { fontSize: 11, color: MUTED } },
+  ], {
+    x: fx + 0.25, y: 5.47, w: cw - 0.4, h: 1.42, fontFace: FONT, valign: "middle", margin: 0,
+    paraSpaceAfter: 2, isTextBox: true,
+  });
   s.addNotes(
     "While testing, we found a problem. We ran the exact same detector on the exact same video twice, on the same computer, and got two different scores: 77 and 80 percent. " +
     "Both numbers are for YOLO26. The only difference: in the second run, YOLOv5 had been run first in the same session. " +
