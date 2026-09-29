@@ -141,15 +141,18 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
     margin: 0, isTextBox: true,
   });
   const parts = [
-    ["1", "Find the cells", "casa.detection",
-      [["YOLOv5", true], ["YOLO26", true], ["Digital washing", false], ["Moving cells", true]]],
-    ["2", "Follow the cells", "casa.tracking",
-      [["SORT", true], ["DeepSORT", false], ["JPDAF  (the lab's own, 2017)", true]]],
-    ["3", "Measure them", "casa.motility",
-      [["Speeds  (VCL, VSL, VAP, ...)", true], ["% of cells moving", true],
-       ["Cells per mL", true], ["Total cell count", true]]],
+    ["1", "Find the cells", "casa.detection", ["YOLOv5", "YOLO26", "Digital washing", "Moving cells"]],
+    ["2", "Follow the cells", "casa.tracking", ["SORT", "DeepSORT", "JPDAF  (the lab's own, 2017)"]],
+    ["3", "Measure them", "casa.motility", null],
   ];
-  const cw = 3.6, gap = (W - 2 * M - 3 * cw) / 2, cy = 2.35, ch = 3.75;
+  // the eight movement measures pycasa reports for every cell, with their full names
+  const measures = [
+    ["VCL", "Curvilinear velocity"], ["VSL", "Straight-line velocity"],
+    ["VAP", "Average path velocity"], ["LIN", "Linearity"],
+    ["STR", "Straightness"], ["WOB", "Wobble"],
+    ["ALH", "Lateral head displacement"], ["MAD", "Mean angular displacement"],
+  ];
+  const cw = 3.75, gap = (W - 2 * M - 3 * cw) / 2, cy = 2.25, ch = 4.65;
   parts.forEach(([n, name, code, opts], i) => {
     const x = M + i * (cw + gap);
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
@@ -168,18 +171,43 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
       x: x + 0.25, y: cy + 0.88, w: cw - 0.5, h: 0.36, fontFace: MONO, fontSize: 14,
       color: MUTED, margin: 0, isTextBox: true,
     });
-    opts.forEach(([label, used], k) => {
-      pill(pres, s, label, x + 0.25, cy + 1.42 + k * 0.54, cw - 0.5, {
-        fill: WHITE, color: TEXT, size: 15, bold: false, spacing: 0, h: 0.42,
+    if (opts) {
+      opts.forEach((label, k) => {
+        pill(pres, s, label, x + 0.25, cy + 1.42 + k * 0.54, cw - 0.5, {
+          fill: WHITE, color: TEXT, size: 15, bold: false, spacing: 0, h: 0.42,
+        });
       });
-    });
-    if (i < 2) arrow(pres, s, x + cw + gap / 2 - 0.2, cy + ch / 2, 0.4);
+    } else {
+      const tw = (cw - 0.6) / 2;
+      measures.forEach(([abbr, full], k) => {
+        const tx = x + 0.25 + (k % 2) * (tw + 0.1), ty = cy + 1.38 + Math.floor(k / 2) * 0.62;
+        s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+          x: tx, y: ty, w: tw, h: 0.54, fill: { color: WHITE }, line: { color: WHITE }, rectRadius: 0.1,
+        });
+        s.addText(abbr, {
+          x: tx + 0.1, y: ty + 0.04, w: tw - 0.2, h: 0.26, fontFace: FONT, fontSize: 14, bold: true,
+          color: TEXT, margin: 0, isTextBox: true,
+        });
+        s.addText(full, {
+          x: tx + 0.1, y: ty + 0.29, w: tw - 0.15, h: 0.2, fontFace: FONT, fontSize: 8.5,
+          color: MUTED, margin: 0, isTextBox: true,
+        });
+      });
+      s.addText([
+        { text: "Also: % of cells moving,", options: { breakLine: true } },
+        { text: "cells per mL, total cell count" },
+      ], {
+        x: x + 0.25, y: cy + 3.92, w: cw - 0.5, h: 0.55, fontFace: FONT, fontSize: 13,
+        color: TEXT, margin: 0, valign: "top", isTextBox: true,
+      });
+    }
+    if (i < 2) arrow(pres, s, x + cw + gap / 2 - 0.16, cy + ch / 2, 0.32);
   });
   s.addNotes(
     "pycasa is a free Python tool that this lab built. CASA means computer-assisted semen analysis: " +
     "a computer looks at the video instead of a person. " +
     "It has three parts. The first finds the cells, the second follows them, the third measures them. " +
-    "Each part has several options to choose from. I ran every one of them."
+    "Each part has several options to choose from. I ran every one of them. The last part reports eight measures of how each cell moves, such as its speed along the real path (VCL) and in a straight line (VSL), plus how many cells move and how many cells there are."
   );
 }
 
