@@ -141,8 +141,10 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
     margin: 0, isTextBox: true,
   });
   const parts = [
-    ["1", "Find the cells", "casa.detection", ["YOLOv5", "YOLO26", "Digital washing", "Moving cells"]],
-    ["2", "Follow the cells", "casa.tracking", ["SORT", "DeepSORT", "JPDAF  (the lab's own, 2017)"]],
+    ["1", "Find the cells", "casa.detection", ["YOLOv5", "YOLO26", "Digital washing", "Moving cells", "Urbano"]],
+    ["2", "Follow the cells", "casa.tracking", null, [
+      ["SORT", "Simple Online and Realtime Tracking"],
+      ["JPDAF", "Joint Probabilistic Data Association Filter"]]],
     ["3", "Measure them", "casa.motility", null],
   ];
   // the eight movement measures pycasa reports for every cell, with their full names
@@ -153,7 +155,7 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
     ["ALH", "Lateral head displacement"], ["MAD", "Mean angular displacement"],
   ];
   const cw = 3.75, gap = (W - 2 * M - 3 * cw) / 2, cy = 2.25, ch = 4.65;
-  parts.forEach(([n, name, code, opts], i) => {
+  parts.forEach(([n, name, code, opts, named], i) => {
     const x = M + i * (cw + gap);
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
       x, y: cy, w: cw, h: ch, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
@@ -175,6 +177,22 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
       opts.forEach((label, k) => {
         pill(pres, s, label, x + 0.25, cy + 1.42 + k * 0.54, cw - 0.5, {
           fill: WHITE, color: TEXT, size: 15, bold: false, spacing: 0, h: 0.42,
+        });
+      });
+    } else if (named) {
+      // full-width tiles: short name on top, full name underneath in small type
+      named.forEach(([abbr, full], k) => {
+        const ty = cy + 1.38 + k * 0.72;
+        s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+          x: x + 0.25, y: ty, w: cw - 0.5, h: 0.62, fill: { color: WHITE }, line: { color: WHITE }, rectRadius: 0.1,
+        });
+        s.addText(abbr, {
+          x: x + 0.4, y: ty + 0.05, w: cw - 0.8, h: 0.3, fontFace: FONT, fontSize: 15, bold: true,
+          color: TEXT, margin: 0, isTextBox: true,
+        });
+        s.addText(full, {
+          x: x + 0.4, y: ty + 0.35, w: cw - 0.75, h: 0.22, fontFace: FONT, fontSize: 10,
+          color: MUTED, margin: 0, isTextBox: true,
         });
       });
     } else {
@@ -207,7 +225,10 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
     "pycasa is a free Python tool that this lab built. CASA means computer-assisted semen analysis: " +
     "a computer looks at the video instead of a person. " +
     "It has three parts. The first finds the cells, the second follows them, the third measures them. " +
-    "Each part has several options to choose from. I ran every one of them. The last part reports eight measures of how each cell moves, such as its speed along the real path (VCL) and in a straight line (VSL), plus how many cells move and how many cells there are."
+    "Each part has several options to choose from. I ran every one of them. " +
+    "We choose the method ourselves; pycasa never picks one on its own. " +
+    "For following cells there are two methods: SORT, a simple and fast standard tracker, and JPDAF, a method that comes from radar tracking and that this lab adapted for sperm cells in 2017. " +
+    "The last part reports eight measures of how each cell moves, such as its speed along the real path (VCL) and in a straight line (VSL), plus how many cells move and how many cells there are."
   );
 }
 
