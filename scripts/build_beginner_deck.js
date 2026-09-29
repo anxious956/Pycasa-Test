@@ -497,18 +497,23 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
     align: "center", margin: 0, isTextBox: true,
   });
   s.addText([
+    { text: "Detection score", options: { bold: true } },
+    { text: " = it finds the real cells, without extra wrong boxes. 100% means every cell found and no wrong boxes." },
+  ], { x: x0, y: 4.85, w: 2 * cw + gap, h: 0.4, fontFace: FONT, fontSize: 14, color: MUTED, margin: 0, isTextBox: true });
+  s.addText([
     { text: "Why? ", options: { bold: true, color: ORANGE } },
     { text: "The program quietly switches between two methods for removing duplicate boxes, depending on what else was loaded first." },
-  ], { x: x0, y: 5.0, w: 2 * cw + gap, h: 0.8, fontFace: FONT, fontSize: 18, color: TEXT, margin: 0, valign: "top", isTextBox: true });
+  ], { x: x0, y: 5.45, w: 2 * cw + gap, h: 0.8, fontFace: FONT, fontSize: 18, color: TEXT, margin: 0, valign: "top", isTextBox: true });
   s.addText([
     { text: "Fix: ", options: { bold: true, color: ORANGE } },
     { text: "one line of code, " },
     { text: "import torchvision", options: { fontFace: MONO, color: INK } },
     { text: ", before running the detector." },
-  ], { x: x0, y: 5.9, w: 2 * cw + gap, h: 0.5, fontFace: FONT, fontSize: 18, color: TEXT, margin: 0, isTextBox: true });
+  ], { x: x0, y: 6.35, w: 2 * cw + gap, h: 0.5, fontFace: FONT, fontSize: 18, color: TEXT, margin: 0, isTextBox: true });
   s.addNotes(
     "While testing, we found a problem. We ran the exact same detector on the exact same video twice, on the same computer, and got two different scores: 77 and 80 percent. " +
     "The only difference was whether another detector had been run first. " +
+    "The detection score says how well the software finds the real cells without drawing extra wrong boxes. In both runs it finds 99 of every 100 cells; the second run simply draws about a thousand fewer wrong boxes. " +
     "The reason is hidden inside a shared library: it picks one of two methods for removing duplicate boxes, depending on what else is loaded. The fix is one line of code."
   );
 }
