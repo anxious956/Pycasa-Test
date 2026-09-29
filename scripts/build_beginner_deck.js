@@ -474,8 +474,8 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
   header(pres, s, "SOMETHING WE FOUND", "Same video, same program, two different answers");
   const cw = 4.2, gap = 1.1, x0 = (W - 2 * cw - gap) / 2;
   [
-    { num: "77%", lbl: "run on its own", color: INK },
-    { num: "80%", lbl: "run after another detector", color: ORANGE },
+    { num: "77%", lbl: "YOLO26 on its own", color: INK },
+    { num: "80%", lbl: "YOLOv5 first, then YOLO26", color: ORANGE },
   ].forEach((c, i) => {
     const x = x0 + i * (cw + gap);
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
@@ -512,7 +512,7 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
   ], { x: x0, y: 6.35, w: 2 * cw + gap, h: 0.5, fontFace: FONT, fontSize: 18, color: TEXT, margin: 0, isTextBox: true });
   s.addNotes(
     "While testing, we found a problem. We ran the exact same detector on the exact same video twice, on the same computer, and got two different scores: 77 and 80 percent. " +
-    "The only difference was whether another detector had been run first. " +
+    "Both numbers are for YOLO26. The only difference: in the second run, YOLOv5 had been run first in the same session. " +
     "The detection score says how well the software finds the real cells without drawing extra wrong boxes. In both runs it finds 99 of every 100 cells; the second run simply draws about a thousand fewer wrong boxes. " +
     "The reason is hidden inside a shared library: it picks one of two methods for removing duplicate boxes, depending on what else is loaded. The fix is one line of code."
   );
