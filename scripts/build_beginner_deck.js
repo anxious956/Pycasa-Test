@@ -211,94 +211,105 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
   );
 }
 
-/* 2. The task: input and output --------------------------------------------- */
+/* 2. The big picture: what went in, what pycasa did, what came out ----------- */
 {
   const s = pres.addSlide();
-  header(pres, s, "THE TASK", "One video in, clinic numbers out");
-  pill(pres, s, "INPUT", M, 1.85, 1.3);
-  pill(pres, s, "pc.io.load_default_data()", M + 1.45, 1.85, 3.6, {
-    fill: PANEL, color: INK, font: MONO, size: 13, bold: false, spacing: 0,
-  });
-  framed(pres, s, R("10_raw_video.gif"), M, 2.35, 5.2, 3.75, "left");
-  s.addText("30-second video  ·  30 frames per second  ·  ~90 cells in view", {
-    x: M, y: 6.2, w: 5.4, h: 0.6, fontFace: FONT, fontSize: 13, color: MUTED,
-    margin: 0, valign: "top", isTextBox: true,
-  });
+  header(pres, s, "THE BIG PICTURE", "What we gave pycasa, and what came out");
+  const top = 1.85, y0 = 2.35;
+  const xi = M, wi = 3.7;              // input column
+  const xm = 5.0, wm = 3.3;            // pycasa column
+  const xo = 9.0, wo = W - M - 9.0;    // output column
 
-  arrow(pres, s, 6.2, 4.2);
-
-  const ox = 7.4;
-  pill(pres, s, "GOAL", ox, 1.85, 1.2);
-  s.addText("What the clinic's machine reported", {
-    x: ox + 1.35, y: 1.85, w: 3.95, h: 0.38, fontFace: FONT, fontSize: 15, color: MUTED,
-    valign: "middle", margin: 0, isTextBox: true,
+  // INPUT
+  pill(pres, s, "INPUT", xi, top, 1.3);
+  framed(pres, s, R("10_raw_video.gif"), xi, y0, wi, 2.7, "left");
+  s.addText("pc.io.load_default_data()", {
+    x: xi, y: 5.2, w: wi, h: 0.3, fontFace: MONO, fontSize: 12, color: MUTED, margin: 0, isTextBox: true,
   });
-  const cards = [["42%", "swim fast"], ["23%", "swim slowly"],
-                 ["9%", "wiggle in place"], ["26%", "don't move"]];
-  cards.forEach(([num, lbl], i) => {
-    const cx = ox + (i % 2) * 2.75, cy = 2.35 + Math.floor(i / 2) * 1.5;
+  s.addText([
+    { text: "Video: ", options: { bold: true } },
+    { text: "30 seconds from a fertility clinic, 899 frames", options: { breakLine: true } },
+    { text: "Scale: ", options: { bold: true } },
+    { text: "1 pixel = 0.24 µm", options: { breakLine: true } },
+    { text: "Answer key: ", options: { bold: true } },
+    { text: "cells marked by hand" },
+  ], {
+    x: xi, y: 5.58, w: wi + 0.2, h: 0.95, fontFace: FONT, fontSize: 13, color: TEXT,
+    margin: 0, valign: "top", paraSpaceAfter: 3, isTextBox: true,
+  });
+  arrow(pres, s, xi + wi + 0.12, 4.3, 0.45);
+
+  // PYCASA: the three function calls
+  pill(pres, s, "PYCASA", xm, top, 1.4);
+  const steps = [
+    ["1", "Find each cell", "YOLO26", "casa.detection.yolo()"],
+    ["2", "Follow each cell", "SORT", "casa.tracking.sort()"],
+    ["3", "Measure", "8 speeds per cell", "casa.motility.casa_parameters()"],
+  ];
+  steps.forEach(([n, name, how, code], k) => {
+    const by = y0 + k * 1.4;
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
-      x: cx, y: cy, w: 2.55, h: 1.3, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
+      x: xm, y: by, w: wm, h: 1.2, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
+    });
+    s.addText(n, {
+      shape: pres.shapes.OVAL, x: xm + 0.2, y: by + 0.2, w: 0.45, h: 0.45,
+      fill: { color: INK }, line: { color: INK }, color: WHITE, fontFace: FONT,
+      fontSize: 16, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true,
+    });
+    s.addText([
+      { text: name, options: { bold: true, color: TEXT } },
+      { text: "  ·  " + how, options: { color: MUTED, fontSize: 13 } },
+    ], {
+      x: xm + 0.8, y: by + 0.2, w: wm - 0.95, h: 0.45, fontFace: FONT, fontSize: 17,
+      valign: "middle", margin: 0, isTextBox: true,
+    });
+    s.addText(code, {
+      x: xm + 0.2, y: by + 0.76, w: wm - 0.3, h: 0.3, fontFace: MONO, fontSize: 11,
+      color: MUTED, margin: 0, isTextBox: true,
+    });
+  });
+  arrow(pres, s, xm + wm + 0.12, 4.3, 0.45);
+
+  // OUTPUT: pycasa's own numbers (full video, fully automatic)
+  pill(pres, s, "OUTPUT", xo, top, 1.5);
+  const cards = [["38%", "swim fast"], ["23%", "swim slowly"], ["1%", "wiggle in place"], ["38%", "don't move"]];
+  const cw = (wo - 0.15) / 2;
+  cards.forEach(([num, lbl], i) => {
+    const cx = xo + (i % 2) * (cw + 0.15), cy = y0 + Math.floor(i / 2) * 1.15;
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+      x: cx, y: cy, w: cw, h: 1.0, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
     });
     s.addText(num, {
-      x: cx + 0.2, y: cy + 0.1, w: 2.2, h: 0.72, fontFace: FONT, fontSize: 38, bold: true,
+      x: cx + 0.15, y: cy + 0.08, w: cw - 0.3, h: 0.55, fontFace: FONT, fontSize: 28, bold: true,
       color: INK, margin: 0, isTextBox: true,
     });
     s.addText(lbl, {
-      x: cx + 0.2, y: cy + 0.8, w: 2.2, h: 0.4, fontFace: FONT, fontSize: 15, color: MUTED,
+      x: cx + 0.15, y: cy + 0.62, w: cw - 0.2, h: 0.3, fontFace: FONT, fontSize: 13, color: MUTED,
       margin: 0, isTextBox: true,
     });
   });
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
-    x: ox, y: 5.35, w: 5.3, h: 1.0, fill: { color: INK }, line: { color: INK }, rectRadius: 0.12,
+    x: xo, y: y0 + 2.3, w: wo, h: 0.95, fill: { color: INK }, line: { color: INK }, rectRadius: 0.12,
   });
   s.addText([
-    { text: "69 million", options: { fontSize: 30, bold: true, color: ORANGE } },
-    { text: "   cells per mL", options: { fontSize: 17, color: WHITE } },
-  ], { x: ox + 0.25, y: 5.35, w: 4.9, h: 1.0, fontFace: FONT, valign: "middle", margin: 0, isTextBox: true });
-  s.addText("pycasa has to get these same numbers from the video alone.", {
-    x: ox, y: 6.45, w: 5.3, h: 0.35, fontFace: FONT, fontSize: 13, color: MUTED, margin: 0, isTextBox: true,
+    { text: "74 million", options: { fontSize: 26, bold: true, color: ORANGE } },
+    { text: "  cells per mL", options: { fontSize: 15, color: WHITE } },
+  ], { x: xo + 0.2, y: y0 + 2.3, w: wo - 0.3, h: 0.95, fontFace: FONT, valign: "middle", margin: 0, isTextBox: true });
+  s.addText("510 cell paths  ·  average speed 20 µm per second", {
+    x: xo, y: y0 + 3.4, w: wo, h: 0.6, fontFace: FONT, fontSize: 13, color: MUTED,
+    margin: 0, valign: "top", isTextBox: true,
   });
-  s.addNotes(
-    "The input is just a video. Thirty seconds, taken through a microscope, with about ninety cells in view. " +
-    "The function load_default_data only loads this video; it does not compute anything. " +
-    "On the right is the goal: the numbers the clinic's own machine reported for this donor. What share of cells swim fast, slowly, wiggle in place, or don't move, and how many cells there are. " +
-    "pycasa has to reach the same numbers from the video alone. Its own numbers come at the end, and I compare them on the result slide."
-  );
-}
 
-/* 3. How it works: three steps ---------------------------------------------- */
-{
-  const s = pres.addSlide();
-  header(pres, s, "HOW IT WORKS", "Three steps: find, follow, measure");
-  const steps = [
-    ["10_raw_video.png", "The video", "What the microscope records"],
-    ["02_gt_vs_yolo26.png", "1  ·  Find", "Draw a box around every cell"],
-    ["03_sort_gt.png", "2  ·  Follow", "Link boxes into one path per cell"],
-    ["12_speed_explained.png", "3  ·  Measure", "Turn each path into a speed"],
-  ];
-  const cw = 2.5, gap = (W - 2 * M - 4 * cw) / 3;
-  steps.forEach(([img, name, desc], i) => {
-    const x = M + i * (cw + gap);
-    framed(pres, s, R(img), x, 2.0, cw, 2.0);
-    s.addText(name, {
-      x, y: 4.3, w: cw, h: 0.45, fontFace: FONT, fontSize: 20, bold: true,
-      color: i ? ORANGE : INK, margin: 0, isTextBox: true,
-    });
-    s.addText(desc, {
-      x, y: 4.8, w: cw, h: 0.8, fontFace: FONT, fontSize: 15, color: MUTED,
-      margin: 0, valign: "top", isTextBox: true,
-    });
-    if (i < 3) arrow(pres, s, x + cw + gap / 2 - 0.22, 3.0, 0.44);
-  });
   caption(s, [
-    { text: "Output: ", options: { bold: true, color: ORANGE } },
-    { text: "the same numbers a clinic's machine reports." },
-  ], 6.2);
+    { text: "How we check it: ", options: { bold: true, color: ORANGE } },
+    { text: "the clinic's own machine measured the same sample. We compare the two at the end." },
+  ], 6.75, 0.4);
   s.addNotes(
-    "The software works in three steps. " +
-    "First it finds every cell in every frame. Then it follows each cell from frame to frame, so every cell gets a path. " +
-    "Finally it measures how fast each cell moved along its path. The next three slides show one step each."
+    "This is the whole experiment on one slide. " +
+    "Input: a 30-second microscope video recorded at a fertility clinic, the microscope scale, and cells that a person marked by hand so we can check the software. " +
+    "pycasa then runs three functions: it finds every cell with YOLO26, follows each cell with SORT, and measures how each cell moves. " +
+    "Output: 38 percent of cells swim fast, 23 percent slowly, 1 percent wiggle in place, 38 percent don't move, and 74 million cells per mL. " +
+    "The clinic's own machine measured the same sample, so at the end I compare our numbers with theirs. The next three slides show each step."
   );
 }
 
@@ -306,7 +317,7 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
 {
   const s = pres.addSlide();
   header(pres, s, "STEP 1  ·  FIND", "Find every cell in every frame");
-  fnPill(pres, s, 'self.detection.yolo(yolo_model="yolo26")');
+  fnPill(pres, s, 'casa.detection.yolo(yolo_model="yolo26")');
   pill(pres, s, "INPUT", M, 1.85, 1.3);
   framed(pres, s, R("10_raw_video.png"), M, 2.35, 4.9, 3.7, "left");
   arrow(pres, s, 6.24, 4.2);
@@ -330,7 +341,7 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
 {
   const s = pres.addSlide();
   header(pres, s, "STEP 2  ·  FOLLOW", "Follow each cell from frame to frame");
-  fnPill(pres, s, "self.tracking.sort()");
+  fnPill(pres, s, "casa.tracking.sort()");
   pill(pres, s, "INPUT", M, 1.85, 1.3);
   framed(pres, s, R("02_gt_vs_yolo26.png"), M, 2.35, 4.9, 3.7, "left");
   arrow(pres, s, 6.24, 4.2);
@@ -351,7 +362,7 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
 {
   const s = pres.addSlide();
   header(pres, s, "STEP 3  ·  MEASURE", "Turn each path into a speed");
-  fnPill(pres, s, "self.motility.kinematic_parameters()");
+  fnPill(pres, s, "casa.motility.kinematic_parameters()");
   pill(pres, s, "INPUT", M, 1.85, 1.3);
   framed(pres, s, R("12_speed_explained.png"), M, 2.35, 3.7, 3.7, "left");
   arrow(pres, s, 4.8, 4.2);
@@ -395,7 +406,7 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
 {
   const s = pres.addSlide();
   header(pres, s, "RESULT", "Does it match the clinic's machine?");
-  fnPill(pres, s, "self.motility.casa_parameters()");
+  fnPill(pres, s, "casa.motility.casa_parameters()");
   s.addChart(pres.charts.BAR, [
     { name: "Clinic's machine", labels: ["Swim fast", "Swim slowly", "Wiggle in place", "Don't move"], values: [42, 23, 9, 26] },
     { name: "pycasa", labels: ["Swim fast", "Swim slowly", "Wiggle in place", "Don't move"], values: [37.8, 23.1, 0.8, 38.2] },
