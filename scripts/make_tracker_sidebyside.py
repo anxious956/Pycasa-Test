@@ -119,16 +119,19 @@ def render():
         before = cutoff
 
         panel = []
-        for b, name in (("sort", f"SORT on GT  -  {len(d['sort'])} tracks"),
-                        ("jpdaf", f"JPDAF on GT  -  {len(d['jpdaf'])} tracks")):
+        for b, name in (("sort", f"SORT:  {len(d['sort'])} paths"),
+                        ("jpdaf", f"JPDAF:  {len(d['jpdaf'])} paths")):
             p = np.full((panelH + TITLE_H, panelW, 3), 255, np.uint8)
             p[TITLE_H:] = canvas[b]
             cv2.putText(p, name, (10, 31), cv2.FONT_HERSHEY_SIMPLEX, 0.72, (30, 30, 30), 2, cv2.LINE_AA)
             panel.append(p)
         gap = np.full((panelH + TITLE_H, 26, 3), 255, np.uint8)
         img = np.hstack([panel[0], gap, panel[1]])
-        cv2.putText(img, f"frame {cutoff} / {N}", (img.shape[1] - 205, 31),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.58, (120, 120, 120), 1, cv2.LINE_AA)
+        # progress bar along the bottom: how much of the 30-second video has played
+        bar = np.full((16, img.shape[1], 3), 255, np.uint8)
+        cv2.rectangle(bar, (0, 5), (img.shape[1] - 1, 11), (225, 225, 225), -1)
+        cv2.rectangle(bar, (0, 5), (int((img.shape[1] - 1) * cutoff / N), 11), (36, 138, 240), -1)
+        img = np.vstack([img, bar])
         frames.append(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         if step % 10 == 0:
             print(f"  frame {step + 1}/{FRAME_COUNT}", flush=True)
