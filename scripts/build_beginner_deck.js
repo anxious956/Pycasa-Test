@@ -215,9 +215,10 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
 {
   const s = pres.addSlide();
   header(pres, s, "THE TASK", "One video in, clinic numbers out");
-  fnPill(pres, s, "pc.io.load_default_data()");
-
   pill(pres, s, "INPUT", M, 1.85, 1.3);
+  pill(pres, s, "pc.io.load_default_data()", M + 1.45, 1.85, 3.6, {
+    fill: PANEL, color: INK, font: MONO, size: 13, bold: false, spacing: 0,
+  });
   framed(pres, s, R("10_raw_video.gif"), M, 2.35, 5.2, 3.75, "left");
   s.addText("30-second video  ·  30 frames per second  ·  ~90 cells in view", {
     x: M, y: 6.2, w: 5.4, h: 0.6, fontFace: FONT, fontSize: 13, color: MUTED,
@@ -227,7 +228,11 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
   arrow(pres, s, 6.2, 4.2);
 
   const ox = 7.4;
-  pill(pres, s, "OUTPUT", ox, 1.85, 1.5);
+  pill(pres, s, "GOAL", ox, 1.85, 1.2);
+  s.addText("What the clinic's machine reported", {
+    x: ox + 1.35, y: 1.85, w: 3.95, h: 0.38, fontFace: FONT, fontSize: 15, color: MUTED,
+    valign: "middle", margin: 0, isTextBox: true,
+  });
   const cards = [["42%", "swim fast"], ["23%", "swim slowly"],
                  ["9%", "wiggle in place"], ["26%", "don't move"]];
   cards.forEach(([num, lbl], i) => {
@@ -251,13 +256,14 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
     { text: "69 million", options: { fontSize: 30, bold: true, color: ORANGE } },
     { text: "   cells per mL", options: { fontSize: 17, color: WHITE } },
   ], { x: ox + 0.25, y: 5.35, w: 4.9, h: 1.0, fontFace: FONT, valign: "middle", margin: 0, isTextBox: true });
-  s.addText("Target: the clinic's own report for this donor", {
+  s.addText("pycasa has to get these same numbers from the video alone.", {
     x: ox, y: 6.45, w: 5.3, h: 0.35, fontFace: FONT, fontSize: 13, color: MUTED, margin: 0, isTextBox: true,
   });
   s.addNotes(
     "The input is just a video. Thirty seconds, taken through a microscope, with about ninety cells in view. " +
-    "The output we want is what a fertility clinic's machine reports: what share of cells swim fast, slowly, wiggle in place, or don't move, and how many cells there are. " +
-    "For this donor we have the clinic's real report, so we can check the software against it."
+    "The function load_default_data only loads this video; it does not compute anything. " +
+    "On the right is the goal: the numbers the clinic's own machine reported for this donor. What share of cells swim fast, slowly, wiggle in place, or don't move, and how many cells there are. " +
+    "pycasa has to reach the same numbers from the video alone. Its own numbers come at the end, and I compare them on the result slide."
   );
 }
 
