@@ -170,22 +170,16 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
     });
     opts.forEach(([label, used], k) => {
       pill(pres, s, label, x + 0.25, cy + 1.42 + k * 0.54, cw - 0.5, {
-        fill: used ? ORANGE : WHITE, color: used ? WHITE : TEXT, size: 15,
-        bold: used, spacing: 0, h: 0.42,
+        fill: WHITE, color: TEXT, size: 15, bold: false, spacing: 0, h: 0.42,
       });
     });
     if (i < 2) arrow(pres, s, x + cw + gap / 2 - 0.2, cy + ch / 2, 0.4);
   });
-  caption(s, [
-    { text: "■ ", options: { color: ORANGE } },
-    { text: "Orange", options: { bold: true } },
-    { text: " = tested and compared with scores.   The white ones were also run, as a quick check." },
-  ], 6.4);
   s.addNotes(
     "pycasa is a free Python tool that this lab built. CASA means computer-assisted semen analysis: " +
     "a computer looks at the video instead of a person. " +
     "It has three parts. The first finds the cells, the second follows them, the third measures them. " +
-    "Each part has several options to choose from. I ran every option. The orange ones I also compared side by side with scores."
+    "Each part has several options to choose from. I ran every one of them."
   );
 }
 
