@@ -132,6 +132,63 @@ pres.title = "pycasa — measuring sperm movement from a microscope video";
   );
 }
 
+/* 1b. What pycasa is: three parts, their options ------------------------------ */
+{
+  const s = pres.addSlide();
+  header(pres, s, "WHAT IT IS", "What is pycasa?");
+  s.addText("A free Python tool built by this lab for CASA: Computer-Assisted Semen Analysis.", {
+    x: M, y: 1.55, w: W - 2 * M, h: 0.45, fontFace: FONT, fontSize: 19, color: MUTED,
+    margin: 0, isTextBox: true,
+  });
+  const parts = [
+    ["1", "Find the cells", "casa.detection",
+      [["YOLOv5", false], ["YOLO26", true], ["Digital washing", false], ["Moving cells", false]]],
+    ["2", "Follow the cells", "casa.tracking",
+      [["SORT", true], ["DeepSORT", false], ["JPDAF  (the lab's own, 2017)", true]]],
+    ["3", "Measure them", "casa.motility",
+      [["Speeds  (VCL, VSL, VAP, ...)", true], ["% of cells moving", true],
+       ["Cells per mL", true], ["Total cell count", true]]],
+  ];
+  const cw = 3.6, gap = (W - 2 * M - 3 * cw) / 2, cy = 2.35, ch = 3.75;
+  parts.forEach(([n, name, code, opts], i) => {
+    const x = M + i * (cw + gap);
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+      x, y: cy, w: cw, h: ch, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
+    });
+    s.addText(n, {
+      shape: pres.shapes.OVAL, x: x + 0.25, y: cy + 0.25, w: 0.5, h: 0.5,
+      fill: { color: INK }, line: { color: INK }, color: WHITE, fontFace: FONT,
+      fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true,
+    });
+    s.addText(name, {
+      x: x + 0.9, y: cy + 0.25, w: cw - 1.1, h: 0.5, fontFace: FONT, fontSize: 21, bold: true,
+      color: TEXT, valign: "middle", margin: 0, isTextBox: true,
+    });
+    s.addText(code, {
+      x: x + 0.25, y: cy + 0.88, w: cw - 0.5, h: 0.36, fontFace: MONO, fontSize: 14,
+      color: MUTED, margin: 0, isTextBox: true,
+    });
+    opts.forEach(([label, used], k) => {
+      pill(pres, s, label, x + 0.25, cy + 1.42 + k * 0.54, cw - 0.5, {
+        fill: used ? ORANGE : WHITE, color: used ? WHITE : TEXT, size: 15,
+        bold: used, spacing: 0, h: 0.42,
+      });
+    });
+    if (i < 2) arrow(pres, s, x + cw + gap / 2 - 0.2, cy + ch / 2, 0.4);
+  });
+  caption(s, [
+    { text: "■ ", options: { color: ORANGE } },
+    { text: "Orange", options: { bold: true } },
+    { text: " = what we used in this presentation." },
+  ], 6.4);
+  s.addNotes(
+    "pycasa is a free Python tool that this lab built. CASA means computer-assisted semen analysis: " +
+    "a computer looks at the video instead of a person. " +
+    "It has three parts. The first finds the cells, the second follows them, the third measures them. " +
+    "Each part has several options to choose from. The orange ones are the ones I used, and the next slides show them."
+  );
+}
+
 /* 2. The task: input and output --------------------------------------------- */
 {
   const s = pres.addSlide();
