@@ -288,17 +288,17 @@ function scoreSlide(data, kicker, title, footnote, notes) {
   framed(pres, s, R("13c_break_user.gif"), (W - 8.6) / 2, 1.8, 8.6, 4.4);
   caption(s, [
     { text: "Each colour is one path: the software's idea of \"the same cell\". ", options: { bold: true } },
-    { text: "A cell swims down past another one. ", options: {} },
+    { text: "The blue cell swims down and touches the yellow one. ", options: {} },
     { text: "SORT", options: { bold: true } },
-    { text: ` loses it at frame ${brk.f0}: path 1 stops, and at frame ${brk.f1} a new path 2 starts on the same cell. One cell, two paths. `, options: {} },
+    { text: ` loses it at the touch (frame ${brk.f0}): path 1 stops, and at frame ${brk.f1} a new path 2 starts on the same cell. One cell, two paths. `, options: {} },
     { text: "JPDAF", options: { bold: true } },
     { text: " keeps path 1 all the way." },
   ], 6.35, 0.9);
   s.addNotes(
     "This is one cell from the video, zoomed in, with the same frames on both sides, slowed down. " +
     "Each colour is one ID. An ID is the name the software gives a cell so it can say 'this is still the same cell' from one frame to the next. " +
-    "The cell swims down and passes close to another cell. " +
-    "On the left, SORT: at the moment they pass, it loses the cell. The red X marks where its track stops. A few frames later it picks the cell up again, but as a new ID, so the path is cut in two. " +
+    "The blue cell swims down and touches the yellow cell. " +
+    "On the left, SORT: at the moment they touch, it loses the blue cell. A few frames later it picks it up again, but as a new path, path 2, so the path is cut in two. " +
     "On the right, JPDAF: one ID, one path, all the way through. " +
     "Both trackers ran on the hand-marked boxes, so the only difference here is the tracking itself."
   );
