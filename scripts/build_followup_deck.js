@@ -269,6 +269,57 @@ pres.title = "pycasa — two follow-up questions";
 }
 
 
+/* 2b. What was asked, what we did ---------------------------------------------- */
+{
+  const s = pres.addSlide();
+  header(pres, s, "THE TWO QUESTIONS", "What was asked, and what we did");
+  const rows = [
+    ["1", "Finding cells",
+      "Compare the two YOLO versions.",
+      "Ran YOLOv5 and YOLO26 on the whole 30-second video (899 frames) and checked each one against the 81,079 hand-marked cells.",
+      "casa.detection.yolo(yolo_model='yolov5' | 'yolo26')   ·   casa.assessment.evaluate_detections()"],
+    ["2", "Following cells",
+      "Show what SORT and JPDAF do when two cells collide: do they keep them apart, or mix them up?",
+      "Ran both trackers on the hand-marked boxes, found every moment two cells touch (203 in the video), checked which tracker kept both tracks, and picked clear examples to show.",
+      "casa.tracking.sort()   ·   casa.tracking.jpdaf()"],
+  ];
+  rows.forEach(([n, name, asked, done, fns], i) => {
+    const y = 1.85 + i * 2.5, h = 2.25;
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+      x: M, y, w: W - 2 * M, h, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
+    });
+    s.addText(n, {
+      shape: pres.shapes.OVAL, x: M + 0.25, y: y + 0.25, w: 0.5, h: 0.5,
+      fill: { color: INK }, line: { color: INK }, color: WHITE, fontFace: FONT,
+      fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true,
+    });
+    s.addText(name, {
+      x: M + 0.9, y: y + 0.25, w: 3.5, h: 0.5, fontFace: FONT, fontSize: 21, bold: true,
+      color: TEXT, valign: "middle", margin: 0, isTextBox: true,
+    });
+    const cx1 = M + 0.25, cx2 = M + 6.3, cwid = 5.6;
+    pill(pres, s, "ASKED", cx1, y + 0.92, 1.1, { h: 0.32, size: 11 });
+    s.addText(asked, {
+      x: cx1, y: y + 1.3, w: cwid, h: 0.85, fontFace: FONT, fontSize: 15, color: TEXT,
+      margin: 0, valign: "top", isTextBox: true,
+    });
+    pill(pres, s, "DONE", cx2, y + 0.92, 1.1, { h: 0.32, size: 11, fill: INK });
+    s.addText(done, {
+      x: cx2, y: y + 1.3, w: cwid, h: 0.85, fontFace: FONT, fontSize: 15, color: TEXT,
+      margin: 0, valign: "top", isTextBox: true,
+    });
+    s.addText(fns, {
+      x: M + 4.6, y: y + 0.32, w: W - 2 * M - 4.85, h: 0.36, fontFace: MONO, fontSize: 11.5, color: MUTED,
+      align: "right", valign: "middle", margin: 0, isTextBox: true,
+    });
+  });
+  s.addNotes(
+    "Two questions came out of the last meeting. " +
+    "First, compare the two YOLO versions. We ran both on the whole video and checked them against the hand-marked cells. " +
+    "Second, show what the two trackers do when cells collide. We ran SORT and JPDAF on the hand-marked boxes, found every collision in the video, counted how each tracker handled them, and picked examples that show it clearly."
+  );
+}
+
 /* 3. Q1: YOLOv5 vs YOLO26, close up, and the whole-video counts ------------- */
 {
   const s = pres.addSlide();
