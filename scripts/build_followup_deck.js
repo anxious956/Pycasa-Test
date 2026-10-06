@@ -297,14 +297,14 @@ if (fs.existsSync(FULL_FILE)) {
   const s = pres.addSlide();
   header(pres, s, "QUESTION 2  ·  FOLLOWING ONE CELL", "SORT cuts the path in two; JPDAF keeps it whole");
   fnPill(pres, s, "casa.tracking.sort()   vs   casa.tracking.jpdaf()");
-  framed(pres, s, R("13c_break_sort_vs_jpdaf.gif"), (W - 8.0) / 2, 1.8, 8.0, 4.4);
+  framed(pres, s, R("13c_break_user.gif"), (W - 8.6) / 2, 1.8, 8.6, 4.4);
   caption(s, [
-    { text: "Each colour is one ID: the software's name for \"the same cell\". ", options: { bold: true } },
+    { text: "Each colour is one path: the software's idea of \"the same cell\". ", options: { bold: true } },
     { text: "A cell swims down past another one. ", options: {} },
     { text: "SORT", options: { bold: true } },
-    { text: ` loses it at frame ${brk.f0} (ID ${brk.sort.ids[0].replace("t", "")} stops, red X) and starts a new ID ${brk.sort.ids[1].replace("t", "")} at frame ${brk.f1}: one cell, two paths. `, options: {} },
+    { text: ` loses it at frame ${brk.f0}: path 1 stops, and at frame ${brk.f1} a new path 2 starts on the same cell. One cell, two paths. `, options: {} },
     { text: "JPDAF", options: { bold: true } },
-    { text: ` keeps one path (ID ${brk.jpdaf.ids[0].replace("t", "")}) all the way.` },
+    { text: " keeps path 1 all the way." },
   ], 6.35, 0.9);
   s.addNotes(
     "This is one cell from the video, zoomed in, with the same frames on both sides, slowed down. " +
@@ -316,10 +316,28 @@ if (fs.existsSync(FULL_FILE)) {
   );
 }
 
+/* 5b. Q2: a second cell, same thing ------------------------------------------ */
+{
+  const s = pres.addSlide();
+  header(pres, s, "QUESTION 2  ·  A SECOND EXAMPLE", "Same thing on another cell");
+  fnPill(pres, s, "casa.tracking.sort()   vs   casa.tracking.jpdaf()");
+  framed(pres, s, R("13d_break0_user.gif"), (W - 8.6) / 2, 1.8, 8.6, 4.4);
+  caption(s, [
+    { text: "SORT", options: { bold: true } },
+    { text: " drops the cell at frame 210 and starts path 2 on it at frame 213. ", options: {} },
+    { text: "JPDAF", options: { bold: true } },
+    { text: " follows it as one path from frame 0 to frame 708.  Over the whole video SORT restarted a path 13 times where JPDAF did not; the reverse never happened." },
+  ], 6.35, 0.9);
+  s.addNotes(
+    "A second cell, same story. SORT drops it for a few frames and then picks it up as a new path. JPDAF never lets go. " +
+    "We looked for every case like this in the video: thirteen times SORT restarted a path where JPDAF carried on, and never the other way round."
+  );
+}
+
 /* 6. Q2: frame by frame ------------------------------------------------------ */
 {
   const s = pres.addSlide();
-  header(pres, s, "QUESTION 2  ·  FRAME BY FRAME", "Before, the cut, after");
+  header(pres, s, "QUESTION 2  ·  FRAME BY FRAME", "The first cell again: before, the cut, after");
   framed(pres, s, R("13c_break_strip.png"), M, 1.8, 7.3, 4.9, "left");
   const bx = 8.35, bw = W - M - bx;
   const rows = [
