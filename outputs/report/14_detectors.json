@@ -1,0 +1,72 @@
+{
+ "yolov5": {
+  "name": "yolov5",
+  "call": "casa.detection.yolo(yolo_model='yolov5')",
+  "seconds": 71.4,
+  "assessment": {
+   "tp": 7649,
+   "fp": 2941,
+   "fn": 2349,
+   "precision": 72.23,
+   "recall": 76.51,
+   "F1": 74.31,
+   "evaluated_frames": 100
+  }
+ },
+ "yolo26": {
+  "name": "yolo26",
+  "call": "casa.detection.yolo(yolo_model='yolo26')",
+  "seconds": 25.8,
+  "assessment": {
+   "tp": 9891,
+   "fp": 5756,
+   "fn": 107,
+   "precision": 63.21,
+   "recall": 98.93,
+   "F1": 77.14,
+   "evaluated_frames": 100
+  }
+ },
+ "moving_cells": {
+  "name": "moving_cells",
+  "call": "casa.detection.detect_moving_cells()",
+  "seconds": 11.1,
+  "assessment": {
+   "tp": 6715,
+   "fp": 7997,
+   "fn": 1257,
+   "precision": 45.64,
+   "recall": 84.23,
+   "F1": 59.2,
+   "evaluated_frames": 80
+  }
+ },
+ "digital_washing": {
+  "name": "digital_washing",
+  "call": "casa.detection.digital_washing()",
+  "seconds": 372.1,
+  "assessment": {
+   "tp": 6456,
+   "fp": 1594,
+   "fn": 1516,
+   "precision": 80.2,
+   "recall": 80.98,
+   "F1": 80.59,
+   "evaluated_frames": 80
+  }
+ },
+ "urbano": {
+  "name": "urbano",
+  "call": "casa.detection.urbano_detection()",
+  "seconds": 26.2,
+  "assessment": {
+   "tp": 9079,
+   "fp": 2771,
+   "fn": 919,
+   "precision": 76.62,
+   "recall": 90.81,
+   "F1": 83.11,
+   "evaluated_frames": 100
+  }
+ }
+}
