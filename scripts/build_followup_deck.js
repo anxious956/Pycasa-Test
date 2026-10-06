@@ -20,8 +20,6 @@ const OUT = process.argv[2] || path.join(ROOT, "pycasa_Followup_Presentation.ppt
 const DET = JSON.parse(fs.readFileSync(R("14_detectors.json")));
 const COL = JSON.parse(fs.readFileSync(R("13_collision.json")));
 const STEP8 = JSON.parse(fs.readFileSync(path.join(ROOT, "outputs", "step8_full_clip.json")));
-const FULL_FILE = R("14_detectors_full.json");
-const FULL = fs.existsSync(FULL_FILE) ? JSON.parse(fs.readFileSync(FULL_FILE)) : null;
 const fmt = (n) => n.toLocaleString("en-US");
 
 /* ------------------------------------------------------------------ palette */
@@ -144,7 +142,7 @@ pres.title = "pycasa — two follow-up questions";
   });
   s.addText([
     { text: "1  ", options: { bold: true, color: ORANGE } },
-    { text: "How do the five cell detectors compare?", options: { breakLine: true } },
+    { text: "How do the two YOLO versions compare?", options: { breakLine: true } },
     { text: "2  ", options: { bold: true, color: ORANGE } },
     { text: "When two cells touch, does the software keep them apart?" },
   ], {
@@ -160,41 +158,8 @@ pres.title = "pycasa — two follow-up questions";
     align: "center", margin: 0, isTextBox: true,
   });
   s.addNotes(
-    "Last time you asked two things. First, how the different ways of finding cells compare. " +
+    "Last time you asked two things. First, how the two YOLO versions compare at finding cells. " +
     "Second, what happens to the tracking when two cells touch. This short deck answers both with pictures."
-  );
-}
-
-/* 2. Q1: all five detectors on the same frames ------------------------------- */
-{
-  const s = pres.addSlide();
-  header(pres, s, "QUESTION 1  ·  FINDING CELLS", "Five detectors, same frames, same answer key");
-  fnPill(pres, s, "casa.detection.*");
-  framed(pres, s, R("14_all_detectors.gif"), (W - 8.0) / 2, 2.05, 8.0, 4.35);
-  s.addText(ORDER.map((n) => "casa.detection." + CALL[n]).join("     "), {
-    x: M, y: 6.45, w: W - 2 * M, h: 0.3, fontFace: MONO, fontSize: 10.5, color: MUTED,
-    align: "center", margin: 0, isTextBox: true,
-  });
-  if (FULL) {
-    s.addText([
-      { text: "Score on the whole video:  ", options: { bold: true } },
-      { text: ORDER.map((n) => `${LABEL[n]} ${Math.round(FULL[n].assessment.F1)}`).join("   ·   ") },
-    ], {
-      x: M, y: 1.72, w: W - 2 * M, h: 0.3, fontFace: FONT, fontSize: 13, color: TEXT,
-      align: "center", margin: 0, isTextBox: true,
-    });
-  }
-  caption(s, [
-    { text: "■ ", options: { color: GREEN } }, { text: "Green", options: { bold: true } },
-    { text: " = marked by a person      " },
-    { text: "■ ", options: { color: RED } }, { text: "Red", options: { bold: true } },
-    { text: " = found by the software.   A green box with no red box is a missed cell; a red box alone is a false one." },
-  ], 6.8, 0.45);
-  s.addNotes(
-    "pycasa has five ways to find cells. Here they all run on the same sixty frames of the same video. " +
-    "Green boxes were drawn by a person; red boxes by the software. Where the two overlap, the software is right. " +
-    "A green box on its own is a cell the software missed. A red box on its own is a false detection: dirt, a reflection, or the same cell counted twice. " +
-    "The two YOLO versions are learned models. Moving cells and digital washing look for things that move, so they cannot see cells that stay still. Urbano looks for bright spots."
   );
 }
 
@@ -459,7 +424,7 @@ function scoreSlide(data, kicker, title, footnote, notes) {
     x: M, y: 0.7, w: 7, h: 0.9, fontFace: FONT, fontSize: 40, bold: true, color: WHITE, margin: 0, isTextBox: true,
   });
   const points = [
-    `YOLO26 finds the most cells (${Math.round(rec("yolo26"))} of 100) but draws the most extra boxes. YOLOv5 is the other way round. Urbano is the best of the classic methods.`,
+    `YOLO26 finds almost every cell (${Math.round(STEP8.yolo26.detection.recall)} of 100) but draws many extra boxes. YOLOv5 misses one cell in four but draws fewer wrong boxes.`,
     `When two cells touch, JPDAF keeps both tracks more often than SORT (${pct(jpdafKept)}% vs ${pct(sortKept)}% of ${sortKept.n} touches).`,
     "Neither tracker is perfect: SORT cuts a path in two, JPDAF can swap two cells. Swaps need a person to spot them.",
   ];
@@ -480,7 +445,7 @@ function scoreSlide(data, kicker, title, footnote, notes) {
     align: "center", margin: 0, valign: "top", isTextBox: true,
   });
   s.addNotes(
-    "To sum up. Of the five detectors, YOLO26 misses the fewest cells but draws the most false boxes; YOLOv5 is the opposite; Urbano is the strongest of the classic methods. " +
+    "To sum up. YOLO26 misses almost no cells but draws many false boxes; YOLOv5 is the opposite. For counting cells, YOLO26 is the safer choice. " +
     "When two cells touch, JPDAF keeps both tracks more often than SORT. " +
     "But neither is perfect: SORT tends to cut a path in two, and JPDAF can swap two cells, which only a person can spot. Thank you."
   );
