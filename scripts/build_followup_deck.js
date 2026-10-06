@@ -89,6 +89,12 @@ function header(pres, slide, kicker, title) {
   });
 }
 
+function arrow(pres, slide, x, yMid, w = 0.85) {
+  slide.addShape(pres.shapes.RIGHT_ARROW, {
+    x, y: yMid - 0.3, w, h: 0.6, fill: { color: ORANGE }, line: { color: ORANGE },
+  });
+}
+
 function caption(slide, runs, y = 6.42, h = 0.5) {
   slide.addText(runs, {
     x: M, y, w: W - 2 * M, h, fontFace: FONT, fontSize: 17, color: TEXT,
@@ -163,70 +169,105 @@ pres.title = "pycasa — two follow-up questions";
   );
 }
 
-/* 2. Recap: what pycasa does, what we ran for this deck -------------------------- */
+/* 2. What pycasa is: three parts, the options we used ------------------------- */
 {
   const s = pres.addSlide();
-  header(pres, s, "WHERE WE ARE", "pycasa in one picture, and what we ran this time");
-  s.addText([
-    { text: "pycasa ", options: { bold: true } },
-    { text: "is the lab's Python tool for computer-assisted semen analysis. " },
-    { text: "Input: ", options: { bold: true } },
-    { text: "a 30-second clinic video (899 frames, about 90 cells in view) plus every cell marked by hand, as the answer key." },
-  ], {
-    x: M, y: 1.6, w: W - 2 * M, h: 0.7, fontFace: FONT, fontSize: 16, color: TEXT, margin: 0, valign: "top", isTextBox: true,
+  header(pres, s, "WHAT IT IS", "What is pycasa?");
+  s.addText("A free Python tool built by this lab for CASA: Computer-Assisted Semen Analysis.", {
+    x: M, y: 1.55, w: W - 2 * M, h: 0.45, fontFace: FONT, fontSize: 19, color: MUTED,
+    margin: 0, isTextBox: true,
   });
-  const cols = [
-    ["1", "Find the cells", "casa.detection", ["yolo(yolo_model='yolov5')", "yolo(yolo_model='yolo26')"],
-      "This time: the two YOLO versions, head to head on the whole video.", true],
-    ["2", "Follow the cells", "casa.tracking", ["sort()", "jpdaf()"],
-      "This time: what each tracker does when two cells touch.", true],
-    ["3", "Measure them", "casa.motility", ["kinematic_parameters()", "casa_parameters()"],
-      "Last time: speeds per cell and the clinic-style numbers.", false],
+  const parts = [
+    ["1", "Find the cells", "casa.detection", ["YOLOv5", "YOLO26"]],
+    ["2", "Follow the cells", "casa.tracking", null, [
+      ["SORT", "Simple Online and Realtime Tracking"],
+      ["JPDAF", "Joint Probabilistic Data Association Filter"]]],
+    ["3", "Measure them", "casa.motility", null],
   ];
-  const cw = 3.85, gap = (W - 2 * M - 3 * cw) / 2, cy = 2.5, ch = 3.75;
-  cols.forEach(([n, name, mod, fns, note, now], i) => {
+  // the eight movement measures pycasa reports for every cell, with their full names
+  const measures = [
+    ["VCL", "Curvilinear velocity"], ["VSL", "Straight-line velocity"],
+    ["VAP", "Average path velocity"], ["LIN", "Linearity"],
+    ["STR", "Straightness"], ["WOB", "Wobble"],
+    ["ALH", "Lateral head displacement"], ["MAD", "Mean angular displacement"],
+  ];
+  const cw = 3.75, gap = (W - 2 * M - 3 * cw) / 2, cy = 2.25, ch = 4.65;
+  parts.forEach(([n, name, code, opts, named], i) => {
     const x = M + i * (cw + gap);
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
       x, y: cy, w: cw, h: ch, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
     });
     s.addText(n, {
       shape: pres.shapes.OVAL, x: x + 0.25, y: cy + 0.25, w: 0.5, h: 0.5,
-      fill: { color: now ? ORANGE : INK }, line: { color: now ? ORANGE : INK }, color: WHITE, fontFace: FONT,
+      fill: { color: INK }, line: { color: INK }, color: WHITE, fontFace: FONT,
       fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true,
     });
     s.addText(name, {
       x: x + 0.9, y: cy + 0.25, w: cw - 1.1, h: 0.5, fontFace: FONT, fontSize: 21, bold: true,
       color: TEXT, valign: "middle", margin: 0, isTextBox: true,
     });
-    s.addText(mod, {
-      x: x + 0.25, y: cy + 0.9, w: cw - 0.5, h: 0.32, fontFace: MONO, fontSize: 13, color: MUTED, margin: 0, isTextBox: true,
+    s.addText(code, {
+      x: x + 0.25, y: cy + 0.88, w: cw - 0.5, h: 0.36, fontFace: MONO, fontSize: 14,
+      color: MUTED, margin: 0, isTextBox: true,
     });
-    fns.forEach((f, k) => {
-      pill(pres, s, f, x + 0.25, cy + 1.32 + k * 0.5, cw - 0.5, {
-        fill: WHITE, color: TEXT, font: MONO, size: 12, bold: false, spacing: 0, h: 0.4,
+    if (opts) {
+      opts.forEach((label, k) => {
+        pill(pres, s, label, x + 0.25, cy + 1.42 + k * 0.54, cw - 0.5, {
+          fill: WHITE, color: TEXT, size: 15, bold: false, spacing: 0, h: 0.42,
+        });
       });
-    });
-    s.addText(note, {
-      x: x + 0.25, y: cy + 2.45, w: cw - 0.5, h: 1.15, fontFace: FONT, fontSize: 14, bold: now,
-      color: now ? TEXT : MUTED, margin: 0, valign: "top", isTextBox: true,
-    });
-    if (i < 2) {
-      s.addShape(pres.shapes.RIGHT_ARROW, {
-        x: x + cw + gap / 2 - 0.16, y: cy + ch / 2 - 0.22, w: 0.32, h: 0.44, fill: { color: ORANGE }, line: { color: ORANGE },
+    } else if (named) {
+      // full-width tiles: short name on top, full name underneath in small type
+      named.forEach(([abbr, full], k) => {
+        const ty = cy + 1.38 + k * 0.72;
+        s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+          x: x + 0.25, y: ty, w: cw - 0.5, h: 0.62, fill: { color: WHITE }, line: { color: WHITE }, rectRadius: 0.1,
+        });
+        s.addText(abbr, {
+          x: x + 0.4, y: ty + 0.05, w: cw - 0.8, h: 0.3, fontFace: FONT, fontSize: 15, bold: true,
+          color: TEXT, margin: 0, isTextBox: true,
+        });
+        s.addText(full, {
+          x: x + 0.4, y: ty + 0.35, w: cw - 0.75, h: 0.22, fontFace: FONT, fontSize: 10,
+          color: MUTED, margin: 0, isTextBox: true,
+        });
+      });
+    } else {
+      const tw = (cw - 0.6) / 2;
+      measures.forEach(([abbr, full], k) => {
+        const tx = x + 0.25 + (k % 2) * (tw + 0.1), ty = cy + 1.38 + Math.floor(k / 2) * 0.62;
+        s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+          x: tx, y: ty, w: tw, h: 0.54, fill: { color: WHITE }, line: { color: WHITE }, rectRadius: 0.1,
+        });
+        s.addText(abbr, {
+          x: tx + 0.1, y: ty + 0.04, w: tw - 0.2, h: 0.26, fontFace: FONT, fontSize: 14, bold: true,
+          color: TEXT, margin: 0, isTextBox: true,
+        });
+        s.addText(full, {
+          x: tx + 0.1, y: ty + 0.29, w: tw - 0.15, h: 0.2, fontFace: FONT, fontSize: 8.5,
+          color: MUTED, margin: 0, isTextBox: true,
+        });
+      });
+      s.addText([
+        { text: "Also: % of cells moving,", options: { breakLine: true } },
+        { text: "cells per mL, total cell count" },
+      ], {
+        x: x + 0.25, y: cy + 3.92, w: cw - 0.5, h: 0.55, fontFace: FONT, fontSize: 13,
+        color: TEXT, margin: 0, valign: "top", isTextBox: true,
       });
     }
+    if (i < 2) arrow(pres, s, x + cw + gap / 2 - 0.16, cy + ch / 2, 0.32);
   });
-  caption(s, [
-    { text: "Orange = the two parts this deck is about. ", options: { bold: true } },
-    { text: "Both trackers were run on the hand-marked boxes, so the tracking is judged on its own, not on the detector's mistakes." },
-  ], 6.5, 0.6);
   s.addNotes(
-    "A quick reminder of where we are. pycasa works in three steps: find the cells in every frame, follow each cell from frame to frame, and measure how it moves. " +
-    "The input is the same 30-second clinic video as last time, with every cell marked by hand so we can check the software. " +
-    "Today is about the first two steps. For finding cells, we compare the two YOLO versions. For following cells, we look at what SORT and JPDAF do when two cells touch. " +
-    "The trackers ran on the hand-marked boxes, so what you will see is the tracking itself, not detector mistakes."
+    "pycasa is a free Python tool that this lab built. CASA means computer-assisted semen analysis: " +
+    "a computer looks at the video instead of a person. " +
+    "It has three parts. The first finds the cells, the second follows them, the third measures them. " +
+    "Today is about the first two parts: the two YOLO versions for finding cells, and SORT versus JPDAF for following them. " +
+    "For following cells there are two methods: SORT, a simple and fast standard tracker, and JPDAF, a method that comes from radar tracking and that this lab adapted for sperm cells in 2017. " +
+    "The last part reports eight measures of how each cell moves, such as its speed along the real path (VCL) and in a straight line (VSL), plus how many cells move and how many cells there are."
   );
 }
+
 
 /* 3. Q1: YOLOv5 vs YOLO26, close up, and the whole-video counts ------------- */
 {
@@ -351,45 +392,6 @@ function scoreSlide(data, kicker, title, footnote, notes) {
   s.addNotes(
     "A second cell, same story. SORT drops it for a few frames and then picks it up as a new path. JPDAF never lets go. " +
     "We looked for every case like this in the video: thirteen times SORT restarted a path where JPDAF carried on, and never the other way round."
-  );
-}
-
-/* 6. Q2: frame by frame ------------------------------------------------------ */
-{
-  const s = pres.addSlide();
-  header(pres, s, "QUESTION 2  ·  FRAME BY FRAME", "The first cell again: before, the cut, after");
-  framed(pres, s, R("13c_break_strip.png"), M, 1.8, 7.3, 4.9, "left");
-  const bx = 8.35, bw = W - M - bx;
-  const rows = [
-    ["SORT", INK, `IDs ${ids(brk, "sort")}`, `The track stops at frame ${brk.f0} and a new one starts at frame ${brk.f1}. One cell, two paths, and the speed over the gap is lost.`],
-    ["JPDAF", ORANGE, `ID ${ids(brk, "jpdaf")}`, "One ID survives the pass. One cell, one path."],
-  ];
-  rows.forEach(([name, col, idtxt, text], i) => {
-    const y = 1.85 + i * 2.45;
-    s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
-      x: bx, y, w: bw, h: 2.25, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
-    });
-    s.addText(name, {
-      x: bx + 0.25, y: y + 0.18, w: bw - 0.5, h: 0.45, fontFace: FONT, fontSize: 22, bold: true, color: col,
-      margin: 0, isTextBox: true,
-    });
-    s.addText(idtxt, {
-      x: bx + 0.25, y: y + 0.65, w: bw - 0.5, h: 0.35, fontFace: MONO, fontSize: 13, color: MUTED,
-      margin: 0, isTextBox: true,
-    });
-    s.addText(text, {
-      x: bx + 0.25, y: y + 1.05, w: bw - 0.5, h: 1.1, fontFace: FONT, fontSize: 15, color: TEXT,
-      margin: 0, valign: "top", isTextBox: true,
-    });
-  });
-  s.addText(`Frames ${brk.f0 - 40} to ${brk.f1 + 40} of the video  ·  thin grey lines are other cells`, {
-    x: M, y: 6.8, w: 7.3, h: 0.35, fontFace: FONT, fontSize: 12, color: MUTED, margin: 0, isTextBox: true,
-  });
-  s.addNotes(
-    "The same cell as three still pictures: before, at the cut, and after. Top row SORT, bottom row JPDAF. " +
-    "In the middle picture, SORT has already lost the cell: the red X is where its track stopped, and there is no circle on the cell. " +
-    "In the right picture the cell is back, but as a new ID in a new colour. JPDAF keeps the same ID in all three. " +
-    "That is the whole difference: whether the software remembers that it is the same cell."
   );
 }
 
