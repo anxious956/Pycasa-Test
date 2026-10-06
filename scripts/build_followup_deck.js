@@ -241,11 +241,12 @@ pres.title = "pycasa — two follow-up questions";
   card(pres, s, cx, 3.5, cw, 1.5, `${Math.round(y26.F1)}%`, "YOLO26  ·  detection score, whole video", ORANGE);
   s.addText([
     { text: "The whole 30-second video: ", options: { bold: true } },
-    { text: `${STEP8.yolo26.frames_loaded} frames, ${fmt(total)} hand-marked cells (about ${Math.round(total / STEP8.yolo26.frames_loaded)} in every frame).`, options: { breakLine: true } },
+    { text: `${STEP8.yolo26.frames_loaded} frames, about ${Math.round(total / STEP8.yolo26.frames_loaded)} cells in view at any moment, roughly 300 different cells in total. `, options: {} },
+    { text: `A person marked every cell in every frame: ${fmt(total)} marks.`, options: { breakLine: true } },
     { text: "YOLOv5 ", options: { bold: true } },
-    { text: `found ${fmt(v5.tp)} of them, missed ${fmt(v5.fn)}, and drew ${fmt(v5.fp)} wrong boxes.`, options: { breakLine: true } },
+    { text: `found ${fmt(v5.tp)} of those marks (${Math.round(v5.recall)} of 100), missed ${fmt(v5.fn)}, and drew ${fmt(v5.fp)} wrong boxes.`, options: { breakLine: true } },
     { text: "YOLO26 ", options: { bold: true } },
-    { text: `found ${fmt(y26.tp)} of them, missed ${fmt(y26.fn)}, and drew ${fmt(y26.fp)} wrong boxes.` },
+    { text: `found ${fmt(y26.tp)} (${Math.round(y26.recall)} of 100), missed ${fmt(y26.fn)}, and drew ${fmt(y26.fp)} wrong boxes.` },
   ], {
     x: M, y: 5.3, w: W - 2 * M, h: 1.15, fontFace: FONT, fontSize: 16, color: TEXT, margin: 0,
     valign: "top", paraSpaceAfter: 3, isTextBox: true,
@@ -256,7 +257,8 @@ pres.title = "pycasa — two follow-up questions";
   ], 6.55, 0.7);
   s.addNotes(
     "The same region, zoomed in, with the two YOLO versions side by side. " +
-    `Over the whole video a person marked ${fmt(total)} cells, frame by frame; that is about ${Math.round(total / STEP8.yolo26.frames_loaded)} cells in every frame. ` +
+    `At any moment there are about ${Math.round(total / STEP8.yolo26.frames_loaded)} cells in view, between 75 and 109. Cells drift in and out, so over the 30 seconds roughly 300 different cells pass through: JPDAF counts 262 paths, pycasa's cell count on the hand-marked boxes is 319. ` +
+    `A person marked every cell in every frame, which adds up to ${fmt(total)} marks; that is the number the detectors are checked against. ` +
     `YOLOv5 found ${fmt(v5.tp)} of them and missed ${fmt(v5.fn)}, about one in four, but most of the boxes it drew are real cells. ` +
     `YOLO26 found ${fmt(y26.tp)} and missed only ${fmt(y26.fn)}, but it drew ${fmt(y26.fp)} wrong boxes, roughly one box in three. ` +
     "For counting cells, not missing any is the more important of the two. The extra boxes are the thing to fix: they get tracked as cells that never move."
