@@ -4664,5 +4664,35 @@
    "broke": [],
    "kept": true
   }
+ },
+ "13c_break": {
+  "f0": 534,
+  "f1": 540,
+  "x": 224.0,
+  "y": 889.0,
+  "key_frame": 540,
+  "labels": [
+   "before",
+   "the cut",
+   "after"
+  ],
+  "sort": {
+   "ids": [
+    "t29",
+    "t337"
+   ],
+   "broke": [
+    "t29",
+    "t337"
+   ],
+   "kept": false
+  },
+  "jpdaf": {
+   "ids": [
+    "t227"
+   ],
+   "broke": [],
+   "kept": true
+  }
  }
 }

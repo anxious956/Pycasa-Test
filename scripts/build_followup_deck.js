@@ -118,7 +118,7 @@ const CALL = { yolov5: "yolo(yolo_model='yolov5')", yolo26: "yolo(yolo_model='yo
 const f1 = (n) => DET[n].assessment.F1, prec = (n) => DET[n].assessment.precision, rec = (n) => DET[n].assessment.recall;
 const sortKept = COL.stats.sort, jpdafKept = COL.stats.jpdaf;
 const pct = (s) => Math.round(100 * s.kept / s.n);
-const demo = COL.demo, swap = COL["13b_swap"];
+const demo = COL.demo, swap = COL["13b_swap"], brk = COL["13c_break"];
 const ids = (ev, b) => ev[b].ids.map((t) => t.replace("t", "")).join(", ");
 
 /* ------------------------------------------------------------------ deck */
@@ -150,8 +150,8 @@ pres.title = "pycasa — two follow-up questions";
   s.addText("Dr. Moshe Kam's research group  ·  NJIT  ·  October 2026", {
     x: M, y: 6.55, w: 7.5, h: 0.4, fontFace: FONT, fontSize: 13, color: "8A99AD", margin: 0, isTextBox: true,
   });
-  framed(pres, s, R("13_collision_sort_vs_jpdaf.gif"), 7.9, 1.6, 4.85, 4.0);
-  s.addText("Two cells touching, followed by SORT (left) and JPDAF (right)", {
+  framed(pres, s, R("13c_break_sort_vs_jpdaf.gif"), 7.9, 1.6, 4.85, 4.0);
+  s.addText("One cell followed by SORT (left) and JPDAF (right)", {
     x: 7.9, y: 5.45, w: 4.85, h: 0.4, fontFace: FONT, fontSize: 13, color: "8A99AD",
     align: "center", margin: 0, isTextBox: true,
   });
@@ -292,10 +292,73 @@ if (fs.existsSync(FULL_FILE)) {
   );
 }
 
-/* 5. Q2: one collision, SORT vs JPDAF ---------------------------------------- */
+/* 5. Q2: one cell, SORT cuts the path, JPDAF keeps it ---------------------- */
 {
   const s = pres.addSlide();
-  header(pres, s, "QUESTION 2  ·  TWO CELLS TOUCH", "Does the software keep the two cells apart?");
+  header(pres, s, "QUESTION 2  ·  FOLLOWING ONE CELL", "SORT cuts the path in two; JPDAF keeps it whole");
+  fnPill(pres, s, "casa.tracking.sort()   vs   casa.tracking.jpdaf()");
+  framed(pres, s, R("13c_break_sort_vs_jpdaf.gif"), (W - 8.0) / 2, 1.8, 8.0, 4.4);
+  caption(s, [
+    { text: "Each colour is one ID: the software's name for \"the same cell\". ", options: { bold: true } },
+    { text: "A cell swims down past another one. ", options: {} },
+    { text: "SORT", options: { bold: true } },
+    { text: ` loses it at frame ${brk.f0} (ID ${brk.sort.ids[0].replace("t", "")} stops, red X) and starts a new ID ${brk.sort.ids[1].replace("t", "")} at frame ${brk.f1}: one cell, two paths. `, options: {} },
+    { text: "JPDAF", options: { bold: true } },
+    { text: ` keeps one path (ID ${brk.jpdaf.ids[0].replace("t", "")}) all the way.` },
+  ], 6.35, 0.9);
+  s.addNotes(
+    "This is one cell from the video, zoomed in, with the same frames on both sides, slowed down. " +
+    "Each colour is one ID. An ID is the name the software gives a cell so it can say 'this is still the same cell' from one frame to the next. " +
+    "The cell swims down and passes close to another cell. " +
+    "On the left, SORT: at the moment they pass, it loses the cell. The red X marks where its track stops. A few frames later it picks the cell up again, but as a new ID, so the path is cut in two. " +
+    "On the right, JPDAF: one ID, one path, all the way through. " +
+    "Both trackers ran on the hand-marked boxes, so the only difference here is the tracking itself."
+  );
+}
+
+/* 6. Q2: frame by frame ------------------------------------------------------ */
+{
+  const s = pres.addSlide();
+  header(pres, s, "QUESTION 2  ·  FRAME BY FRAME", "Before, the cut, after");
+  framed(pres, s, R("13c_break_strip.png"), M, 1.8, 7.3, 4.9, "left");
+  const bx = 8.35, bw = W - M - bx;
+  const rows = [
+    ["SORT", INK, `IDs ${ids(brk, "sort")}`, `The track stops at frame ${brk.f0} and a new one starts at frame ${brk.f1}. One cell, two paths, and the speed over the gap is lost.`],
+    ["JPDAF", ORANGE, `ID ${ids(brk, "jpdaf")}`, "One ID survives the pass. One cell, one path."],
+  ];
+  rows.forEach(([name, col, idtxt, text], i) => {
+    const y = 1.85 + i * 2.45;
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+      x: bx, y, w: bw, h: 2.25, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
+    });
+    s.addText(name, {
+      x: bx + 0.25, y: y + 0.18, w: bw - 0.5, h: 0.45, fontFace: FONT, fontSize: 22, bold: true, color: col,
+      margin: 0, isTextBox: true,
+    });
+    s.addText(idtxt, {
+      x: bx + 0.25, y: y + 0.65, w: bw - 0.5, h: 0.35, fontFace: MONO, fontSize: 13, color: MUTED,
+      margin: 0, isTextBox: true,
+    });
+    s.addText(text, {
+      x: bx + 0.25, y: y + 1.05, w: bw - 0.5, h: 1.1, fontFace: FONT, fontSize: 15, color: TEXT,
+      margin: 0, valign: "top", isTextBox: true,
+    });
+  });
+  s.addText(`Frames ${brk.f0 - 40} to ${brk.f1 + 40} of the video  ·  thin grey lines are other cells`, {
+    x: M, y: 6.8, w: 7.3, h: 0.35, fontFace: FONT, fontSize: 12, color: MUTED, margin: 0, isTextBox: true,
+  });
+  s.addNotes(
+    "The same cell as three still pictures: before, at the cut, and after. Top row SORT, bottom row JPDAF. " +
+    "In the middle picture, SORT has already lost the cell: the red X is where its track stopped, and there is no circle on the cell. " +
+    "In the right picture the cell is back, but as a new ID in a new colour. JPDAF keeps the same ID in all three. " +
+    "That is the whole difference: whether the software remembers that it is the same cell."
+  );
+}
+
+/* 7. Q2: two cells touch ------------------------------------------------------ */
+{
+  const s = pres.addSlide();
+  header(pres, s, "QUESTION 2  ·  TWO CELLS TOUCH", "Two cells touch: does the software keep them apart?");
   fnPill(pres, s, "casa.tracking.sort()   vs   casa.tracking.jpdaf()");
   framed(pres, s, R("13_collision_sort_vs_jpdaf.gif"), (W - 8.0) / 2, 1.8, 8.0, 4.4);
   caption(s, [
@@ -317,46 +380,7 @@ if (fs.existsSync(FULL_FILE)) {
   );
 }
 
-/* 6. Q2: frame by frame ------------------------------------------------------ */
-{
-  const s = pres.addSlide();
-  header(pres, s, "QUESTION 2  ·  FRAME BY FRAME", "Before, touching, after");
-  framed(pres, s, R("13_collision_strip.png"), M, 1.8, 7.3, 4.9, "left");
-  const bx = 8.35, bw = W - M - bx;
-  const rows = [
-    ["SORT", INK, `IDs ${ids(demo, "sort")}`, "The still cell is dropped at the touch and comes back as a new ID. One cell, two paths."],
-    ["JPDAF", ORANGE, `IDs ${ids(demo, "jpdaf")}`, "Both IDs survive the touch. One cell, one path."],
-  ];
-  rows.forEach(([name, col, idtxt, text], i) => {
-    const y = 1.85 + i * 2.45;
-    s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
-      x: bx, y, w: bw, h: 2.25, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
-    });
-    s.addText(name, {
-      x: bx + 0.25, y: y + 0.18, w: bw - 0.5, h: 0.45, fontFace: FONT, fontSize: 22, bold: true, color: col,
-      margin: 0, isTextBox: true,
-    });
-    s.addText(idtxt, {
-      x: bx + 0.25, y: y + 0.65, w: bw - 0.5, h: 0.35, fontFace: MONO, fontSize: 13, color: MUTED,
-      margin: 0, isTextBox: true,
-    });
-    s.addText(text, {
-      x: bx + 0.25, y: y + 1.05, w: bw - 0.5, h: 1.1, fontFace: FONT, fontSize: 15, color: TEXT,
-      margin: 0, valign: "top", isTextBox: true,
-    });
-  });
-  s.addText(`Frames ${demo.f0 - 40} to ${demo.f1 + 40} of the video  ·  thin grey lines are other cells`, {
-    x: M, y: 6.8, w: 7.3, h: 0.35, fontFace: FONT, fontSize: 12, color: MUTED, margin: 0, isTextBox: true,
-  });
-  s.addNotes(
-    "The same collision as three still pictures: before, while they touch, and after. " +
-    "Top row SORT, bottom row JPDAF. Look at the still cell in the middle. " +
-    "In SORT it is cyan before, and magenta with a new number after. In JPDAF it stays orange with the same number. " +
-    "That is the whole difference: whether the software remembers that it is the same cell."
-  );
-}
-
-/* 7. Q2: it can go the other way --------------------------------------------- */
+/* 8. Q2: it can go the other way --------------------------------------------- */
 {
   const s = pres.addSlide();
   header(pres, s, "QUESTION 2  ·  THE OTHER WAY ROUND", "Here JPDAF swaps the two IDs");
@@ -377,7 +401,7 @@ if (fs.existsSync(FULL_FILE)) {
   );
 }
 
-/* 8. Q2: every collision in the video ----------------------------------------- */
+/* 9. Q2: every collision in the video ----------------------------------------- */
 {
   const s = pres.addSlide();
   header(pres, s, "QUESTION 2  ·  ALL THE COLLISIONS", `Every time two cells touched: ${sortKept.n} collisions in 30 seconds`);
@@ -421,7 +445,7 @@ if (fs.existsSync(FULL_FILE)) {
   );
 }
 
-/* 9. Summary ---------------------------------------------------------------- */
+/* 10. Summary ---------------------------------------------------------------- */
 {
   const s = pres.addSlide();
   s.background = { color: INK };
@@ -444,8 +468,8 @@ if (fs.existsSync(FULL_FILE)) {
       margin: 0, valign: "middle", isTextBox: true,
     });
   });
-  framed(pres, s, R("13_collision_strip.png"), 8.75, 1.7, 3.98, 3.6);
-  s.addText("SORT (top) and JPDAF (bottom) on the same touch", {
+  framed(pres, s, R("13c_break_strip.png"), 8.75, 1.7, 3.98, 3.6);
+  s.addText("SORT (top) and JPDAF (bottom) on the same cell", {
     x: 8.75, y: 4.75, w: 3.98, h: 0.5, fontFace: FONT, fontSize: 13, color: "8A99AD",
     align: "center", margin: 0, valign: "top", isTextBox: true,
   });

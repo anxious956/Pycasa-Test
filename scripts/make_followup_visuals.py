@@ -14,6 +14,8 @@ Stages (kept separate; `find` needs no video):
 
     python scripts/make_followup_visuals.py find      # list collision events, write the JSON
     python scripts/make_followup_visuals.py render    # draw the chosen collision (loads ~100 frames)
+    python scripts/make_followup_visuals.py break 534 540 224 889 t29,t337 t227 13c_break
+                                                      # one cell: SORT track t29 stops at 534, t337 starts at 540
     python scripts/make_followup_visuals.py detectors # all five detectors on frames 0-99 + the overlays
     python scripts/make_followup_visuals.py full      # Urbano + digital washing on all 899 frames (slow)
 
@@ -32,6 +34,12 @@ CLOSE_PX = 14        # two hand-marked centres this close = the cells touch (a b
 INVOLVED_PX = 16     # a track passing this close to the collision point is part of the event
 PAD = 40             # frames shown before and after the event
 HIGHLIGHT_PX = 30    # tracks this close to the collision point are coloured in the pictures
+GIF_STEP = 2         # frames per GIF frame away from the event
+SLOW_RADIUS = 12     # within this many frames of the event every frame is shown
+GIF_DUR = 0.16       # seconds per GIF frame (about 3x slower than real time)
+EVENT_DUR = 0.3      # seconds per GIF frame while the event happens
+HOLD = 1.6           # pause on the key frame
+RED = (60, 60, 230)  # BGR, marks where a track stops
 
 
 # ----------------------------------------------------------------- ground truth
@@ -212,11 +220,20 @@ def _draw_tracks(img, tracks, colours, f_start, f_now, x0, y0, zoom):
             continue
         if len(pts) > 1:
             cv2.polylines(img, [pts], False, col, 3, cv2.LINE_AA)
-        if a[m][-1, 0] == f_now:                              # the track is alive right now
+        last, first = a[m][-1, 0], a[0, 0]
+        if last == f_now:                                     # the track is alive right now
             cx, cy = pts[-1]
             cv2.circle(img, (cx, cy), 12, col, 2, cv2.LINE_AA)
-            cv2.putText(img, "ID " + tid.lstrip("t"), (cx + 15, cy - 11), cv2.FONT_HERSHEY_SIMPLEX,
-                        0.6, col, 2, cv2.LINE_AA)
+            fresh = first >= f_start + 1 and f_now - first <= 25
+            cv2.putText(img, ("NEW ID " if fresh else "ID ") + tid.lstrip("t"), (cx + 15, cy - 11),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, col, 2, cv2.LINE_AA)
+        elif last >= f_start and last < a[-1, 0] + 1 and a[-1, 0] == last:   # it stopped inside the window
+            cx, cy = pts[-1]
+            cv2.line(img, (cx - 9, cy - 9), (cx + 9, cy + 9), RED, 3, cv2.LINE_AA)
+            cv2.line(img, (cx - 9, cy + 9), (cx + 9, cy - 9), RED, 3, cv2.LINE_AA)
+            if f_now - last <= 25:
+                cv2.putText(img, "ID " + tid.lstrip("t") + " stops", (cx + 15, cy + 22),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, RED, 2, cv2.LINE_AA)
 
 
 def _panel(video, fi, tracks, colours, f_start, f_now, x0, y0, title):
@@ -256,8 +273,13 @@ def render(ev, d, out_dir=OUT, tag="13_collision"):
         gap = np.full((PANEL + TITLE_H, 26, 3), 255, np.uint8)
         return np.hstack([panels[0], gap, panels[1]])
 
+    shown = sorted(set(range(f_start, f_end + 1, GIF_STEP)) |
+                   set(range(max(f_start, ev["f0"] - SLOW_RADIUS), min(f_end, ev["f1"] + SLOW_RADIUS) + 1)))
+    key = ev.get("key_frame", ev["f0"])
+    durations = [HOLD if f == key else EVENT_DUR if ev["f0"] <= f <= ev["f1"] else GIF_DUR for f in shown]
+    durations[-1] = 2.5
     frames = []
-    for f_now in range(f_start, f_end + 1, 2):
+    for f_now in shown:
         img = both(f_now)
         bar = np.full((16, img.shape[1], 3), 255, np.uint8)
         cv2.rectangle(bar, (0, 5), (img.shape[1] - 1, 11), (225, 225, 225), -1)
@@ -265,12 +287,13 @@ def render(ev, d, out_dir=OUT, tag="13_collision"):
                       (36, 138, 240), -1)
         frames.append(cv2.cvtColor(np.vstack([img, bar]), cv2.COLOR_BGR2RGB))
     gif = f"{out_dir}/{tag}_sort_vs_jpdaf.gif"
-    imageio.mimsave(gif, frames, duration=[1 / 10] * (len(frames) - 1) + [2.5], loop=0, subrectangles=True)
+    imageio.mimsave(gif, frames, duration=durations, loop=0, subrectangles=True)
     cv2.imwrite(gif.replace(".gif", ".png"), cv2.cvtColor(frames[-1], cv2.COLOR_RGB2BGR))
 
     # strip: before / during / after, SORT on top, JPDAF below
     mid = (ev["f0"] + ev["f1"]) // 2
-    cols = [(f_start + 10, "before"), (mid, "touching"), (f_end, "after")]
+    lab = ev.get("labels", ("before", "touching", "after"))
+    cols = [(f_start + 10, lab[0]), (mid, lab[1]), (f_end, lab[2])]
     rows = []
     for b, name in (("sort", "SORT"), ("jpdaf", "JPDAF")):
         row = []
@@ -475,6 +498,17 @@ if __name__ == "__main__":
         J["demo" if tag == "13_collision" else tag] = ev
         json.dump(J, open(f"{OUT}/13_collision.json", "w"), indent=1)
         render(ev, d, tag=tag)
+    elif mode == "break":                         # break f_stop f_restart x y sortIds jpdafIds tag
+        f0, f1, x, y = int(sys.argv[2]), int(sys.argv[3]), float(sys.argv[4]), float(sys.argv[5])
+        sort_ids, jpdaf_ids, tag = sys.argv[6].split(","), sys.argv[7].split(","), sys.argv[8]
+        ev = {"f0": f0, "f1": f1, "x": x, "y": y, "key_frame": f1,
+              "labels": ("before", "the cut", "after"),
+              "sort": {"ids": sort_ids, "broke": sort_ids, "kept": False},
+              "jpdaf": {"ids": jpdaf_ids, "broke": [], "kept": True}}
+        J = json.load(open(f"{OUT}/13_collision.json"))
+        J[tag] = ev
+        json.dump(J, open(f"{OUT}/13_collision.json", "w"), indent=1)
+        render(ev, json.load(open(TRACKS_JSON)), tag=tag)
     elif mode == "detect":
         detect(sys.argv[2])
     elif mode == "detectors":

@@ -1,0 +1,1 @@
+{"name": "urbano", "call": "casa.detection.urbano_detection()", "seconds": 306.3, "frames_loaded": 899, "assessment": {"tp": 74140, "fp": 20050, "fn": 6939, "precision": 78.71, "recall": 91.44, "F1": 84.6, "evaluated_frames": 899}}
