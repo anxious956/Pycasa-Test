@@ -163,6 +163,71 @@ pres.title = "pycasa — two follow-up questions";
   );
 }
 
+/* 2. Recap: what pycasa does, what we ran for this deck -------------------------- */
+{
+  const s = pres.addSlide();
+  header(pres, s, "WHERE WE ARE", "pycasa in one picture, and what we ran this time");
+  s.addText([
+    { text: "pycasa ", options: { bold: true } },
+    { text: "is the lab's Python tool for computer-assisted semen analysis. " },
+    { text: "Input: ", options: { bold: true } },
+    { text: "a 30-second clinic video (899 frames, about 90 cells in view) plus every cell marked by hand, as the answer key." },
+  ], {
+    x: M, y: 1.6, w: W - 2 * M, h: 0.7, fontFace: FONT, fontSize: 16, color: TEXT, margin: 0, valign: "top", isTextBox: true,
+  });
+  const cols = [
+    ["1", "Find the cells", "casa.detection", ["yolo(yolo_model='yolov5')", "yolo(yolo_model='yolo26')"],
+      "This time: the two YOLO versions, head to head on the whole video.", true],
+    ["2", "Follow the cells", "casa.tracking", ["sort()", "jpdaf()"],
+      "This time: what each tracker does when two cells touch.", true],
+    ["3", "Measure them", "casa.motility", ["kinematic_parameters()", "casa_parameters()"],
+      "Last time: speeds per cell and the clinic-style numbers.", false],
+  ];
+  const cw = 3.85, gap = (W - 2 * M - 3 * cw) / 2, cy = 2.5, ch = 3.75;
+  cols.forEach(([n, name, mod, fns, note, now], i) => {
+    const x = M + i * (cw + gap);
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+      x, y: cy, w: cw, h: ch, fill: { color: PANEL }, line: { color: PANEL }, rectRadius: 0.12,
+    });
+    s.addText(n, {
+      shape: pres.shapes.OVAL, x: x + 0.25, y: cy + 0.25, w: 0.5, h: 0.5,
+      fill: { color: now ? ORANGE : INK }, line: { color: now ? ORANGE : INK }, color: WHITE, fontFace: FONT,
+      fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true,
+    });
+    s.addText(name, {
+      x: x + 0.9, y: cy + 0.25, w: cw - 1.1, h: 0.5, fontFace: FONT, fontSize: 21, bold: true,
+      color: TEXT, valign: "middle", margin: 0, isTextBox: true,
+    });
+    s.addText(mod, {
+      x: x + 0.25, y: cy + 0.9, w: cw - 0.5, h: 0.32, fontFace: MONO, fontSize: 13, color: MUTED, margin: 0, isTextBox: true,
+    });
+    fns.forEach((f, k) => {
+      pill(pres, s, f, x + 0.25, cy + 1.32 + k * 0.5, cw - 0.5, {
+        fill: WHITE, color: TEXT, font: MONO, size: 12, bold: false, spacing: 0, h: 0.4,
+      });
+    });
+    s.addText(note, {
+      x: x + 0.25, y: cy + 2.45, w: cw - 0.5, h: 1.15, fontFace: FONT, fontSize: 14, bold: now,
+      color: now ? TEXT : MUTED, margin: 0, valign: "top", isTextBox: true,
+    });
+    if (i < 2) {
+      s.addShape(pres.shapes.RIGHT_ARROW, {
+        x: x + cw + gap / 2 - 0.16, y: cy + ch / 2 - 0.22, w: 0.32, h: 0.44, fill: { color: ORANGE }, line: { color: ORANGE },
+      });
+    }
+  });
+  caption(s, [
+    { text: "Orange = the two parts this deck is about. ", options: { bold: true } },
+    { text: "Both trackers were run on the hand-marked boxes, so the tracking is judged on its own, not on the detector's mistakes." },
+  ], 6.5, 0.6);
+  s.addNotes(
+    "A quick reminder of where we are. pycasa works in three steps: find the cells in every frame, follow each cell from frame to frame, and measure how it moves. " +
+    "The input is the same 30-second clinic video as last time, with every cell marked by hand so we can check the software. " +
+    "Today is about the first two steps. For finding cells, we compare the two YOLO versions. For following cells, we look at what SORT and JPDAF do when two cells touch. " +
+    "The trackers ran on the hand-marked boxes, so what you will see is the tracking itself, not detector mistakes."
+  );
+}
+
 /* 3. Q1: YOLOv5 vs YOLO26, close up, and the whole-video counts ------------- */
 {
   const s = pres.addSlide();
@@ -450,6 +515,15 @@ function scoreSlide(data, kicker, title, footnote, notes) {
     "But neither is perfect: SORT tends to cut a path in two, and JPDAF can swap two cells, which only a person can spot. Thank you."
   );
 }
+
+/* slide numbers ----------------------------------------------------------------- */
+pres.slides.forEach((sl, i) => {
+  const dark = i === 0 || i === pres.slides.length - 1;
+  sl.addText(String(i + 1), {
+    x: W - M - 0.6, y: 7.05, w: 0.6, h: 0.3, fontFace: FONT, fontSize: 11, color: dark ? "8A99AD" : MUTED,
+    align: "right", margin: 0, isTextBox: true,
+  });
+});
 
 pres.writeFile({ fileName: OUT }).then((f) => {
   const mb = fs.statSync(f).size / 1e6;
