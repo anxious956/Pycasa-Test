@@ -19,6 +19,10 @@ const R = (f) => path.join(ROOT, "outputs", "report", f);
 const OUT = process.argv[2] || path.join(ROOT, "pycasa_Followup_Presentation.pptx");
 const DET = JSON.parse(fs.readFileSync(R("14_detectors.json")));
 const COL = JSON.parse(fs.readFileSync(R("13_collision.json")));
+const STEP8 = JSON.parse(fs.readFileSync(path.join(ROOT, "outputs", "step8_full_clip.json")));
+const FULL_FILE = R("14_detectors_full.json");
+const FULL = fs.existsSync(FULL_FILE) ? JSON.parse(fs.readFileSync(FULL_FILE)) : null;
+const fmt = (n) => n.toLocaleString("en-US");
 
 /* ------------------------------------------------------------------ palette */
 const INK = "0F1B2D";
@@ -166,11 +170,20 @@ pres.title = "pycasa — two follow-up questions";
   const s = pres.addSlide();
   header(pres, s, "QUESTION 1  ·  FINDING CELLS", "Five detectors, same frames, same answer key");
   fnPill(pres, s, "casa.detection.*");
-  framed(pres, s, R("14_all_detectors.gif"), (W - 8.2) / 2, 1.8, 8.2, 4.55);
+  framed(pres, s, R("14_all_detectors.gif"), (W - 8.0) / 2, 2.05, 8.0, 4.35);
   s.addText(ORDER.map((n) => "casa.detection." + CALL[n]).join("     "), {
     x: M, y: 6.45, w: W - 2 * M, h: 0.3, fontFace: MONO, fontSize: 10.5, color: MUTED,
     align: "center", margin: 0, isTextBox: true,
   });
+  if (FULL) {
+    s.addText([
+      { text: "Score on the whole video:  ", options: { bold: true } },
+      { text: ORDER.map((n) => `${LABEL[n]} ${Math.round(FULL[n].assessment.F1)}`).join("   ·   ") },
+    ], {
+      x: M, y: 1.72, w: W - 2 * M, h: 0.3, fontFace: FONT, fontSize: 13, color: TEXT,
+      align: "center", margin: 0, isTextBox: true,
+    });
+  }
   caption(s, [
     { text: "■ ", options: { color: GREEN } }, { text: "Green", options: { bold: true } },
     { text: " = marked by a person      " },
@@ -185,38 +198,42 @@ pres.title = "pycasa — two follow-up questions";
   );
 }
 
-/* 3. Q1: YOLOv5 vs YOLO26, close up ------------------------------------------ */
+/* 3. Q1: YOLOv5 vs YOLO26, close up, and the whole-video counts ------------- */
 {
   const s = pres.addSlide();
   header(pres, s, "QUESTION 1  ·  THE TWO YOLO VERSIONS", "YOLOv5 misses cells; YOLO26 draws extra boxes");
   fnPill(pres, s, "casa.detection.yolo(yolo_model=...)");
   framed(pres, s, R("14_yolov5_vs_yolo26.gif"), M, 1.85, 7.9, 3.25, "left");
+  const v5 = STEP8.yolov5.detection, y26 = STEP8.yolo26.detection;
+  const total = v5.tp + v5.fn;                       // every hand-marked cell in every frame
   const cx = 8.95, cw = 3.78;
-  card(pres, s, cx, 1.85, cw, 1.5, `${Math.round(f1("yolov5"))}%`, "YOLOv5  ·  detection score");
-  card(pres, s, cx, 3.5, cw, 1.5, `${Math.round(f1("yolo26"))}%`, "YOLO26  ·  detection score", ORANGE);
+  card(pres, s, cx, 1.85, cw, 1.5, `${Math.round(v5.F1)}%`, "YOLOv5  ·  detection score, whole video");
+  card(pres, s, cx, 3.5, cw, 1.5, `${Math.round(y26.F1)}%`, "YOLO26  ·  detection score, whole video", ORANGE);
   s.addText([
+    { text: "The whole 30-second video: ", options: { bold: true } },
+    { text: `${STEP8.yolo26.frames_loaded} frames, ${fmt(total)} hand-marked cells (about ${Math.round(total / STEP8.yolo26.frames_loaded)} in every frame).`, options: { breakLine: true } },
     { text: "YOLOv5 ", options: { bold: true } },
-    { text: `finds ${Math.round(rec("yolov5"))} of every 100 cells; ${Math.round(prec("yolov5"))} of its 100 boxes are right.`, options: { breakLine: true } },
+    { text: `found ${fmt(v5.tp)} of them, missed ${fmt(v5.fn)}, and drew ${fmt(v5.fp)} wrong boxes.`, options: { breakLine: true } },
     { text: "YOLO26 ", options: { bold: true } },
-    { text: `finds ${Math.round(rec("yolo26"))} of every 100 cells; ${Math.round(prec("yolo26"))} of its 100 boxes are right.` },
+    { text: `found ${fmt(y26.tp)} of them, missed ${fmt(y26.fn)}, and drew ${fmt(y26.fp)} wrong boxes.` },
   ], {
-    x: M, y: 5.35, w: 7.9, h: 1.0, fontFace: FONT, fontSize: 16, color: TEXT, margin: 0,
-    valign: "top", paraSpaceAfter: 4, isTextBox: true,
+    x: M, y: 5.3, w: W - 2 * M, h: 1.15, fontFace: FONT, fontSize: 16, color: TEXT, margin: 0,
+    valign: "top", paraSpaceAfter: 3, isTextBox: true,
   });
   caption(s, [
     { text: "Which is better? ", options: { bold: true, color: ORANGE } },
-    { text: "YOLO26 almost never misses a cell, which matters for counting. Its extra boxes are the price, and they show up later as \"cells that don't move\"." },
-  ], 6.45, 0.8);
+    { text: "YOLO26 almost never misses a cell, which matters for counting. Its extra boxes are the price: they show up later as \"cells that don't move\"." },
+  ], 6.55, 0.7);
   s.addNotes(
     "The same region, zoomed in, with the two YOLO versions side by side. " +
-    `YOLOv5 misses about one cell in four, but most of the boxes it draws are real cells. ` +
-    `YOLO26 finds ninety-nine of every hundred cells, but roughly one box in three is not a cell. ` +
-    "Overall YOLO26 scores a bit higher. For counting cells, not missing any is the more important of the two. " +
-    "The extra boxes are the thing to fix: they get tracked as cells that never move."
+    `Over the whole video a person marked ${fmt(total)} cells, frame by frame; that is about ${Math.round(total / STEP8.yolo26.frames_loaded)} cells in every frame. ` +
+    `YOLOv5 found ${fmt(v5.tp)} of them and missed ${fmt(v5.fn)}, about one in four, but most of the boxes it drew are real cells. ` +
+    `YOLO26 found ${fmt(y26.tp)} and missed only ${fmt(y26.fn)}, but it drew ${fmt(y26.fp)} wrong boxes, roughly one box in three. ` +
+    "For counting cells, not missing any is the more important of the two. The extra boxes are the thing to fix: they get tracked as cells that never move."
   );
 }
 
-/* 4. Q1: the scores ---------------------------------------------------------- */
+/* (unused) a clustered chart of the detector scores ---------------------------- */
 function scoreSlide(data, kicker, title, footnote, notes) {
   const s = pres.addSlide();
   header(pres, s, kicker, title);
@@ -261,35 +278,6 @@ function scoreSlide(data, kicker, title, footnote, notes) {
   });
   caption(s, footnote, 6.5, 0.8);
   s.addNotes(notes);
-}
-
-scoreSlide(DET, "QUESTION 1  ·  THE NUMBERS", "How each detector scores against the hand-marked cells", [
-  { text: "Same 100 frames for all five, each run in a fresh session. ", options: { bold: true } },
-  { text: "The two motion-based detectors need the first 20 frames to learn the background, so they are scored on frames 20 to 99." },
-],
-  "The numbers behind the pictures. Orange is the overall score. Navy is how many of the hand-marked cells each detector found. Grey is how many of its boxes were right. " +
-  `YOLO26 finds nearly every cell, ${Math.round(rec("yolo26"))} of 100, but only ${Math.round(prec("yolo26"))} of its boxes are right. ` +
-  `Urbano is the most balanced of the classic methods, with a score of ${Math.round(f1("urbano"))}. ` +
-  `Moving cells scores lowest, ${Math.round(f1("moving_cells"))}, because anything that moves counts as a cell for it. ` +
-  "All five ran on the same hundred frames, each in a fresh session, so the comparison is fair. " +
-  "One caveat for YOLO26: with the torchvision fix from last time it scores 80 instead of 77. These are the plain pycasa numbers, without the fix."
-);
-
-/* 4b. Q1: the same test on the whole clip (only when the slow run has finished) */
-const FULL_FILE = R("14_detectors_full.json");
-if (fs.existsSync(FULL_FILE)) {
-  const FULL = JSON.parse(fs.readFileSync(FULL_FILE));
-  const gf = (n, k) => Math.round(FULL[n].assessment[k]);
-  const nFrames = FULL.yolo26.frames_loaded;
-  scoreSlide(FULL, "QUESTION 1  ·  THE WHOLE VIDEO", `The same test on all ${nFrames} frames`, [
-    { text: `All ${nFrames} frames of the 30-second video, each detector in its own run. `, options: { bold: true } },
-    { text: "The order stays the same as on 100 frames; the scores move a little because the first 100 frames are not special." },
-  ],
-    `The same comparison on the whole video, ${nFrames} frames instead of 100. ` +
-    `YOLO26 still finds the most cells, ${gf("yolo26", "recall")} of 100, with a score of ${gf("yolo26", "F1")}. ` +
-    `Urbano scores ${gf("urbano", "F1")}, digital washing ${gf("digital_washing", "F1")}, YOLOv5 ${gf("yolov5", "F1")}, moving cells ${gf("moving_cells", "F1")}. ` +
-    "The ranking is the same as on the short test, so a hundred frames is enough to compare detectors."
-  );
 }
 
 /* 5. Q2: one cell, SORT cuts the path, JPDAF keeps it ---------------------- */
